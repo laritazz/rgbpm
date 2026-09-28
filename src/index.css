@@ -1,0 +1,260 @@
+/* Tokens de marca Laritazz: negro, magenta, blanco. Sin verde. */
+:root {
+  --negro: #0b0a0d;
+  --negro-2: #16131a;
+  --negro-3: #221d27;
+  --magenta: #ff1f8f;
+  --rosa: #ff8ac4;
+  --violeta: #7a2cff;
+  --blanco: #fdf7fb;
+  --gris: #a79fae;
+
+  --radio: 14px;
+  --espacio: 16px;
+  --fuente: 'Space Grotesk', system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: var(--fuente);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Estructura */
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: calc(var(--espacio) * 1.5) var(--espacio) 64px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: calc(var(--espacio) * 2);
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.logo span {
+  color: var(--magenta);
+}
+
+.version {
+  font-size: 12px;
+  color: var(--gris);
+  font-variant-numeric: tabular-nums;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--espacio) * 2);
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .rejilla {
+    grid-template-columns: 1fr;
+  }
+
+  /* En móvil el panel sube arriba para no quedar bajo la lista */
+  .rejilla > .panel {
+    order: -1;
+    position: static;
+  }
+
+  .panel--vacio {
+    min-height: 0;
+    padding: var(--espacio);
+  }
+}
+
+/* Buscador */
+.buscador input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: var(--espacio);
+  border: 1px solid var(--negro-3);
+  border-radius: var(--radio);
+  background: var(--negro-2);
+  color: var(--blanco);
+  font: inherit;
+}
+
+.buscador input:focus {
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+}
+
+/* Lista y tarjetas */
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.tarjeta {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  background: var(--negro-2);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tarjeta:hover {
+  background: var(--negro-3);
+}
+
+.tarjeta:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+}
+
+.tarjeta--activa {
+  border-color: var(--magenta);
+}
+
+.tarjeta__texto {
+  display: grid;
+  min-width: 0;
+}
+
+.tarjeta__texto strong,
+.tarjeta__texto span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tarjeta__texto span {
+  font-size: 14px;
+  color: var(--gris);
+}
+
+.tarjeta__datos {
+  display: grid;
+  justify-items: end;
+  font-size: 13px;
+  color: var(--gris);
+  font-variant-numeric: tabular-nums;
+}
+
+.clave {
+  color: var(--rosa);
+  font-weight: 700;
+}
+
+.etiqueta {
+  justify-self: start;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--magenta) 18%, transparent);
+  color: var(--rosa);
+  white-space: nowrap;
+}
+
+.portada {
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Panel de armonía */
+.panel {
+  position: sticky;
+  top: var(--espacio);
+  padding: calc(var(--espacio) * 1.25);
+  border-radius: calc(var(--radio) * 1.4);
+  background: var(--negro-2);
+  border: 1px solid var(--negro-3);
+}
+
+.panel--vacio {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  color: var(--gris);
+}
+
+.panel__cabecera {
+  display: flex;
+  gap: var(--espacio);
+  align-items: center;
+  margin-bottom: calc(var(--espacio) * 1.5);
+}
+
+.panel__cabecera h2 {
+  font-size: 24px;
+  line-height: 1.1;
+  margin: 2px 0 6px;
+}
+
+.panel__cabecera p {
+  color: var(--gris);
+}
+
+.sobretitulo {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--magenta) !important;
+}
+
+.panel h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gris);
+  margin-bottom: 10px;
+}
+
+.panel .tarjeta {
+  background: var(--negro);
+}
+
+.vacio {
+  color: var(--gris);
+  padding: var(--espacio) 0;
+}
