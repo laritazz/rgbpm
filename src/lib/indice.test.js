@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buscarArchivo, crearIndice, urlEnServidor } from './indice'
+import { buscarArchivo, crearIndice } from './indice'
 
 const indice = crearIndice([
   '_DJ/Music/Amelie Lens/A-Sides, Vol. 6/01 In Silence.mp3',
@@ -25,8 +25,5 @@ describe('índice de archivos', () => {
   it('ignora lo que no es audio', () => {
     expect(indice.has('portada.jpg')).toBe(false)
     expect(indice.get('01 intro.mp3')).toHaveLength(2)
-  })
-  it('codifica cada tramo de la dirección', () => {
-    expect(urlEnServidor('https://creativezz.com/musica', 'Music/A-Sides, Vol. 6/01 #1.mp3')).toBe('https://creativezz.com/musica/Music/A-Sides%2C%20Vol.%206/01%20%231.mp3')
   })
 })

@@ -1,0 +1,18 @@
+# RGBPM · carpeta pública del audio privado
+# Nadie ve la lista de archivos
+Options -Indexes
+
+# Solo se puede llamar a las dos puertas: firmar.php y audio.php
+<IfModule mod_authz_core.c>
+  Require all denied
+  <FilesMatch "^(firmar|audio)\.php$">
+    Require all granted
+  </FilesMatch>
+</IfModule>
+
+# Algunos servidores (PHP como FastCGI) se comen la cabecera Authorization: se la pasamos a PHP
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>

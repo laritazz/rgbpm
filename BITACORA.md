@@ -220,3 +220,27 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Callbacks en refs:** el aviso de «terminado» cambia sin reiniciar la escucha.
 - **`<dialog>` + gestos:** `setPointerCapture` para arrastrar y cerrar.
 - **`env(safe-area-inset-*)`:** respeta la muesca y la barra de inicio del iPhone.
+
+## Sesión 8 · 29 sep 2026 · Audio privado con login
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Diseño antes de programar | Contexto, datos, fallos, permisos, repeticiones y registro, por escrito |
+| Script de fragmentos | En mi Mac: 90 s desde 8 compases antes del primer hotcue, sin etiquetas, nombre anónimo; se puede parar y seguir |
+| Puertas PHP en IONOS | `firmar.php` (pregunta a Supabase quién soy y firma) y `audio.php` (sirve con Range si la firma vale) |
+| Login en la app | Supabase Auth, cargado solo cuando hace falta; la sesión se recuerda |
+| Fuera el «servidor público» | Solo quedan dos fuentes: carpeta (temas enteros) y privada (fragmentos) |
+| Probado | Supabase falso + PHP local + la app: clave mala, sesión falsa, email ajeno, firma tocada, enlace caducado, `../` y Range |
+
+### Decisiones
+- **Sin Edge Functions:** IONOS pregunta directamente a Supabase (`/auth/v1/user`). Menos piezas.
+- **El nombre del fragmento sale de la ruta de Traktor** (SHA-256): el script y la web lo calculan igual, sin lista de títulos en ningún sitio.
+- **Firmas HMAC con caducidad:** un enlace copiado deja de valer a los 20 minutos.
+
+### Qué aprendí
+- **Autenticación ≠ autorización:** Supabase dice *quién* soy; `config.php` dice *si puedo*.
+- **HMAC y `hash_equals`:** firmar sin guardar nada y comparar sin dar pistas por el tiempo de respuesta.
+- **Range (206):** así el navegador salta dentro de un audio.
+- **`import()` dinámico:** la librería de Supabase solo se descarga al usar el login.
+- **Mismo código en navegador y Node:** `crypto.subtle` existe en los dos.

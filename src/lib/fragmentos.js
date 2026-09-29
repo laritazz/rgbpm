@@ -1,0 +1,29 @@
+// Fragmentos privados: cada tema se guarda en el servidor como un trozo de ~90 s
+// con un nombre anónimo. El mismo código calcula el nombre en tu Mac (script) y en la web.
+
+/** La ruta de Traktor tal cual la guarda RGBPM, normalizada: sin mayúsculas y con los acentos compuestos. */
+export const claveRuta = (ruta) => ruta.normalize('NFC').toLowerCase()
+
+/** Nombre del fragmento: 16 caracteres del SHA-256 de la ruta. Sin títulos ni artistas. */
+export async function idFragmento(ruta) {
+  const datos = new TextEncoder().encode(claveRuta(ruta))
+  const resumen = await crypto.subtle.digest('SHA-256', datos)
+  return [...new Uint8Array(resumen)]
+    .slice(0, 8)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+/**
+ * Dónde empieza el fragmento: 8 compases antes de tu primer hotcue (la entrada o el drop).
+ * Los cues de los 5 primeros segundos no cuentan (suelen marcar el inicio del tema).
+ * Sin cues, al 30 % del tema. Nunca se sale del tema.
+ */
+export function inicioFragmento({ duracion, bpm, cues = [] }, segundos = 90) {
+  const total = duracion ?? 0
+  const primerCue = cues.filter((c) => c >= 5).sort((a, b) => a - b)[0]
+  const compases = bpm ? (8 * 4 * 60) / bpm : 16
+  let inicio = primerCue != null ? primerCue - compases : total * 0.3
+  if (total > 0) inicio = Math.min(inicio, total - segundos)
+  return Math.max(0, Math.round(inicio * 10) / 10)
+}

@@ -12,7 +12,7 @@ Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, dis
 - **Filtros** por franja de BPM, búsqueda por título, artista o clave (Open Key o Camelot) y orden por BPM, clave, título o set.
 - **Panel «Sonando»**: vinilo que gira al tempo con la mascota de galleta, rueda armónica y los 6 mejores temas para mezclar con nota 0–100.
 - **Mascota viva**: Disco a poco BPM, Asterisco a tope. Late al tempo, cambia de cara con el ánimo y el fondo toma el color del BPM.
-- **Suena tu biblioteca**: reproductor único con barra inferior. El audio sale de tus carpetas (se eligen una vez) o de tu servidor por https, con un índice y un `.htaccess` que genera la propia app.
+- **Suena tu biblioteca**: reproductor único con barra inferior. Temas enteros desde tus carpetas (se eligen una vez) o **fragmentos privados de 90 s** desde tu hosting, con login de Supabase y enlaces firmados que caducan ([servidor/LEEME.md](./servidor/LEEME.md)).
 - **Tap y escucha** (pensado para móvil): cuenta el BPM a toques o escucha por el micro y calcula BPM y clave en el navegador (FFT, cromagrama y perfiles de Krumhansl). Sugiere qué pinchar de tu biblioteca.
 - **Radio**: suena sola con tu biblioteca. Encadena por armonía desde la clave que elijas, sube el BPM poco a poco y funde cada tema con el siguiente (dos platos, curva de igual potencia).
 - Sin colección propia, arranca con una demo: los temas de mis sets.
@@ -40,7 +40,9 @@ src/
 ├── lib/                 lógica pura y probada: claves, armonía, color, Traktor, FFT, tempo, tonalidad, índice de archivos, radio
 └── data/demo.json       demo generada con scripts/demo.py
 brand/generar.py         la marca en SVG, generada por código
+scripts/fragmentos.mjs   crea los fragmentos privados en tu Mac (ffmpeg)
+servidor/rgbpm-audio/    las dos puertas PHP del audio privado (IONOS)
 ```
 
 ## Stack
-React 19 · React Router 7 · Vite 8 · Vitest · Web Audio (AudioWorklet) · IndexedDB · CSS con variables · GitHub Pages con Actions
+React 19 · React Router 7 · Vite 8 · Vitest · Supabase Auth · PHP (firmas HMAC) · Web Audio (AudioWorklet) · IndexedDB · CSS con variables · GitHub Pages con Actions

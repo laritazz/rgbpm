@@ -108,7 +108,7 @@ export default function BarraLateral({ abierta, alCerrar }) {
               {musica.estadoLocal === 'reconectar'
                 ? 'Falta dar permiso'
                 : musica.hayFuente
-                  ? [musica.totalLocal && 'carpeta', musica.servidor.estado === 'listo' && 'servidor'].filter(Boolean).join(' + ')
+                  ? [musica.totalLocal && 'carpeta', musica.privado.conTema && 'privada'].filter(Boolean).join(' + ')
                   : 'Conecta tus archivos para que suene'}
             </small>
           </span>

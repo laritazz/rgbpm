@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Mascota from '../../components/marca/Mascota'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
-import { descargarTexto, plantillaHtaccess } from '../../lib/servidor'
-import { NOMBRE_INDICE, useMusica } from './MusicaContext'
+import { useMusica } from './MusicaContext'
 
 /** Ventana «Tu música»: de dónde suena cada tema. Usa <dialog> nativo: foco, Esc y fondo ya resueltos. */
 export default function AjustesMusica() {
@@ -10,14 +9,9 @@ export default function AjustesMusica() {
   const { temas, origen } = useBiblioteca()
   const ventana = useRef(null)
   const entradaCarpeta = useRef(null)
-  const [url, setUrl] = useState(m.servidor.base)
-  const [urlVista, setUrlVista] = useState(m.servidor.base)
-
-  // Si la dirección guardada llega después (al arrancar), se refleja en el campo
-  if (urlVista !== m.servidor.base) {
-    setUrlVista(m.servidor.base)
-    setUrl(m.servidor.base)
-  }
+  const [correo, setCorreo] = useState('')
+  const [clave, setClave] = useState('')
+  const p = m.privado
 
   useEffect(() => {
     const d = ventana.current
@@ -87,50 +81,46 @@ export default function AjustesMusica() {
       </section>
 
       <section className="ajustes__bloque">
-        <h3>En tu servidor</h3>
-        <p>Para que suene en cualquier dispositivo. Subes por FTP y RGBPM lee por https.</p>
-        <ol className="ajustes__pasos">
-          <li>
-            Sube por FTP tus carpetas de música{m.carpetas.length ? <> (<strong>{m.carpetas.join(', ')}</strong>)</> : ''} a una carpeta de tu hosting, por ejemplo <code>/musica</code>.
-          </li>
-          <li>
-            Sube también estos dos archivos a esa misma carpeta:
-            <div className="ajustes__botones">
-              <button className="boton boton--fantasma" onClick={m.descargarIndice} disabled={!m.totalLocal} title={m.totalLocal ? '' : 'Primero elige tus carpetas arriba'}>
-                {NOMBRE_INDICE}
-              </button>
-              <button className="boton boton--fantasma" onClick={() => descargarTexto('htaccess.txt', plantillaHtaccess(window.location.origin))}>
-                .htaccess
-              </button>
-            </div>
-            <small>El .htaccess se descarga como htaccess.txt: al subirlo, renómbralo a <code>.htaccess</code>.</small>
-          </li>
-          <li>
-            Pega aquí la dirección https de esa carpeta:
-            <form
-              className="ajustes__servidor"
-              onSubmit={(e) => {
-                e.preventDefault()
-                m.conectarServidor(url)
-              }}
-            >
-              <label className="solo-lectores" htmlFor="url-servidor">
-                Dirección del servidor
-              </label>
-              <input id="url-servidor" type="url" required placeholder="https://tudominio.com/musica/" value={url} onChange={(e) => setUrl(e.target.value)} />
-              <button className="boton boton--rosa" disabled={m.servidor.estado === 'leyendo'}>
-                {m.servidor.estado === 'leyendo' ? 'Conectando…' : 'Conectar'}
-              </button>
-            </form>
-          </li>
-        </ol>
-        <p className="ajustes__estado" role="status">
-          {m.servidor.estado === 'listo' && `Conectado: ${m.servidor.total.toLocaleString('es')} ${m.servidor.total === 1 ? 'archivo' : 'archivos'} en el servidor.`}
-          {m.servidor.estado === 'error' && <span className="ajustes__error">{m.servidor.error}</span>}
-        </p>
-        {m.servidor.estado !== 'vacio' && (
-          <button className="boton boton--fantasma" onClick={m.olvidarServidor}>
-            Desconectar servidor
+        <h3>Tu música privada</h3>
+        <p>Fragmentos de 90 s en tu servidor, para escuchar desde el móvil. Solo entras tú y cada enlace caduca a los 20 minutos.</p>
+
+        {p.estado === 'sin-configurar' && <p className="ajustes__estado">Falta terminar de conectar el servidor. Muy pronto.</p>}
+
+        {(p.estado === 'fuera' || (p.estado === 'entrando' && !p.email)) && (
+          <form
+            className="ajustes__login"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              if (await p.entrar(correo.trim(), clave)) setClave('')
+            }}
+          >
+            <label>
+              Email
+              <input type="email" autoComplete="username" required value={correo} onChange={(e) => setCorreo(e.target.value)} />
+            </label>
+            <label>
+              Contraseña
+              <input type="password" autoComplete="current-password" required value={clave} onChange={(e) => setClave(e.target.value)} />
+            </label>
+            <button className="boton boton--rosa" disabled={p.estado === 'entrando'}>
+              {p.estado === 'entrando' ? 'Entrando…' : 'Entrar'}
+            </button>
+          </form>
+        )}
+
+        {p.estado === 'dentro' && (
+          <p className="ajustes__estado" role="status">
+            Dentro como <strong>{p.email}</strong> · {p.total.toLocaleString('es')} fragmentos · {p.conTema.toLocaleString('es')} de tus temas suenan desde el servidor.
+          </p>
+        )}
+        {p.error && (
+          <p className="ajustes__estado" role="alert">
+            <span className="ajustes__error">{p.error}</span>
+          </p>
+        )}
+        {(p.estado === 'dentro' || p.estado === 'error') && (
+          <button className="boton boton--fantasma" onClick={p.salir}>
+            Salir
           </button>
         )}
       </section>

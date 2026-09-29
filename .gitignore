@@ -32,3 +32,11 @@ fonts/
 
 # Colecciones de Traktor: son datos personales, se importan en el navegador
 *.nml
+
+# Audio privado: la configuración, los fragmentos y el registro viven solo en el servidor
+servidor/rgbpm-audio/privado/config.php
+servidor/rgbpm-audio/privado/registro.log*
+servidor/rgbpm-audio/privado/sesiones/
+servidor/rgbpm-audio/privado/fragmentos/
+rgbpm-fragmentos/
+rgbpm-fragmentos-errores.txt

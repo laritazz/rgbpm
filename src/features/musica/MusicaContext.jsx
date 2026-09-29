@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { guardar, leer } from '../../lib/almacen'
-import { buscarArchivo, crearIndice, esAudio, urlEnServidor } from '../../lib/indice'
-import { descargarTexto } from '../../lib/servidor'
+import { buscarArchivo, crearIndice, esAudio } from '../../lib/indice'
+import { useBiblioteca } from '../biblioteca/BibliotecaContext'
+import { usePrivado } from './usePrivado'
 
 const MusicaContext = createContext(null)
-export const NOMBRE_INDICE = 'rgbpm-indice.json'
 const puedeElegirCarpeta = typeof window !== 'undefined' && 'showDirectoryPicker' in window
 
 // Recorre una carpeta y guarda, por cada audio, su ruta y cómo abrirlo
@@ -25,14 +25,16 @@ async function indexarCarpetas(carpetas) {
 
 /**
  * De dónde sale el audio:
- * - Carpetas de tu ordenador (Chrome/Edge recuerdan el permiso; en otros navegadores se eligen en cada visita).
- * - Tu servidor: una carpeta pública por https con el índice que genera RGBPM.
+ * - Tus carpetas del ordenador: temas enteros (Chrome/Edge recuerdan el permiso).
+ * - Tu música privada en creativezz: fragmentos de 90 s, con login y enlaces que caducan.
  */
 export function MusicaProvider({ children }) {
+  const { temas } = useBiblioteca()
+  const privado = usePrivado(temas)
+  const { resolver: resolverPrivado, tiene: tienePrivado } = privado
   const [carpetas, setCarpetas] = useState([]) // handles de carpeta (solo Chrome/Edge)
   const [archivos, setArchivos] = useState(new Map()) // ruta → () => Promise<File>
   const [estadoLocal, setEstadoLocal] = useState('vacio') // vacio · reconectar · leyendo · listo
-  const [servidor, setServidor] = useState({ base: '', indice: null, estado: 'vacio', error: null })
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false) // la ventana «Tu música»
 
   const anadirCarpeta = useCallback(async () => {
@@ -77,28 +79,7 @@ export function MusicaProvider({ children }) {
     await guardar('carpetas', []).catch(() => {})
   }, [])
 
-  const conectarServidor = useCallback(async (base) => {
-    const limpia = base.trim().replace(/\/?$/, '/')
-    setServidor({ base: limpia, indice: null, estado: 'leyendo', error: null })
-    try {
-      const r = await fetch(limpia + NOMBRE_INDICE, { cache: 'no-cache' })
-      if (!r.ok) throw new Error(r.status === 404 ? `No encuentro ${NOMBRE_INDICE} en esa carpeta` : `El servidor responde ${r.status}`)
-      const datos = await r.json()
-      setServidor({ base: limpia, indice: crearIndice(datos.archivos ?? []), estado: 'listo', error: null })
-      await guardar('servidor', { base: limpia }).catch(() => {})
-    } catch (e) {
-      // Un fallo de red sin respuesta suele ser el permiso CORS del servidor (el .htaccess)
-      const mensaje = e instanceof TypeError ? 'El servidor no deja leer desde RGBPM: revisa el .htaccess' : e.message
-      setServidor({ base: limpia, indice: null, estado: 'error', error: mensaje })
-    }
-  }, [])
-
-  const olvidarServidor = useCallback(async () => {
-    setServidor({ base: '', indice: null, estado: 'vacio', error: null })
-    await guardar('servidor', null).catch(() => {})
-  }, [])
-
-  // Al abrir la app: recuperar carpetas y servidor guardados
+  // Al abrir la app: recuperar las carpetas guardadas
   useEffect(() => {
     let vivo = true
     ;(async () => {
@@ -116,17 +97,15 @@ export function MusicaProvider({ children }) {
           }
         } else setEstadoLocal('reconectar') // el navegador pide un clic para volver a dar permiso
       }
-      const srv = await leer('servidor').catch(() => null)
-      if (srv?.base && vivo) conectarServidor(srv.base)
     })()
     return () => {
       vivo = false
     }
-  }, [conectarServidor])
+  }, [])
 
   const indiceLocal = useMemo(() => crearIndice(archivos.keys()), [archivos])
 
-  /** Dirección reproducible de un tema: primero tu carpeta, si no, tu servidor. */
+  /** Dirección reproducible de un tema: primero el tema entero de tu carpeta; si no, su fragmento privado. */
   const resolver = useCallback(
     async (tema) => {
       const local = buscarArchivo(indiceLocal, tema)
@@ -134,23 +113,15 @@ export function MusicaProvider({ children }) {
         const archivo = await archivos.get(local)()
         return { url: URL.createObjectURL(archivo), origen: 'carpeta', ruta: local, temporal: true }
       }
-      const remoto = servidor.indice && buscarArchivo(servidor.indice, tema)
-      if (remoto) return { url: urlEnServidor(servidor.base, remoto), origen: 'servidor', ruta: remoto }
-      return null
+      return resolverPrivado(tema)
     },
-    [indiceLocal, archivos, servidor]
+    [indiceLocal, archivos, resolverPrivado]
   )
 
   const tieneArchivo = useCallback(
-    (tema) => Boolean(buscarArchivo(indiceLocal, tema) || (servidor.indice && buscarArchivo(servidor.indice, tema))),
-    [indiceLocal, servidor]
+    (tema) => Boolean(buscarArchivo(indiceLocal, tema)) || tienePrivado(tema),
+    [indiceLocal, tienePrivado]
   )
-
-  /** Índice para subir al servidor junto a la música, con las mismas carpetas. */
-  const descargarIndice = useCallback(() => {
-    const datos = { version: 1, creado: new Date().toISOString(), archivos: [...archivos.keys()].sort() }
-    descargarTexto(NOMBRE_INDICE, JSON.stringify(datos), 'application/json')
-  }, [archivos])
 
   const valor = useMemo(
     () => ({
@@ -158,22 +129,19 @@ export function MusicaProvider({ children }) {
       carpetas: carpetas.map((c) => c.name),
       totalLocal: archivos.size,
       estadoLocal,
-      servidor: { base: servidor.base, estado: servidor.estado, error: servidor.error, total: servidor.indice ? [...servidor.indice.values()].reduce((s, l) => s + l.length, 0) : 0 },
-      hayFuente: archivos.size > 0 || Boolean(servidor.indice),
+      privado,
+      hayFuente: archivos.size > 0 || privado.conTema > 0,
       anadirCarpeta,
       anadirArchivos,
       reconectar,
       olvidarCarpetas,
-      conectarServidor,
-      olvidarServidor,
       resolver,
       tieneArchivo,
-      descargarIndice,
       ajustesAbiertos,
       abrirAjustes: () => setAjustesAbiertos(true),
       cerrarAjustes: () => setAjustesAbiertos(false),
     }),
-    [ajustesAbiertos, carpetas, archivos, estadoLocal, servidor, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, conectarServidor, olvidarServidor, resolver, tieneArchivo, descargarIndice]
+    [ajustesAbiertos, carpetas, archivos, estadoLocal, privado, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, resolver, tieneArchivo]
   )
 
   return <MusicaContext.Provider value={valor}>{children}</MusicaContext.Provider>

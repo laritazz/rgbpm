@@ -1,5 +1,5 @@
 // Lector del collection.nml de Traktor. Todo ocurre en el navegador: nada sale del equipo.
-import { leerClave } from './claves'
+import { leerClave } from './claves.js'
 
 // Lo que NO es una canción: kits, one-shots, logos sonoros… (reglas del motor original)
 const RUTA_SAMPLE = /(native instruments|maschine|battery|komplete|reaktor|kontakt|expansion|drum ?kit|one ?shots?|oneshot|samples?|loops?|sound ?pack|construction ?kit|library\/sounds|factory ?library|ableton\/|logic\/|serato\/sample)/i

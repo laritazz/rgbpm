@@ -42,12 +42,6 @@ export function buscarArchivo(indice, tema) {
   return candidatos.reduce((mejor, c) => (puntos(c) > puntos(mejor) ? c : mejor))
 }
 
-/** Dirección https de un archivo en tu servidor, con cada tramo codificado (espacios, acentos, #…). */
-export function urlEnServidor(base, ruta) {
-  const raiz = base.endsWith('/') ? base : `${base}/`
-  return raiz + ruta.split('/').map(encodeURIComponent).join('/')
-}
-
 /** Formatos que este navegador sabe reproducir (Safari, por ejemplo, no abre FLAC). */
 const TIPOS = { mp3: 'audio/mpeg', m4a: 'audio/mp4', aac: 'audio/aac', wav: 'audio/wav', aif: 'audio/aiff', aiff: 'audio/aiff', flac: 'audio/flac', ogg: 'audio/ogg', opus: 'audio/ogg; codecs=opus' }
 export function sePuedeReproducir(nombre, audio = typeof Audio !== 'undefined' ? new Audio() : null) {

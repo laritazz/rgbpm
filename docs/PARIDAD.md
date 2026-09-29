@@ -81,5 +81,5 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | «¿Es uno de tus temas?» por clave y BPM | ✨ |
 | Cazados: historial de escuchas | ✨ |
 | Móvil: pestañas con la mascota, mini reproductor y pantalla completa | ✨ |
-| Servidor propio por https con índice y `.htaccess` | ✨ |
+| Audio privado: login, fragmentos anónimos de 90 s y enlaces que caducan | ✨ |
 | Todo el estado de la vista en la URL (compartible) | ✨ |

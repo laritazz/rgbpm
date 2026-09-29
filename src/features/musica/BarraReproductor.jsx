@@ -49,7 +49,7 @@ export default function BarraReproductor({ alAbrir }) {
             <input type="range" min="0" max={duracion || 0} step="0.1" value={tiempo} onChange={(e) => buscar(Number(e.target.value))} aria-label="Posición" />
             <span>{reloj(duracion)}</span>
           </div>
-          <span className="barra__origen">{estado === 'cargando' ? 'Cargando…' : fundiendo ? 'Mezclando…' : origen === 'servidor' ? 'Servidor' : 'Tu carpeta'}</span>
+          <span className="barra__origen">{estado === 'cargando' ? 'Cargando…' : fundiendo ? 'Mezclando…' : origen === 'privado' ? 'Fragmento' : 'Tu carpeta'}</span>
         </>
       )}
     </section>
