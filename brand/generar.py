@@ -235,6 +235,53 @@ def iconos_asterisco():
     guardar("icono-a6-invertido", svg("0 0 512 512", fondo(ROSA) + f'<path d="{forma(1, cx, cy, esc)}" fill="{NEGRO}"/>'
                                       + cara(cx, cy - 14 * esc, esc, color=ROSA)))
 
+    iconos_invertido()
+
+
+def iconos_invertido():
+    """Evolución de la 6: base negra sobre rosa + un solo gesto de color, nunca un arcoíris."""
+    fondo = lambda c: f'<rect width="512" height="512" rx="112" fill="{c}"/>'
+    franjas = list(BPM.values())
+
+    def asterisco(cx, cy, esc, giro=22.5, color=NEGRO):
+        return f'<path d="{forma(1, cx, cy, esc, giro=giro)}" fill="{color}"/>'
+
+    # B1 · Línea BPM: la línea de color fina de tu portada «Electric Pride»
+    linea = "".join(f'<rect x="{116 + i * 56}" y="440" width="56" height="16" fill="{c}"/>' for i, c in enumerate(franjas))
+    guardar("icono-b1-linea", svg("0 0 512 512", fondo(ROSA) + asterisco(256, 238, 1.38)
+                                  + cara(256, 238 - 14 * 1.38, 1.38, color=ROSA) + linea))
+
+    # B2 · Pantone: el icono es una de tus portadas (muestra arriba, etiqueta blanca abajo)
+    clip = '<clipPath id="tarjeta"><rect width="512" height="512" rx="112"/></clipPath>'
+    chips = "".join(f'<rect x="{96 + i * 66}" y="420" width="54" height="40" rx="6" fill="{c}"/>' for i, c in enumerate(franjas))
+    guardar("icono-b2-pantone", svg("0 0 512 512", f"<defs>{clip}</defs>"
+                                    + f'<g clip-path="url(#tarjeta)"><rect width="512" height="512" fill="{ROSA}"/>'
+                                    + f'<rect y="386" width="512" height="126" fill="{BLANCO}"/>'
+                                    + asterisco(256, 196, 1.16) + cara(256, 196 - 14 * 1.16, 1.16, color=ROSA) + chips + '</g>'))
+
+    # B3 · Guiño: giro de 10°, un ojo guiñado y boca grande. Pura actitud
+    esc = 1.45
+    guiño = (f'<g fill="{ROSA}"><circle cx="{256 - 34 * esc:.1f}" cy="{244:.1f}" r="{7 * esc:.1f}"/>'
+             f'<path d="M{256 + 34 * esc - 12:.1f},{244} Q{256 + 34 * esc:.1f},{234} {256 + 34 * esc + 12:.1f},{244}" '
+             f'fill="none" stroke="{ROSA}" stroke-width="{5 * esc:.1f}" stroke-linecap="round"/>'
+             f'<path d="M{256 - 19 * esc:.1f},{266} L{256 + 19 * esc:.1f},{266} A{19 * esc:.1f},{19 * esc:.1f} 0 0 1 {256 - 19 * esc:.1f},{266} Z"/></g>')
+    guardar("icono-b3-guino", svg("0 0 512 512", fondo(ROSA) + asterisco(256, 264, esc, giro=32.5) + guiño))
+
+    # B4 · Destello: un brazo lleva el color del BPM que suena (en la app cambia con cada tema)
+    esc = 1.45
+    brazo = (f'<rect x="{256 - 30 * esc}" y="{262 - 140 * esc}" width="{60 * esc}" height="{78 * esc}" fill="{BPM["G"]}" '
+             f'transform="rotate(157.5 256 262)"/>')
+    guardar("icono-b4-destello", svg("0 0 512 512", '<defs><clipPath id="ast4">'
+                                     + f'<path d="{forma(1, 256, 262, esc)}"/></clipPath></defs>'
+                                     + fondo(ROSA) + asterisco(256, 262, esc)
+                                     + f'<g clip-path="url(#ast4)">{brazo}</g>'
+                                     + cara(256, 262 - 14 * esc, esc, color=ROSA)))
+
+    # B5 · Sombra de color: asterisco negro con su «eco» desplazado en el color de la franja, estilo serigrafía
+    esc = 1.4
+    guardar("icono-b5-eco", svg("0 0 512 512", fondo(ROSA) + asterisco(272, 278, esc, color=BPM["R"])
+                                + asterisco(248, 254, esc) + cara(248, 254 - 14 * esc, esc, color=ROSA)))
+
 
 if __name__ == "__main__":
     for viejo in SALIDA.glob("*.svg"):
