@@ -14,7 +14,7 @@ Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, dis
 - **Mascota viva**: Disco a poco BPM, Asterisco a tope. Late al tempo, cambia de cara con el ánimo y el fondo toma el color del BPM.
 - **Suena tu biblioteca**: reproductor único con barra inferior. El audio sale de tus carpetas (se eligen una vez) o de tu servidor por https, con un índice y un `.htaccess` que genera la propia app.
 - **Tap y escucha** (pensado para móvil): cuenta el BPM a toques o escucha por el micro y calcula BPM y clave en el navegador (FFT, cromagrama y perfiles de Krumhansl). Sugiere qué pinchar de tu biblioteca.
-- **Radio**: mis sesiones de SoundCloud suenan dentro de la app (Widget API). El BPM se lee de la descripción y avanza con la sesión; la mascota cambia de color mientras suena.
+- **Radio**: suena sola con tu biblioteca. Encadena por armonía desde la clave que elijas, sube el BPM poco a poco y funde cada tema con el siguiente (dos platos, curva de igual potencia).
 - Sin colección propia, arranca con una demo: los temas de mis sets.
 
 ## Arrancar en local
@@ -32,14 +32,15 @@ src/
 ├── features/
 │   ├── biblioteca/      página, contexto de datos, tarjeta Pantone, panel Sonando, rueda
 │   ├── tap/             tap BPM y escucha por micro
-│   ├── radio/           sesiones de SoundCloud
+│   ├── musica/          reproductor, fuentes de audio y ventana «Tu música»
+│   ├── radio/           radio automática con tu música
 │   └── proximamente/    estados vacíos con la mascota
 ├── components/marca/    Logo, Mascota y Vinilo
-├── hooks/               useMascota (rAF), useEscucha (micro + AudioWorklet), useSoundCloud, useProgresivo…
-├── lib/                 lógica pura y probada: claves, armonía, color, Traktor, FFT, tempo, tonalidad, sesiones
+├── hooks/               useMascota (rAF), useEscucha (micro + AudioWorklet), useProgresivo…
+├── lib/                 lógica pura y probada: claves, armonía, color, Traktor, FFT, tempo, tonalidad, índice de archivos, radio
 └── data/demo.json       demo generada con scripts/demo.py
 brand/generar.py         la marca en SVG, generada por código
 ```
 
 ## Stack
-React 19 · React Router 7 · Vite 8 · Vitest · Web Audio (AudioWorklet) · SoundCloud Widget API · IndexedDB · CSS con variables · GitHub Pages con Actions
+React 19 · React Router 7 · Vite 8 · Vitest · Web Audio (AudioWorklet) · IndexedDB · CSS con variables · GitHub Pages con Actions

@@ -175,3 +175,24 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **`useRef` para evitar funciones que cambian:** `reproducir` lee el tema actual de una ref y se mantiene estable.
 - **Carreras asíncronas:** si pulso dos temas seguidos, un contador de peticiones hace que gane el último.
 - **`<dialog>` nativo:** foco, tecla Esc y fondo oscuro sin librerías.
+
+## Sesión 6 · 29 sep 2026 · Radio con mi música
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Radio de la biblioteca | Sustituye a SoundCloud. Elijo clave, BPM, cuánto sube y cuántos temas; suena sola |
+| Generador portado | La misma lógica de RGBPM original: encadena por mis 7 categorías y reparte la subida de BPM |
+| Fundido de 10 s | Dos platos que se cruzan con curva de igual potencia |
+| Sin repetidos | La radio no pone dos veces el mismo artista y título |
+| Probado | 8 temas de prueba: arranca, funde, avanza y «Siguiente» salta con fundido |
+
+### Decisiones
+- **Fuera SoundCloud del todo:** la radio es mi biblioteca.
+- **Servidor privado, en pausa hasta decidir:** fragmentos de ~60 s desde el primer cue, nombres anónimos, carpeta fuera de la web, login y enlaces que caducan.
+
+### Qué aprendí
+- **Dos `<audio>` y una ref que dice cuál manda:** los eventos del plato que sale se ignoran.
+- **`setInterval` en vez de `requestAnimationFrame`** para el fundido: el segundo se para con la pestaña en segundo plano.
+- **Curva de igual potencia** (seno y coseno): a mitad del fundido no hay bajón de volumen.
+- **Pruebas con azar controlado:** paso una función aleatoria fija para que el test dé siempre lo mismo.
