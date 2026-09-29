@@ -148,3 +148,30 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Integrar un reproductor de terceros:** cargar su script una sola vez, escuchar sus eventos (`PLAY`, `PAUSE`, `PLAY_PROGRESS`) y soltarlos al salir.
 - **`e.timeStamp`** de un evento comparte reloj con `requestAnimationFrame`: así el latido cae justo en el toque.
 - **Pruebas con audio sintético:** genero un bombo a 128 y unos acordes en La menor para comprobar que el análisis acierta.
+
+## Sesión 5 · 29 sep 2026 · La biblioteca suena
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Reproductor único | Barra abajo en toda la app; el vinilo y las tarjetas saben qué suena |
+| Fuente 1 · carpetas | Eliges tus carpetas una vez (Chrome/Edge recuerdan el permiso). Cada tema de Traktor encuentra su archivo |
+| Fuente 2 · servidor | Subes por FTP; RGBPM lee por https con `rgbpm-indice.json` y un `.htaccess` que genera la app |
+| Ventana «Tu música» | Cuántos temas tienen archivo, carpetas, servidor y descargas, en un `<dialog>` nativo |
+| Probado | Colección real importada + servidor de pruebas: suena, avanza y lo recuerda al recargar |
+
+### Decisiones
+- **Fuera la API de SoundCloud:** para lo que quiero (mi música en mi app) no compensa.
+- **Buscar por nombre de archivo, no por ruta:** mi música está repartida entre el disco del Mac, el externo e iTunes. Si hay nombres repetidos, gana el que comparte más carpetas.
+- **Índice en vez de listar el servidor:** la carpeta queda oculta (`Options -Indexes`) y la app sabe qué hay gracias al índice.
+- **`.htaccess`:** solo RGBPM puede leer la música y se cortan los enlaces directos desde otras webs.
+- **Aviso legal:** música comercial en una dirección pública es distribución. Carpeta oculta ahora; almacenamiento privado con login más adelante.
+
+### Qué aprendí
+- **File System Access API:** `showDirectoryPicker` da acceso a una carpeta; el «handle» se guarda en IndexedDB y el permiso se recupera con un clic.
+- **`URL.createObjectURL`:** convierte un archivo local en una dirección que el `<audio>` entiende. Hay que soltarla al cambiar de tema.
+- **CORS:** el navegador solo deja leer archivos de otro dominio si ese servidor lo autoriza con una cabecera.
+- **Contextos separados por ritmo de cambio:** el tiempo de reproducción cambia 4 veces por segundo y va en su propio contexto, así no se repintan las 10.000 tarjetas.
+- **`useRef` para evitar funciones que cambian:** `reproducir` lee el tema actual de una ref y se mantiene estable.
+- **Carreras asíncronas:** si pulso dos temas seguidos, un contador de peticiones hace que gane el último.
+- **`<dialog>` nativo:** foco, tecla Esc y fondo oscuro sin librerías.

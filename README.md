@@ -12,6 +12,7 @@ Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, dis
 - **Filtros** por franja de BPM, búsqueda por título, artista o clave (Open Key o Camelot) y orden por BPM, clave, título o set.
 - **Panel «Sonando»**: vinilo que gira al tempo con la mascota de galleta, rueda armónica y los 6 mejores temas para mezclar con nota 0–100.
 - **Mascota viva**: Disco a poco BPM, Asterisco a tope. Late al tempo, cambia de cara con el ánimo y el fondo toma el color del BPM.
+- **Suena tu biblioteca**: reproductor único con barra inferior. El audio sale de tus carpetas (se eligen una vez) o de tu servidor por https, con un índice y un `.htaccess` que genera la propia app.
 - **Tap y escucha** (pensado para móvil): cuenta el BPM a toques o escucha por el micro y calcula BPM y clave en el navegador (FFT, cromagrama y perfiles de Krumhansl). Sugiere qué pinchar de tu biblioteca.
 - **Radio**: mis sesiones de SoundCloud suenan dentro de la app (Widget API). El BPM se lee de la descripción y avanza con la sesión; la mascota cambia de color mientras suena.
 - Sin colección propia, arranca con una demo: los temas de mis sets.

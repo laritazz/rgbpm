@@ -2,6 +2,8 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Shell from './app/Shell'
 import Biblioteca from './features/biblioteca/Biblioteca'
 import { BibliotecaProvider } from './features/biblioteca/BibliotecaContext'
+import { MusicaProvider } from './features/musica/MusicaContext'
+import { ReproductorProvider } from './features/musica/ReproductorContext'
 import Proximamente from './features/proximamente/Proximamente'
 import Radio from './features/radio/Radio'
 import Tap from './features/tap/Tap'
@@ -17,20 +19,24 @@ const PRONTO = [
 export default function App() {
   return (
     <BibliotecaProvider>
-      <HashRouter>
-        <Routes>
-          <Route element={<Shell />}>
-            <Route index element={<Biblioteca />} />
-            <Route path="set/:setId" element={<Biblioteca />} />
-            <Route path="tap" element={<Tap />} />
-            <Route path="radio" element={<Radio />} />
-            {PRONTO.map(({ ruta, ...p }) => (
-              <Route key={ruta} path={ruta} element={<Proximamente {...p} />} />
-            ))}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </HashRouter>
+      <MusicaProvider>
+        <ReproductorProvider>
+          <HashRouter>
+            <Routes>
+              <Route element={<Shell />}>
+                <Route index element={<Biblioteca />} />
+                <Route path="set/:setId" element={<Biblioteca />} />
+                <Route path="tap" element={<Tap />} />
+                <Route path="radio" element={<Radio />} />
+                {PRONTO.map(({ ruta, ...p }) => (
+                  <Route key={ruta} path={ruta} element={<Proximamente {...p} />} />
+                ))}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+            </Routes>
+          </HashRouter>
+        </ReproductorProvider>
+      </MusicaProvider>
     </BibliotecaProvider>
   )
 }

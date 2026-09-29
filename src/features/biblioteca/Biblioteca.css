@@ -144,6 +144,48 @@
   transition: opacity 200ms;
 }
 
+.pantone-caja {
+  position: relative;
+}
+
+/* Play sobre la muestra: aparece al pasar por encima, y se queda si está sonando */
+.pantone__play {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--negro);
+  color: var(--blanco);
+  opacity: 0;
+  scale: 0.85;
+  transition:
+    opacity 160ms,
+    scale 200ms var(--curva-muelle);
+}
+
+.pantone-caja:hover .pantone__play,
+.pantone__play:focus-visible,
+.pantone-caja--sonando .pantone__play {
+  opacity: 1;
+  scale: 1;
+}
+
+.pantone-caja--sonando .pantone__play {
+  background: var(--rosa);
+  color: var(--negro);
+}
+
+@media (hover: none) {
+  .pantone__play {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
 .pantone {
   display: flex;
   flex-direction: column;

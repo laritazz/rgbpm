@@ -1,0 +1,276 @@
+/* ——— Barra del reproductor ——— */
+.barra {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  background: var(--superficie);
+  border-top: 1px solid var(--linea);
+}
+
+/* Una línea del color del tema marca por dónde va */
+.barra::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 2px;
+  width: calc(var(--avance) * 100%);
+  background: var(--color);
+}
+
+.barra__tema {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 0 1 280px;
+}
+
+.barra__tema strong {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barra__tema span {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gris-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barra__play {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blanco);
+  color: var(--negro);
+  transition: transform 160ms var(--curva-salida);
+}
+
+.barra__play:active {
+  transform: scale(0.94);
+}
+
+.barra__tiempo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.barra__tiempo input {
+  flex: 1;
+  accent-color: var(--rosa);
+}
+
+.barra__origen {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--pildora);
+  border: 1px solid var(--linea-2);
+  color: var(--gris-2);
+  white-space: nowrap;
+}
+
+.barra__aviso {
+  flex: 1;
+  font-size: 14px;
+  color: var(--gris-1);
+}
+
+.barra__aviso button {
+  color: var(--rosa);
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+/* ——— Ventana «Tu música» ——— */
+.ajustes {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--linea-2);
+  border-radius: var(--radio-l);
+  background: var(--superficie);
+  color: var(--blanco);
+}
+
+.ajustes::backdrop {
+  background: #000b;
+  backdrop-filter: blur(4px);
+}
+
+.ajustes__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.ajustes__cabecera h2 {
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ajustes__cabecera p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--gris-1);
+}
+
+.ajustes__cerrar {
+  margin-left: auto;
+  align-self: flex-start;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--superficie-2);
+}
+
+.ajustes__bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.ajustes__bloque:last-child {
+  border-bottom: 0;
+}
+
+.ajustes__bloque h3 {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rosa);
+}
+
+.ajustes__bloque > p,
+.ajustes__pasos {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--gris-1);
+}
+
+.ajustes__pasos {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ajustes__pasos small {
+  display: block;
+  margin-top: 6px;
+  color: var(--gris-3);
+}
+
+.ajustes code {
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--blanco);
+}
+
+.ajustes__carpetas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ajustes__carpetas li {
+  padding: 4px 12px;
+  border-radius: var(--pildora);
+  background: var(--superficie-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ajustes__estado {
+  font-size: 13px;
+  color: var(--gris-2);
+}
+
+.ajustes__estado:empty {
+  display: none;
+}
+
+.ajustes__error {
+  color: var(--rosa);
+}
+
+.ajustes__botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.ajustes__servidor {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ajustes__servidor input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--pildora);
+  border: 1px solid var(--linea-2);
+  background: #111;
+}
+
+.ajustes__servidor input:focus {
+  outline: none;
+  border-color: var(--rosa);
+}
+
+@media (max-width: 700px) {
+  .barra {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .barra__tema {
+    flex: 1;
+  }
+
+  .barra__tiempo {
+    order: 5;
+    flex-basis: 100%;
+  }
+
+  .barra__origen {
+    display: none;
+  }
+
+  .ajustes__servidor {
+    flex-direction: column;
+  }
+}

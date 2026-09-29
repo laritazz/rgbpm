@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import BarraLateral from './BarraLateral'
+import AjustesMusica from '../features/musica/AjustesMusica'
+import BarraReproductor from '../features/musica/BarraReproductor'
+import '../features/musica/Musica.css'
 import Logo from '../components/marca/Logo'
 import './Shell.css'
 
@@ -34,6 +37,8 @@ export default function Shell() {
       <div className="shell__contenido">
         <Outlet />
       </div>
+      <BarraReproductor />
+      <AjustesMusica />
     </div>
   )
 }

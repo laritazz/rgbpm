@@ -1,15 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Vinilo from '../../components/marca/Vinilo'
 import { compatibles } from '../../lib/armonia'
 import { colorBpm, franjaDe } from '../../lib/color'
 import { animoDe } from '../../lib/mascota'
+import { useMusica } from '../musica/MusicaContext'
+import { useReproductor } from '../musica/ReproductorContext'
 import RuedaMini from './RuedaMini'
 
 const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '—')
 
 /** Panel derecho: el tema elegido gira en el vinilo y la mascota propone con qué mezclarlo. */
 export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
-  const [tocando, setTocando] = useState(true)
+  const rep = useReproductor()
+  const { hayFuente, abrirAjustes } = useMusica()
   const opciones = useMemo(() => (tema ? compatibles(tema, temas, 6) : []), [tema, temas])
 
   if (!tema) {
@@ -21,6 +24,8 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
     )
   }
 
+  const esEste = rep.tema?.id === tema.id
+  const tocando = esEste && rep.sonando
   const animo = animoDe(tema.bpm)
   const mejor = opciones[0]
 
@@ -32,9 +37,15 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
 
       <div className="sonando__plato">
         <Vinilo bpm={tema.bpm} tocando={tocando} tamano={236} />
-        <button className="sonando__play" onClick={() => setTocando((v) => !v)} aria-pressed={tocando}>
-          {tocando ? 'Pausa' : 'Play'}
-        </button>
+        {hayFuente ? (
+          <button className="sonando__play" onClick={() => rep.reproducir(tema)} aria-pressed={tocando}>
+            {tocando ? 'Pausa' : esEste && rep.estado === 'cargando' ? 'Cargando…' : 'Play'}
+          </button>
+        ) : (
+          <button className="sonando__play" onClick={abrirAjustes}>
+            Conectar música
+          </button>
+        )}
       </div>
 
       <header className="sonando__ficha">

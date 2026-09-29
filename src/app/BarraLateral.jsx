@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import Logo from '../components/marca/Logo'
 import { useBiblioteca } from '../features/biblioteca/BibliotecaContext'
+import { useMusica } from '../features/musica/MusicaContext'
 import { colorBpm } from '../lib/color'
 
 const SECCIONES = [
@@ -26,6 +27,7 @@ function resumenSet(playlist, porId) {
 
 export default function BarraLateral({ abierta }) {
   const { playlists, porId, origen, nombre, temas, estado, error, importar, volverADemo } = useBiblioteca()
+  const musica = useMusica()
   const entrada = useRef(null)
   const navegar = useNavigate()
 
@@ -95,6 +97,19 @@ export default function BarraLateral({ abierta }) {
             {error}
           </p>
         )}
+        <button className="lateral__musica" onClick={musica.abrirAjustes}>
+          <span className={`lateral__luz${musica.hayFuente ? ' lateral__luz--on' : ''}`} aria-hidden="true" />
+          <span>
+            <strong>Tu música</strong>
+            <small>
+              {musica.estadoLocal === 'reconectar'
+                ? 'Falta dar permiso'
+                : musica.hayFuente
+                  ? [musica.totalLocal && 'carpeta', musica.servidor.estado === 'listo' && 'servidor'].filter(Boolean).join(' + ')
+                  : 'Conecta tus archivos para que suene'}
+            </small>
+          </span>
+        </button>
         <input ref={entrada} type="file" accept=".nml" hidden onChange={alElegirArchivo} />
         <button className="boton boton--rosa" onClick={() => entrada.current.click()} disabled={estado === 'leyendo'}>
           {estado === 'leyendo' ? 'Leyendo colección…' : origen === 'demo' ? 'Importar colección' : 'Importar otra'}
