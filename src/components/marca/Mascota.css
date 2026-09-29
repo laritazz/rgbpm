@@ -1,0 +1,30 @@
+.mascota {
+  display: block;
+  overflow: visible;
+}
+
+/* El fondo y el eco se funden al cambiar de BPM: color = ánimo */
+.mascota__fondo,
+.mascota__eco {
+  transition: fill 700ms var(--curva-salida);
+}
+
+/* Cada cara nueva entra con un pequeño salto */
+.mascota__cara {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cara-entra 380ms var(--curva-muelle);
+}
+
+@keyframes cara-entra {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascota__cara {
+    animation: none;
+  }
+}

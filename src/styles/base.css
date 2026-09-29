@@ -1,0 +1,137 @@
+/* Sistema Laritazz: negro, rosa y blanco. El color de verdad lo pone el BPM. */
+:root {
+  --negro: #000000;
+  --superficie: #0c0c0c;
+  --superficie-2: #161616;
+  --linea: #1f1f1f;
+  --linea-2: #2a2a2a;
+  --blanco: #ffffff;
+  --gris-1: #e6e6e6;
+  --gris-2: #bdbdbd;
+  --gris-3: #8c8c8c;
+  --rosa: #ff66c4;
+  --rosa-vivo: #ff8fd4;
+  --magenta: #ff009d;
+
+  --fuente: 'Urbanist', system-ui, sans-serif;
+  --radio-s: 8px;
+  --radio: 14px;
+  --radio-l: 22px;
+  --pildora: 999px;
+
+  --curva-salida: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --curva-muelle: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: var(--fuente);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--rosa);
+}
+
+:focus-visible {
+  outline: 3px solid var(--rosa);
+  outline-offset: 3px;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Botones de la casa */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--pildora);
+  font-size: 14px;
+  font-weight: 800;
+  transition:
+    transform 160ms var(--curva-salida),
+    background 160ms;
+}
+
+.boton:active {
+  transform: scale(0.96);
+}
+
+.boton--rosa {
+  background: var(--rosa);
+  color: var(--negro);
+}
+
+.boton--rosa:hover {
+  background: var(--rosa-vivo);
+}
+
+.boton--negro {
+  background: var(--negro);
+  color: var(--blanco);
+}
+
+.boton--fantasma {
+  border: 1px solid var(--linea-2);
+  color: var(--gris-1);
+}
+
+.boton--fantasma:hover {
+  border-color: var(--gris-3);
+}
+
+.etiqueta-seccion {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gris-3);
+}

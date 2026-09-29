@@ -1,0 +1,243 @@
+.shell {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  height: 100%;
+}
+
+.shell__contenido {
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shell__movil,
+.shell__velo {
+  display: none;
+}
+
+/* ——— Barra lateral ——— */
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 32px 18px 20px;
+  border-right: 1px solid var(--linea);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lateral__marca {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.lateral__firma {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris-2);
+}
+
+.lateral ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lateral__enlace {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radio);
+  color: var(--gris-2);
+  font-size: 15px;
+  text-decoration: none;
+  transition: background 160ms;
+}
+
+.lateral__enlace:hover {
+  background: var(--superficie-2);
+}
+
+.lateral__punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 200ms;
+}
+
+.lateral__enlace.active {
+  background: var(--superficie-2);
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+.lateral__enlace.active .lateral__punto {
+  background: var(--rosa);
+}
+
+.lateral__pronto {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--pildora);
+  border: 1px solid var(--linea-2);
+  color: var(--gris-3);
+}
+
+.lateral__sets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lateral__sets h2 {
+  padding: 0 12px;
+}
+
+.lateral__set {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 12px;
+  border-radius: var(--radio);
+  color: var(--blanco);
+  text-decoration: none;
+}
+
+.lateral__set:hover,
+.lateral__set.active {
+  background: var(--superficie-2);
+}
+
+.lateral__set.active .lateral__muestra {
+  outline: 2px solid var(--rosa);
+  outline-offset: 2px;
+}
+
+.lateral__muestra {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.lateral__set > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lateral__set-nombre {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lateral__set-rango {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gris-2);
+}
+
+.lateral__pie {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lateral__origen {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--gris-2);
+  padding: 0 4px;
+}
+
+.lateral__origen code {
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--blanco);
+}
+
+.lateral__error {
+  font-size: 13px;
+  color: var(--rosa);
+  padding: 0 4px;
+}
+
+.lateral__version {
+  font-size: 11px;
+  color: var(--gris-3);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ——— Móvil: el menú se convierte en cajón ——— */
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .shell__movil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .shell__hamburguesa {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  .shell__hamburguesa span[aria-hidden] {
+    width: 22px;
+    height: 2px;
+    background: var(--blanco);
+    box-shadow:
+      0 -7px 0 var(--blanco),
+      0 7px 0 var(--blanco);
+  }
+
+  .lateral {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(300px, 86vw);
+    z-index: 30;
+    background: var(--negro);
+    translate: -100% 0;
+    transition: translate 280ms var(--curva-salida);
+  }
+
+  .lateral--abierta {
+    translate: 0 0;
+  }
+
+  .shell__velo {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: #000a;
+  }
+}

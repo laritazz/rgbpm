@@ -283,8 +283,24 @@ def iconos_invertido():
                                 + asterisco(248, 254, esc) + cara(248, 254 - 14 * esc, esc, color=ROSA)))
 
 
+def icono_eco_guino():
+    """C1 · Eco + Guiño: el icono definitivo. En la app, la cara cambia con el ánimo y el fondo con el BPM."""
+    esc = 1.36
+    fondo = f'<rect width="512" height="512" rx="112" fill="{ROSA}"/>'
+    eco = f'<path d="{forma(1, 274, 280, esc, giro=32.5)}" fill="{BPM["M"]}"/>'
+    cuerpo = f'<path d="{forma(1, 250, 256, esc, giro=32.5)}" fill="{NEGRO}"/>'
+    cx, cy = 250, 256 - 14 * esc
+    guino = (f'<g fill="{ROSA}"><circle cx="{cx - 34 * esc:.1f}" cy="{cy:.1f}" r="{7 * esc:.1f}"/>'
+             f'<path d="M{cx + 34 * esc - 12:.1f},{cy:.1f} Q{cx + 34 * esc:.1f},{cy - 12:.1f} {cx + 34 * esc + 12:.1f},{cy:.1f}" '
+             f'fill="none" stroke="{ROSA}" stroke-width="{5 * esc:.1f}" stroke-linecap="round"/>'
+             f'<path d="M{cx - 19 * esc:.1f},{cy + 15 * esc:.1f} L{cx + 19 * esc:.1f},{cy + 15 * esc:.1f} '
+             f'A{19 * esc:.1f},{19 * esc:.1f} 0 0 1 {cx - 19 * esc:.1f},{cy + 15 * esc:.1f} Z"/></g>')
+    guardar("icono-c1-eco-guino", svg("0 0 512 512", fondo + eco + cuerpo + guino))
+
+
 if __name__ == "__main__":
     for viejo in SALIDA.glob("*.svg"):
         viejo.unlink()
     generar()
+    icono_eco_guino()
     print("SVG en", SALIDA, "→", len(list(SALIDA.glob('*.svg'))), "archivos")

@@ -88,3 +88,37 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - SVG a mano: rutas, `fill-rule`, trazos con unión redonda para suavizar esquinas.
 
 ---
+
+## Sesión 3 · 29 sep 2026 · Sprint 1: base y biblioteca
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Lógica portada del HTML original | `lib/claves`, `lib/armonia`, `lib/color`, `lib/traktor`, con 8 pruebas en Vitest |
+| Marca en componentes | `Logo`, `Mascota` (forma, cara y fondo vivos) y `Vinilo` |
+| Estructura Vinilo | Barra lateral con secciones y mis sets, rejilla central, panel «Sonando» |
+| Importar Traktor | `collection.nml` leído en el navegador: 9.714 temas en menos de 1 s, guardado en IndexedDB |
+| Demo pública | 153 temas de mis sets LN y PRIDE, solo metadatos (`scripts/demo.py`) |
+| Icono definitivo | Eco + Guiño (`icono-c1-eco-guino.svg`), ya es el favicon |
+| Publicación | Las Actions pasan pruebas y lint antes de compilar |
+
+### Decisiones
+- **Privacidad:** mi colección completa no va al repo. Se importa en el navegador y se queda allí.
+- **La URL guarda la vista** (`?q`, `?franja`, `?orden`, `?tema`): se comparte un enlace y se ve lo mismo; el botón Atrás funciona.
+- **HashRouter:** GitHub Pages no sabe de rutas; con `#/set/p1` todo funciona sin configurar el servidor.
+- **La mascota cambia de cara con el ánimo** (Calma, Feliz, Guiño, Sorpresa, Euforia) y el fondo toma el color del BPM.
+- **Organización por funcionalidad** (`features/biblioteca`) en vez de por tipo de archivo: todo lo de la biblioteca vive junto.
+
+### Qué aprendí
+- **`useContext` + proveedor:** una fuente única de datos para toda la app, sin pasar props de mano en mano.
+- **`useReducer` no hizo falta:** con dos `useState` bastaba. Elegir la herramienta mínima.
+- **`useEffect` para sincronizar con el exterior:** leer IndexedDB al arrancar y limpiar al desmontar.
+- **`useRef` para lo que no se pinta:** el motor de la mascota vive en una ref; solo se publica una foto por fotograma.
+- **`requestAnimationFrame`:** animación al ritmo de la pantalla, pausada si el sistema pide menos movimiento.
+- **`useSyncExternalStore`:** escuchar `prefers-reduced-motion` como un dato más de React.
+- **`useDeferredValue`:** el buscador responde al instante y la rejilla se pone al día después.
+- **`memo`:** con miles de tarjetas, solo se repinta la que cambia.
+- **Carga progresiva con `IntersectionObserver`:** 60 tarjetas y más cuando te acercas al final.
+- **Ajustar estado durante el render** en vez de un efecto (cerrar el menú al navegar).
+- **Hooks propios** (`useMascota`, `useProgresivo`): lógica reutilizable con nombre propio.
+- **Pruebas:** una prueba falló y descubrí que la regla de Abre/Cierra estaba bien y la prueba no. Probar también enseña las reglas.

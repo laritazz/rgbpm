@@ -1,0 +1,30 @@
+.logo {
+  display: block;
+  height: auto;
+  overflow: visible;
+}
+
+/* La ola: una onda que recorre las letras de la R a la M */
+.logo--ola path {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: ola 1.6s var(--curva-muelle) infinite;
+  animation-delay: calc(var(--i) * 110ms);
+}
+
+@keyframes ola {
+  0%,
+  60%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: 0 -18%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo--ola path {
+    animation: none;
+  }
+}

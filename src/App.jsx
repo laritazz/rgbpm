@@ -1,36 +1,33 @@
-import { useState } from 'react'
-import Buscador from './components/Buscador'
-import ListaTemas from './components/ListaTemas'
-import PanelArmonia from './components/PanelArmonia'
-import { biblioteca } from './data/biblioteca'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import Shell from './app/Shell'
+import Biblioteca from './features/biblioteca/Biblioteca'
+import { BibliotecaProvider } from './features/biblioteca/BibliotecaContext'
+import Proximamente from './features/proximamente/Proximamente'
 
+// Lo que llega en los próximos sprints. La mascota cambia de ánimo en cada sección.
+const PRONTO = [
+  { ruta: 'armonia', titulo: 'Rueda armónica', sprint: 4, bpm: 118, texto: 'Gira la rueda y verás tus siete categorías de mezcla sobre tus propios temas.' },
+  { ruta: 'sets', titulo: 'Sets', sprint: 4, bpm: 132, texto: 'Arrastra temas, ordena por energía y genera la portada Pantone del set.' },
+  { ruta: 'mezclador', titulo: 'Mezclador', sprint: 3, bpm: 146, texto: 'Dos platos, crossfader y la mascota escuchando de verdad: pruebas la transición antes del bolo.' },
+  { ruta: 'radio', titulo: 'Radio', sprint: 6, bpm: 172, texto: 'Modo VJ: la mascota y los colores bailan con lo que suena, a pantalla completa.' },
+]
+
+// HashRouter: GitHub Pages no sabe de rutas, así que van detrás de la almohadilla (#/sets)
 export default function App() {
-  // Estado: lo único que cambia con la interacción
-  const [busqueda, setBusqueda] = useState('')
-  const [seleccionado, setSeleccionado] = useState(null)
-
-  // Estado derivado: la lista filtrada se calcula, no se guarda
-  const texto = busqueda.trim().toLowerCase()
-  const filtrados = biblioteca.filter(
-    (t) => t.titulo.toLowerCase().includes(texto) || t.artista.toLowerCase().includes(texto)
-  )
-
   return (
-    <div className="app">
-      <header className="cabecera">
-        <h1 className="logo">
-          RGB<span>PM</span>
-        </h1>
-        <span className="version">{__VERSION__}</span>
-      </header>
-
-      <main className="rejilla">
-        <section>
-          <Buscador valor={busqueda} alCambiar={setBusqueda} />
-          <ListaTemas temas={filtrados} seleccionado={seleccionado} alElegir={setSeleccionado} />
-        </section>
-        <PanelArmonia tema={seleccionado} biblioteca={biblioteca} alElegir={setSeleccionado} />
-      </main>
-    </div>
+    <BibliotecaProvider>
+      <HashRouter>
+        <Routes>
+          <Route element={<Shell />}>
+            <Route index element={<Biblioteca />} />
+            <Route path="set/:setId" element={<Biblioteca />} />
+            {PRONTO.map(({ ruta, ...p }) => (
+              <Route key={ruta} path={ruta} element={<Proximamente {...p} />} />
+            ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </BibliotecaProvider>
   )
 }

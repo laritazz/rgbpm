@@ -29,3 +29,6 @@ fonts/
 *.otf
 *.woff
 *.woff2
+
+# Colecciones de Traktor: son datos personales, se importan en el navegador
+*.nml

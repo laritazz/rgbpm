@@ -1,0 +1,44 @@
+.vinilo {
+  position: relative;
+  width: var(--tamano);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.vinilo__disco {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    conic-gradient(from 20deg, transparent 0 40deg, color-mix(in srgb, var(--brillo) 45%, transparent) 60deg, transparent 80deg 220deg, #ffffff22 240deg, transparent 260deg),
+    repeating-radial-gradient(circle, #111 0 2px, #1b1b1b 2px 3px, #0d0d0d 3px 5px),
+    #0b0b0b;
+  box-shadow:
+    0 0 0 1px #262626,
+    0 24px 60px -20px color-mix(in srgb, var(--brillo) 70%, transparent);
+  transition: box-shadow 700ms var(--curva-salida);
+  animation: gira var(--vuelta) linear infinite paused;
+}
+
+.vinilo__galleta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.vinilo--tocando .vinilo__disco {
+  animation-play-state: running;
+}
+
+@keyframes gira {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinilo__disco {
+    animation: none;
+  }
+}
