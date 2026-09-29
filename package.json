@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "fragmentos": "node scripts/fragmentos.mjs"
+    "fragmentos": "node scripts/fragmentos.mjs",
+    "servidor:config": "node scripts/configurar-servidor.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

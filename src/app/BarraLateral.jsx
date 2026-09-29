@@ -10,7 +10,7 @@ const SECCIONES = [
   { a: '/tap', nombre: 'Tap y escucha', lista: true },
   { a: '/radio', nombre: 'Radio', lista: true },
   { a: '/armonia', nombre: 'Armonía' },
-  { a: '/sets', nombre: 'Sets' },
+  { a: '/sets', nombre: 'Sets', lista: true },
   { a: '/mezclador', nombre: 'Mezclador' },
 ]
 

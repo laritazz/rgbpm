@@ -58,3 +58,46 @@ export const IconoBajar = (p) => (
     <path d="M6 9l6 6 6-6" />
   </svg>
 )
+
+export const IconoArrastrar = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="9" cy="6" r="1.2" fill="currentColor" />
+    <circle cx="15" cy="6" r="1.2" fill="currentColor" />
+    <circle cx="9" cy="12" r="1.2" fill="currentColor" />
+    <circle cx="15" cy="12" r="1.2" fill="currentColor" />
+    <circle cx="9" cy="18" r="1.2" fill="currentColor" />
+    <circle cx="15" cy="18" r="1.2" fill="currentColor" />
+  </svg>
+)
+
+export const IconoAncla = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3.5" />
+    <circle cx="12" cy="12" r="0.8" fill="currentColor" />
+  </svg>
+)
+
+export const IconoCambiar = (p) => (
+  <svg {...base} {...p}>
+    <path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5" />
+  </svg>
+)
+
+export const IconoQuitar = (p) => (
+  <svg {...base} {...p}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </svg>
+)
+
+export const IconoMasSimple = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+)
+
+export const IconoSubir = (p) => (
+  <svg {...base} {...p}>
+    <path d="M6 15l6-6 6 6" />
+  </svg>
+)

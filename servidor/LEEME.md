@@ -20,31 +20,36 @@ RGBPM (web)  ──login──▶  Supabase (quién eres)
 
 ## Pasos (una vez)
 
-1. **Supabase**
-   - *Authentication → Sign In / Providers*: desactiva «Allow new users to sign up».
-   - *Authentication → Users → Add user*: tu email y una contraseña.
-2. **IONOS · PHP**: en el panel, tarjeta *PHP*, pon **PHP 8.2 o superior** para creativezz.com.
-3. **Secreto**: en la Terminal del Mac → `openssl rand -hex 32` y copia el resultado.
-4. **config.php**: copia `privado/config.ejemplo.php` como `privado/config.php` y rellena:
-   la publishable key, tu email y el secreto del paso 3.
-5. **Subir por SFTP** (Cyberduck o FileZilla, servidor `home391793325.1and1-data.host`, usuario de IONOS):
-   la carpeta `servidor/rgbpm-audio` entera a la raíz de creativezz.com, **incluidos los `.htaccess`**
-   (son archivos ocultos: en el Finder, `Cmd + Mayús + .` para verlos).
-6. **Comprobar**: abre `https://creativezz.com/rgbpm-audio/firmar.php?salud=1` → debe decir `{"ok":true,…}`.
-   Y `https://creativezz.com/rgbpm-audio/privado/config.php` → debe dar **error 403**.
+Supabase ya está listo: registros cerrados y tu usuaria creada.
 
-## Crear y subir los fragmentos
-
-```bash
-cd ~/RGBPM/rgbpm
-npm i --no-save ffmpeg-static        # una vez: trae ffmpeg
-npm run fragmentos -- --nml "~/Documents/Native Instruments/Traktor 3.6.0/collection.nml" --limite 50
-```
-
-- Primero **con `--limite 50`** para probar. Después sin límite (~10.000 temas, ~14 GB; tarda horas).
-- Se puede parar y relanzar: no repite los que ya están.
-- Sube la carpeta `rgbpm-fragmentos` entera como `rgbpm-audio/privado/fragmentos/`.
-- `rgbpm-fragmentos-errores.txt` (queda en tu Mac) dice qué temas no encontró.
+1. **Traer lo último** (Terminal, en la carpeta del proyecto):
+   ```bash
+   cd ~/RGBPM/rgbpm
+   git pull
+   npm install
+   npm i --no-save ffmpeg-static
+   ```
+2. **Crear `config.php`** (te pide tu email y genera el secreto solo; no hace falta que lo veas):
+   ```bash
+   npm run servidor:config
+   ```
+3. **Fragmentos de prueba** (50 temas, un par de minutos):
+   ```bash
+   npm run fragmentos -- --nml ../data/traktor/collection.nml --limite 50
+   ```
+   Si tu colección buena está en Traktor, usa esa ruta:
+   `--nml "~/Documents/Native Instruments/Traktor 3.6.0/collection.nml"`
+4. **IONOS · PHP**: en el panel, tarjeta *PHP*, elige **8.2 o superior** para creativezz.com.
+5. **Subir por SFTP** con [Cyberduck](https://cyberduck.io) (gratis):
+   - Servidor `home391793325.1and1-data.host`, puerto 22, tu usuario SFTP de IONOS y su contraseña.
+   - Arrastra la carpeta `servidor/rgbpm-audio` a la **raíz de creativezz.com** (donde está tu `index.html`).
+   - Arrastra la carpeta `rgbpm-fragmentos` **dentro de** `rgbpm-audio/privado/` y renómbrala a `fragmentos`.
+   - Los `.htaccess` son ocultos: en Cyberduck, *Visualización → Mostrar archivos ocultos*, y comprueba que están arriba.
+6. **Comprobar**:
+   - `https://creativezz.com/rgbpm-audio/firmar.php?salud=1` → `{"ok":true,"fragmentos":50}`
+   - `https://creativezz.com/rgbpm-audio/privado/config.php` → **403**
+7. **En RGBPM**: *Tu música → Tu música privada* → tu email y contraseña. Los 50 temas suenan en el móvil.
+8. Si todo va bien: `npm run fragmentos -- --nml …` **sin `--limite`** (tarda horas, se puede parar y seguir) y sube lo nuevo.
 
 ## Seguridad
 

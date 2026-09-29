@@ -55,6 +55,9 @@ export function leerNml(texto) {
       duracion: info?.getAttribute('PLAYTIME') ? Number(info.getAttribute('PLAYTIME')) : null,
       ruta: carpeta.replace(/\/:/g, '/') + archivo,
       archivo,
+      // Tal cual los guarda Traktor: hacen falta para devolverle un set exportado
+      volumen,
+      carpeta,
     }
     if (esSample(tema)) {
       descartados++
