@@ -75,6 +75,10 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Verde** permitido en la escala; nunca en botones ni acciones principales.
 - **Codec** es trial CC BY-NC y prohíbe distribuir los archivos → fuera del repo público. Outfit en la web hasta tener licencia.
 - **Marca generada por código** (`brand/generar.py`): un cambio de color o pose se regenera en segundos.
+- **Mascotas sin manos:** solo la O y el ✱. Una sola forma que se transforma de una en otra (O = calma, ✱ = energía).
+- **Animación ligada a la música:** late al BPM, gira una muesca por compás, se tiñe con la escala y se transforma según la energía.
+- **Tipografía web: Urbanist.** La versión trial de Codec sustituye los números por un sello: inútil para una app de BPM.
+- **6 pruebas de logo:** escala, apilado, RGB ✱ PM, recorrido, pegatina e iconos.
 
 ### Qué aprendí
 - Una licencia de fuente decide dónde puedo usarla: diseño no es lo mismo que web pública.
