@@ -11,6 +11,8 @@
 //   --hilos     cuántos a la vez                    (4)
 //   --limite    solo los N primeros, para probar
 //   --playlist  solo los temas de una playlist («LN 14F»)
+//   --buscar    carpetas donde buscar por nombre si el tema se movió
+//               («/Volumes/LaritaZZ,~/Music»)
 //
 // Se puede parar (Ctrl+C) y volver a lanzar: los que ya existen no se repiten.
 // Necesita ffmpeg: si no lo tienes, `npm i --no-save ffmpeg-static` una vez.
@@ -18,7 +20,7 @@
 import { spawn, spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync, appendFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { XMLParser } from 'fast-xml-parser'
 import { idFragmento, inicioFragmento } from '../src/lib/fragmentos.js'
 import { esSample } from '../src/lib/traktor.js'
@@ -91,8 +93,79 @@ for (const e of entradas) {
 }
 
 mkdirSync(SALIDA, { recursive: true })
-const ERRORES = `${SALIDA}-errores.txt` // fuera de la carpeta que se sube: lleva rutas de tu Mac
+const ERRORES = join(dirname(NML), 'fragmentos-errores.txt') // junto al .nml: nunca en la carpeta que se sube
 rmSync(ERRORES, { force: true })
+rmSync(`${SALIDA}-errores.txt`, { force: true }) // el de versiones anteriores
+
+// ——— ¿Existe, falta o macOS no deja leerlo? ———
+function estado(ruta) {
+  try {
+    return statSync(ruta).isFile() ? 'ok' : 'falta'
+  } catch (e) {
+    return ['EPERM', 'EACCES'].includes(e.code) ? 'permiso' : 'falta'
+  }
+}
+
+// Si la primera carpeta no se deja leer, macOS está bloqueando a la Terminal: avisar y parar
+const bloqueada = (carpeta) => {
+  try {
+    readdirSync(carpeta)
+    return false
+  } catch (e) {
+    return ['EPERM', 'EACCES'].includes(e.code)
+  }
+}
+const primera = trabajos.find((t) => estado(t.enDisco) === 'permiso' || bloqueada(dirname(t.enDisco)))
+if (primera) {
+  console.error(`
+macOS no deja a la Terminal leer:
+  ${dirname(primera.enDisco)}
+
+Arréglalo una vez:
+  1. Ajustes del Sistema → Privacidad y seguridad → Acceso total al disco
+  2. Activa «Terminal» (si no está, pulsa + y añádela desde Aplicaciones → Utilidades)
+  3. Cierra la Terminal del todo (Cmd+Q), ábrela y lanza el comando otra vez
+`)
+  process.exit(1)
+}
+
+// Índice por nombre de archivo de las carpetas de --buscar (para temas movidos de sitio)
+const porNombre = new Map()
+function indexar(carpeta, nivel = 0) {
+  if (nivel > 8) return
+  let hijos = []
+  try {
+    hijos = readdirSync(carpeta, { withFileTypes: true })
+  } catch {
+    return
+  }
+  for (const h of hijos) {
+    if (h.name.startsWith('.')) continue
+    const ruta = join(carpeta, h.name)
+    if (h.isDirectory()) indexar(ruta, nivel + 1)
+    else if (h.isFile()) porNombre.set(h.name.normalize('NFC'), [...(porNombre.get(h.name.normalize('NFC')) ?? []), ruta])
+  }
+}
+const raices = (args.buscar ?? '').split(',').map((r) => r.trim()).filter(Boolean).map((r) => resolve(casa(r)))
+if (raices.length) {
+  process.stdout.write(`Buscando tu música en ${raices.join(', ')}… `)
+  raices.forEach((r) => indexar(r))
+  console.log(`${porNombre.size.toLocaleString('es')} archivos`)
+}
+
+// Cuántas carpetas del final coinciden: desempata entre archivos con el mismo nombre
+const cola = (a, b) => {
+  const x = a.split('/').reverse()
+  const y = b.split('/').reverse()
+  let n = 0
+  while (n < x.length && x[n] === y[n]) n++
+  return n
+}
+function localizar(t) {
+  if (estado(t.enDisco) === 'ok') return t.enDisco
+  const candidatos = porNombre.get(basename(t.enDisco).normalize('NFC')) ?? []
+  return candidatos.sort((a, b) => cola(b, t.enDisco) - cola(a, t.enDisco))[0] ?? null
+}
 
 // ——— Crear cada fragmento ———
 const cuenta = { hechos: 0, estaban: 0, sinArchivo: 0, fallos: 0 }
@@ -111,7 +184,8 @@ async function crear(t) {
   const id = await idFragmento(t.ruta)
   const destino = join(SALIDA, `${id}.mp3`)
   if (existsSync(destino)) return cuenta.estaban++
-  if (!existsSync(t.enDisco)) {
+  const archivo = localizar(t)
+  if (!archivo) {
     cuenta.sinArchivo++
     appendFileSync(ERRORES, `sin archivo\t${t.enDisco}\n`)
     return
@@ -121,7 +195,7 @@ async function crear(t) {
   const temporal = `${destino}.parcial`
   const fallo = await ffmpeg([
     '-hide_banner', '-loglevel', 'error', '-y',
-    '-ss', String(inicio), '-t', String(dura), '-i', t.enDisco,
+    '-ss', String(inicio), '-t', String(dura), '-i', archivo,
     '-vn', '-map', '0:a:0',
     '-map_metadata', '-1', '-id3v2_version', '0', // sin título, artista ni portada dentro del mp3
     '-ac', '2', '-ar', '44100', '-b:a', `${KBPS}k`,
@@ -131,7 +205,7 @@ async function crear(t) {
   if (fallo) {
     cuenta.fallos++
     rmSync(temporal, { force: true })
-    appendFileSync(ERRORES, `ffmpeg\t${t.enDisco}\t${fallo}\n`)
+    appendFileSync(ERRORES, `ffmpeg\t${archivo}\t${fallo}\n`)
     return
   }
   renameSync(temporal, destino) // solo aparece cuando está entero: si paras a mitad, no queda uno roto
@@ -157,4 +231,5 @@ const bytes = ids.reduce((s, id) => s + statSync(join(SALIDA, `${id}.mp3`)).size
 
 console.log(`\n\nListo: ${ids.length} fragmentos · ${(bytes / 1024 ** 3).toFixed(2)} GB`)
 if (cuenta.sinArchivo || cuenta.fallos) console.log(`Revisa ${ERRORES} (${cuenta.sinArchivo} sin archivo, ${cuenta.fallos} fallos)`)
+if (cuenta.sinArchivo && !raices.length) console.log(`¿Los moviste de sitio? Añade  --buscar "/Volumes/TuDisco"  y los busco por nombre`)
 console.log(`Sube la carpeta entera por SFTP como  rgbpm-audio/privado/fragmentos/`)
