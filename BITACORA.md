@@ -122,3 +122,29 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Ajustar estado durante el render** en vez de un efecto (cerrar el menú al navegar).
 - **Hooks propios** (`useMascota`, `useProgresivo`): lógica reutilizable con nombre propio.
 - **Pruebas:** una prueba falló y descubrí que la regla de Abre/Cierra estaba bien y la prueba no. Probar también enseña las reglas.
+
+## Sesión 4 · 29 sep 2026 · Tap, escucha y Radio
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Mascota del lienzo en React | `MascotaEscena`: cuerpo del color del BPM, cara negra, halo, anillo de ecualizador y drop |
+| Tap BPM | Toca la pantalla al ritmo; cada toque es un latido. Descarta toques perdidos y mide la estabilidad |
+| Escucha por micro | 12 s de audio → BPM y clave calculados en el móvil. El audio no se guarda |
+| Radio | Mis 15 sesiones de SoundCloud suenan dentro de RGBPM, con sus portadas reales |
+| BPM de cada sesión | Se lee de la descripción («136–145 BPM») y sube a medida que avanza el set |
+| Atajo móvil | Botón «Tap BPM» siempre a mano en la cabecera |
+
+### Decisiones
+- **SoundCloud:** el reproductor oficial (Widget) no necesita claves. Para buscar cualquier tema hace falta la API con Artist Pro, y su secreto vive en un servidor (Supabase), nunca en la web.
+- **Shazam no tiene API web.** Para cazar temas: AudD o ACRCloud, también a través de Supabase.
+- **Análisis de audio propio** en vez de una librería de 2 MB: FFT, cromagrama y perfiles de Krumhansl. Más ligero y lo entiendo entero.
+- **Dos mascotas:** la negra sobre color para el icono y el vinilo; la del lienzo, a color, para las pantallas de escucha.
+
+### Qué aprendí
+- **Web Audio:** `getUserMedia` abre el micro, un `AnalyserNode` da el volumen en directo y un **AudioWorklet** recoge el audio en su propio hilo sin bloquear la interfaz.
+- **FFT:** convierte el sonido en frecuencias. Con las frecuencias saco las 12 notas (cromagrama) y comparo con el «perfil» de cada tonalidad.
+- **Autocorrelación:** para el BPM busco cada cuánto se repiten los golpes.
+- **Integrar un reproductor de terceros:** cargar su script una sola vez, escuchar sus eventos (`PLAY`, `PAUSE`, `PLAY_PROGRESS`) y soltarlos al salir.
+- **`e.timeStamp`** de un evento comparte reloj con `requestAnimationFrame`: así el latido cae justo en el toque.
+- **Pruebas con audio sintético:** genero un bombo a 128 y unos acordes en La menor para comprobar que el análisis acierta.

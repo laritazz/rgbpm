@@ -86,3 +86,13 @@ export function compatibles(tema, biblioteca, limite = 8) {
   }
   return salida.sort((a, b) => b.nota - a.nota).slice(0, limite)
 }
+
+/** Solo con el tempo (sin clave): los temas más cercanos en BPM, admitiendo doble y mitad. */
+export function porTempo(bpm, biblioteca, limite = 6, margen = 4) {
+  return biblioteca
+    .filter((t) => t.bpm)
+    .map((t) => ({ tema: t, bpm: notaBpm(bpm, t.bpm) }))
+    .filter((o) => Math.abs(o.bpm.porcentaje) <= margen)
+    .sort((a, b) => Math.abs(a.bpm.porcentaje) - Math.abs(b.bpm.porcentaje))
+    .slice(0, limite)
+}

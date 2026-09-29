@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import BarraLateral from './BarraLateral'
 import Logo from '../components/marca/Logo'
 import './Shell.css'
@@ -20,6 +20,10 @@ export default function Shell() {
     <div className="shell">
       <header className="shell__movil">
         <Logo ancho={112} />
+        {/* En móvil, el tap va a mano: un toque desde cualquier pantalla */}
+        <Link to="/tap" className="shell__atajo">
+          Tap BPM
+        </Link>
         <button className="shell__hamburguesa" aria-expanded={menuAbierto} aria-controls="menu-principal" onClick={() => setMenuAbierto((v) => !v)}>
           <span className="solo-lectores">Menú</span>
           <span aria-hidden="true" />

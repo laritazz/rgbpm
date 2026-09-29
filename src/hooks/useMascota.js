@@ -11,7 +11,7 @@ export function useMascota(bpm, activo = true) {
   const quieto = useMovimientoReducido()
   const objetivo = energia(bpm)
   const motor = useRef({ t: 0, k: objetivo, objetivo })
-  const [foto, setFoto] = useState({ t: 0, k: objetivo })
+  const [foto, setFoto] = useState({ t: 0, k: objetivo, ahora: 0 })
 
   useEffect(() => {
     motor.current.objetivo = objetivo
@@ -28,7 +28,7 @@ export function useMascota(bpm, activo = true) {
       const m = motor.current
       m.t += dt
       m.k += (m.objetivo - m.k) * Math.min(1, dt * 2.5)
-      setFoto({ t: m.t, k: m.k })
+      setFoto({ t: m.t, k: m.k, ahora })
       raf = requestAnimationFrame(paso)
     }
     raf = requestAnimationFrame(paso)
@@ -36,5 +36,6 @@ export function useMascota(bpm, activo = true) {
   }, [activo, quieto])
 
   const enMarcha = activo && !quieto
-  return { t: foto.t, k: enMarcha ? foto.k : objetivo, enMarcha }
+  // ahora: marca del fotograma (ms), para medir el tiempo desde un golpe externo (un tap)
+  return { t: foto.t, k: enMarcha ? foto.k : objetivo, ahora: foto.ahora, enMarcha }
 }

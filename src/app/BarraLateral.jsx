@@ -6,10 +6,11 @@ import { colorBpm } from '../lib/color'
 
 const SECCIONES = [
   { a: '/', nombre: 'Biblioteca', lista: true },
+  { a: '/tap', nombre: 'Tap y escucha', lista: true },
+  { a: '/radio', nombre: 'Radio', lista: true },
   { a: '/armonia', nombre: 'Armonía' },
   { a: '/sets', nombre: 'Sets' },
   { a: '/mezclador', nombre: 'Mezclador' },
-  { a: '/radio', nombre: 'Radio' },
 ]
 
 // Muestra de color de un set: su recorrido de BPM, del más lento al más rápido

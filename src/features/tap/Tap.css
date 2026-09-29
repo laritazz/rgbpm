@@ -1,0 +1,240 @@
+.tap {
+  height: 100%;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'modos lectura'
+    'escenario lectura'
+    'escenario sugerencias';
+  gap: 20px 32px;
+  padding: 28px 32px;
+}
+
+.tap__modos {
+  grid-area: modos;
+  justify-self: start;
+  display: flex;
+  padding: 4px;
+  border-radius: var(--pildora);
+  background: var(--superficie-2);
+}
+
+.tap__modos button {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: var(--pildora);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--gris-2);
+  transition: background 200ms, color 200ms;
+}
+
+.tap__modos button[aria-selected='true'] {
+  background: var(--blanco);
+  color: var(--negro);
+}
+
+/* El escenario entero es la tecla del tap: cuanto más grande, más fácil acertar */
+.tap__escenario {
+  grid-area: escenario;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+  border-radius: 32px;
+  background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--color) 22%, #000) 0%, #000 70%);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 600ms var(--curva-salida);
+  overflow: hidden;
+}
+
+.tap__escenario .mascota {
+  width: min(100%, 520px);
+  height: auto;
+}
+
+.tap__pista {
+  position: absolute;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gris-1);
+}
+
+.tap__progreso {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--rosa) calc(var(--progreso) * 100%), #ffffff22 0);
+}
+
+.tap__lectura {
+  grid-area: lectura;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-self: start;
+}
+
+.tap__cifras {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tap__cifras > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tap__bpm {
+  font-size: clamp(72px, 12vw, 112px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tap__bpm--vacio {
+  color: var(--linea-2);
+}
+
+.tap__franja {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 3px 12px;
+  border-radius: var(--pildora);
+  background: var(--color);
+  color: var(--negro);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tap__clave {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tap__clave em {
+  font-style: normal;
+  color: var(--gris-3);
+}
+
+.tap__estabilidad {
+  height: 6px;
+  border-radius: 6px;
+  background: var(--linea-2);
+  overflow: hidden;
+}
+
+.tap__estabilidad span {
+  display: block;
+  height: 100%;
+  background: var(--rosa);
+  transition: width 200ms var(--curva-salida);
+}
+
+.tap__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tap__privacidad {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gris-3);
+  text-align: center;
+}
+
+.tap__sugerencias {
+  grid-area: sugerencias;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tap__sugerencias ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tap__tema {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radio);
+  color: var(--blanco);
+  text-decoration: none;
+}
+
+.tap__tema:hover {
+  background: var(--superficie-2);
+}
+
+.tap__tema > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tap__tema strong {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tap__tema small {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gris-2);
+}
+
+.tap__muestra {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  /* En móvil, una sola columna que baja con el scroll */
+  .tap {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .tap__modos {
+    align-self: center;
+  }
+
+  .tap__escenario {
+    min-height: 0;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+}
