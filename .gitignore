@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Fuentes con licencia: nunca al repositorio público
+fonts/
+*.ttf
+*.otf
+*.woff
+*.woff2

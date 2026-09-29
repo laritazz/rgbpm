@@ -35,9 +35,50 @@ Es la fuente del caso de estudio final.
 - **`map` + `key`:** pintar listas; la `key` le dice a React qué fila es cuál.
 - **Subir el estado:** `App` guarda el tema elegido y lo comparte con lista y panel.
 - **Campo controlado:** el `input` muestra el estado y avisa de cada cambio.
+- **Terminal:** `npm` busca `package.json` en la carpeta actual. Primer error real: ejecutar `npm install` fuera del proyecto (`ENOENT`).
+- **Depurar paso a paso:** si un comando falla, los siguientes fallan en cadena. Localicé el zip con `find` y lo descomprimí con `unzip`.
+- **Puertos:** Vite arrancó en el 5174 porque el 5173 ya estaba ocupado por otro servidor.
+- **Pestañas de Terminal:** la que ejecuta `npm run dev` queda ocupada; los comandos van en otra (`Cmd + T`).
+- **GitHub:** en Terminal no vale la contraseña de la cuenta, hace falta un token *classic* con permisos `repo` y `workflow`. Primer `git push` a `laritazz/rgbpm`.
+- **GitHub Pages + Actions:** la primera ejecución falló porque Pages aún no estaba activado; con *Source: GitHub Actions* y *Re-run* quedó publicada en `laritazz.github.io/rgbpm`.
 
 ### Ejercicio para la próxima sesión (lo escribo yo)
 Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores», que filtren la biblioteca.
-Pistas: un `useState` nuevo en `App` y un `filter` más.
+---
+
+## Decisiones de rumbo · 28 sep 2026
+
+| Tema | Decisión |
+|---|---|
+| Back | **Supabase** (base de datos + login) para guardar y compartir sets |
+| Datos en la nube | Solo metadatos (título, artista, BPM, clave). Nunca audio ni portadas con derechos |
+| Región de datos | UE, por RGPD |
+| Diseño | Se replantea la dirección visual: Lara aporta referencias y se proponen 2-3 direcciones como prototipos |
+| Producto | Antes de programar más: definir problema, usuaria y tareas clave para poder justificar cada decisión |
+
+---
+
+## Sesión 2 · 28–29 sep 2026 · Producto, dirección visual y marca
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Brief de producto | Problema, usuaria, 3 tareas clave, alcance y riesgos (`BRIEF.md`) |
+| Investigación | Spotify Mix ya ordena por BPM y tono; en software de DJ solo uso personal |
+| 3 direcciones visuales navegables | Vinilo, Cartel y Deck móvil con mezclador |
+| Sistema Laritazz aplicado | Color = BPM, portadas Pantone, rueda armónica para el tono |
+| Mascotas en vector | El Disco y el Asterisco, 4 poses cada uno, generados por código |
+| Logo RGBPM | Letras de bloque recortadas al estilo de los ZZ; 4 versiones + icono |
+
+### Decisiones
+- **Color = BPM** (mi sistema de RRSS), no color = tono. El tono se ve en la rueda.
+- **Verde** permitido en la escala; nunca en botones ni acciones principales.
+- **Codec** es trial CC BY-NC y prohíbe distribuir los archivos → fuera del repo público. Outfit en la web hasta tener licencia.
+- **Marca generada por código** (`brand/generar.py`): un cambio de color o pose se regenera en segundos.
+
+### Qué aprendí
+- Una licencia de fuente decide dónde puedo usarla: diseño no es lo mismo que web pública.
+- `.gitignore` protege lo que no debe subirse.
+- SVG a mano: rutas, `fill-rule`, trazos con unión redonda para suavizar esquinas.
 
 ---
