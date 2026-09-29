@@ -157,6 +157,84 @@ def generar():
     for l, c in BPM.items():
         guardar(f"mascota-asterisco-{l.lower()}", svg("-160 -160 320 320", mascota(1, c), etiqueta="El Asterisco"))
 
+    iconos_asterisco()
+
+
+# ─────────────────────────── VARIANTES DE ICONO ───────────────────────────
+ESCALA_GIRO = ["#7D4EA2", "#4B8EC6", "#4ABDC4", "#48C3A5", "#A0B03D", "#E4BB2A", "#E5922F", "#A42640", "#7D4EA2"]
+
+
+def _hex(h):
+    return [int(h[i:i + 2], 16) for i in (1, 3, 5)]
+
+
+def _color_en(t, paleta):
+    """Color en la posición t (0–1) de una paleta repartida a partes iguales."""
+    t = t % 1 * (len(paleta) - 1)
+    i = int(t)
+    a, b = _hex(paleta[i]), _hex(paleta[min(i + 1, len(paleta) - 1)])
+    f = t - i
+    return "#" + "".join(f"{round(a[j] + (b[j] - a[j]) * f):02X}" for j in range(3))
+
+
+def degradado_giro(cx, cy, r, paleta, pasos=72, giro=-90):
+    """Degradado cónico hecho a cuñas (SVG no lo trae de serie): tu «degradado girando»."""
+    cunas = []
+    for i in range(pasos):
+        a0 = math.radians(giro + 360 * i / pasos)
+        a1 = math.radians(giro + 360 * (i + 1) / pasos + 2.5)
+        cunas.append(f'<path d="M{cx},{cy} L{cx + r * math.cos(a0):.1f},{cy + r * math.sin(a0):.1f} '
+                     f'A{r},{r} 0 0 1 {cx + r * math.cos(a1):.1f},{cy + r * math.sin(a1):.1f} Z" '
+                     f'fill="{_color_en(i / pasos, paleta)}"/>')
+    return "".join(cunas)
+
+
+def vibracion(cx, cy, ang, color, esc=1.0):
+    arcos = "".join(
+        f'<path d="M{r * math.cos(math.radians(-38)):.1f},{r * math.sin(math.radians(-38)):.1f} '
+        f'A{r},{r} 0 0 1 {r * math.cos(math.radians(38)):.1f},{r * math.sin(math.radians(38)):.1f}"/>'
+        for r in (18 * esc, 32 * esc))
+    return (f'<g transform="translate({cx} {cy}) rotate({ang})" fill="none" stroke="{color}" '
+            f'stroke-width="{7 * esc:.1f}" stroke-linecap="round">{arcos}</g>')
+
+
+def iconos_asterisco():
+    fondo = lambda c: f'<rect width="512" height="512" rx="112" fill="{c}"/>'
+    cx, cy, esc = 256, 262, 1.5
+    clip = f'<clipPath id="ast"><path d="{forma(1, cx, cy, esc)}"/></clipPath>'
+
+    # 1 · Base: rosa sobre negro
+    guardar("icono-a1-base", svg("0 0 512 512", fondo(NEGRO) + mascota(1, ROSA, cx, cy, esc)))
+
+    # 2 · Degradado girando con tu escala de BPM
+    guardar("icono-a2-giro", svg("0 0 512 512", f"<defs>{clip}</defs>" + fondo(NEGRO)
+                                 + f'<g clip-path="url(#ast)">{degradado_giro(cx, cy, 240, ESCALA_GIRO)}</g>'
+                                 + cara(cx, cy - 14 * esc, esc)))
+
+    # 3 · Vinilo: surcos detrás y galleta magenta
+    surcos = "".join(f'<circle cx="256" cy="256" r="{r}" fill="none" stroke="#1C1C1C" stroke-width="3"/>'
+                     for r in range(70, 250, 14))
+    guardar("icono-a3-vinilo", svg("0 0 512 512", fondo(NEGRO) + surcos
+                                   + f'<circle cx="256" cy="256" r="236" fill="none" stroke="{MAGENTA}" stroke-width="6"/>'
+                                   + mascota(1, ROSA, cx, cy, 1.38)))
+
+    # 4 · Escala: cada brazo con el color de una franja
+    barras = "".join(
+        f'<rect x="{cx - 30 * esc}" y="{cy - 132 * esc}" width="{60 * esc}" height="{264 * esc}" '
+        f'fill="{c}" transform="rotate({22.5 + 45 * i} {cx} {cy})"/>'
+        for i, c in enumerate(["#4ABDC4", "#A0B03D", "#E4BB2A", "#7D4EA2"]))
+    guardar("icono-a4-escala", svg("0 0 512 512", fondo(NEGRO) + barras
+                                   + f'<circle cx="{cx}" cy="{cy - 4}" r="{50 * esc:.0f}" fill="{ROSA}"/>'
+                                   + cara(cx, cy - 14 * esc, esc)))
+
+    # 5 · Con vibración, como las marcas de tus dibujos
+    guardar("icono-a5-vibra", svg("0 0 512 512", fondo(MAGENTA) + mascota(1, ROSA, 240, 268, 1.32, boca="grande")
+                                  + vibracion(404, 146, -40, NEGRO, 1.9) + vibracion(94, 404, 140, NEGRO, 1.9)))
+
+    # 6 · Invertido: asterisco negro, cara rosa, sobre rosa
+    guardar("icono-a6-invertido", svg("0 0 512 512", fondo(ROSA) + f'<path d="{forma(1, cx, cy, esc)}" fill="{NEGRO}"/>'
+                                      + cara(cx, cy - 14 * esc, esc, color=ROSA)))
+
 
 if __name__ == "__main__":
     for viejo in SALIDA.glob("*.svg"):

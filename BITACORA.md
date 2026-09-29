@@ -79,6 +79,8 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Animación ligada a la música:** late al BPM, gira una muesca por compás, se tiñe con la escala y se transforma según la energía.
 - **Tipografía web: Urbanist.** La versión trial de Codec sustituye los números por un sello: inútil para una app de BPM.
 - **6 pruebas de logo:** escala, apilado, RGB ✱ PM, recorrido, pegatina e iconos.
+- **Elección de marca:** logo 1 (escala) como principal · 4 (recorrido) si se anima con un sonido que viaja del Disco al Asterisco · 6 (iconos) sí · 5 (pegatina) mejorable · 2 y 3 descartados (no cortar la palabra).
+- **Dirección visual elegida:** estructura Vinilo + Biblioteca Laritazz + mascota animada.
 
 ### Qué aprendí
 - Una licencia de fuente decide dónde puedo usarla: diseño no es lo mismo que web pública.
