@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { TODAS_LAS_CLAVES } from '../../lib/claves'
 import { colorBpm, franjaDe } from '../../lib/color'
@@ -6,6 +7,7 @@ import { generarRadio, sinRepetidos } from '../../lib/radio'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useMusica } from '../musica/MusicaContext'
 import { FUNDIDO, useReproductor } from '../musica/ReproductorContext'
+import { useSet } from '../sets/SetContext'
 import './Radio.css'
 
 const SUBIDAS = [
@@ -23,6 +25,8 @@ export default function Radio() {
   const { temas } = useBiblioteca()
   const musica = useMusica()
   const rep = useReproductor()
+  const set = useSet()
+  const navegar = useNavigate()
   const [drop, setDrop] = useState(null)
   const [aviso, setAviso] = useState(null)
   const [ajustes, setAjustes] = useState(() => ({
@@ -156,9 +160,22 @@ export default function Radio() {
               <h2 id="titulo-cola" className="etiqueta-seccion">
                 En cola · {rep.indice + 1} de {rep.cola.length}
               </h2>
-              <button className="radio__vaciar" onClick={rep.vaciarCola}>
-                Vaciar
-              </button>
+              <span>
+                <button
+                  className="radio__vaciar"
+                  onClick={() => {
+                    const d = new Date()
+                    set.reemplazar(rep.cola.map((t) => t.id), `Radio ${d.getDate()}/${d.getMonth() + 1}`)
+                    navegar('/sets')
+                  }}
+                >
+                  Guardar como set
+                </button>
+                {' · '}
+                <button className="radio__vaciar" onClick={rep.vaciarCola}>
+                  Vaciar
+                </button>
+              </span>
             </div>
             <ol className="radio__cola">
               {rep.cola.map((t, i) => (

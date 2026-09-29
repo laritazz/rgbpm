@@ -5,6 +5,7 @@ import { colorBpm, franjaDe } from '../../lib/color'
 import { animoDe } from '../../lib/mascota'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
+import BotonSet from '../sets/BotonSet'
 import RuedaMini from './RuedaMini'
 
 const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '—')
@@ -72,6 +73,9 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
             <dd>{minutos(tema.duracion)}</dd>
           </div>
         </dl>
+        <div className="sonando__acciones">
+          <BotonSet tema={tema} />
+        </div>
       </header>
 
       <div className="sonando__rueda">
@@ -103,6 +107,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
                 </span>
                 <span className="sonando__nota">{o.nota}</span>
               </button>
+              <BotonSet tema={o.tema} compacto />
             </li>
           ))}
         </ul>

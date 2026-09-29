@@ -33,13 +33,17 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 ## Set
 | Utilidad | Estado | Dónde / nota |
 |---|---|---|
-| Montar un set con nombre | ⏳ | |
-| Guardar, cargar y borrar sets | ⏳ | |
-| Salud del set (saltos de clave y BPM) | ⏳ | |
-| Reordenar automáticamente + deshacer | ⏳ | |
-| Exportar `.nml`, `.m3u`, TXT y CSV | ⏳ | |
-| Importar un set desde archivo | ⏳ | |
-| Compatibles con el tema ancla | 🟡 | Panel «Mezcla con» de la biblioteca |
+| Montar un set con nombre | ✅ | Nombre editable en la cabecera |
+| Guardar, cargar y borrar sets | ✅ | Pestaña «Guardados», con portada Pantone generada |
+| Salud del set (transiciones, nota, choques, saltos) | ✅ | Y además la **curva de energía** coloreada por categoría |
+| Reordenar automáticamente + deshacer | ✅ | Deshacer vale para **cualquier** cambio, no solo el reordenado |
+| Exportar `.nml`, `.m3u`, TXT y CSV | ✅ | Probado ida y vuelta: exportar → importar |
+| Importar un set desde archivo | ✅ | `.nml` de Traktor, `.m3u` y `.txt` |
+| Cargar una playlist de Traktor como set | ✅ | Pestaña «Playlists» |
+| Arrastrar para reordenar | ✅ | Con animación; en móvil, botones subir/bajar |
+| Ancla: qué meter justo después de un tema | ✅ | ◎ en cada fila o en la curva |
+| Cambiazo: otro tema del mismo tono y BPM | ✅ | ⇄ en cada fila |
+| Compatibles con el tema ancla | ✅ | Pestaña «Pegan» |
 
 ## Armonía
 | Utilidad | Estado | Dónde / nota |
@@ -57,7 +61,7 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Suena sola con fundido cruzado | ✅ | 10 s, curva de igual potencia |
 | Generador por clave, BPM, subida y largo | ✅ | Portado tal cual |
 | Siguiente con fundido, pausa | ✅ | |
-| Añadir temas a mano a la cola | ⏳ | |
+| Añadir temas a mano a la cola | 🟡 | «Escuchar el set» lo pone como radio; «Guardar como set» al revés |
 | Vista lista y mosaico por tono | 🟡 | Solo lista |
 
 ## Mezclador (dos canales)

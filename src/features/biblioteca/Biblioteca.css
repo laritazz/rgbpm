@@ -398,6 +398,16 @@
   padding: 0;
 }
 
+.sonando__acciones {
+  margin-top: 10px;
+}
+
+.sonando__mezcla li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .sonando__opcion {
   display: flex;
   align-items: center;

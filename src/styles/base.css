@@ -135,3 +135,49 @@ a {
   text-transform: uppercase;
   color: var(--gris-3);
 }
+
+/* Añadir al set: se usa en varias pantallas */
+.boton-set {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--pildora);
+  border: 1px solid var(--linea-2);
+  font-size: 13px;
+  font-weight: 800;
+  transition:
+    background 160ms,
+    border-color 160ms,
+    scale 200ms var(--curva-muelle);
+}
+
+.boton-set:active {
+  scale: 0.92;
+}
+
+.boton-set--dentro {
+  background: var(--rosa);
+  border-color: var(--rosa);
+  color: var(--negro);
+  animation: set-entra 360ms var(--curva-muelle);
+}
+
+.boton-set--compacto {
+  width: 36px;
+  padding: 0;
+}
+
+@keyframes set-entra {
+  40% {
+    scale: 1.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-set--dentro {
+    animation: none;
+  }
+}

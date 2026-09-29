@@ -5,6 +5,7 @@ import { compatibles } from '../../lib/armonia'
 import { colorBpm, franjaDe } from '../../lib/color'
 import { reloj } from '../../lib/formato'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
+import BotonSet from '../sets/BotonSet'
 import { useReproductor, useTiempo } from './ReproductorContext'
 
 /**
@@ -75,6 +76,9 @@ export default function PantallaSonando({ abierta, alCerrar }) {
           )}
           {bpm && <li className="escena__franja">{franjaDe(bpm).nombre}</li>}
         </ul>
+        <div className="escena__set">
+          <BotonSet tema={tema} />
+        </div>
       </header>
 
       <div className="escena__tiempo">

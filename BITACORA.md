@@ -244,3 +244,23 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Range (206):** así el navegador salta dentro de un audio.
 - **`import()` dinámico:** la librería de Supabase solo se descarga al usar el login.
 - **Mismo código en navegador y Node:** `crypto.subtle` existe en los dos.
+
+## Sesión 9 · 29 sep 2026 · Sets
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Todo el Set original | Nombre, guardar/cargar/borrar, salud, reordenar, exportar e importar |
+| Curva de energía | El BPM tema a tema, cada tramo en el color de su categoría; los choques en discontinua |
+| Portada Pantone del set | Franjas con los colores del set, de principio a fin |
+| Arrastrar con animación | FLIP: cada fila viaja desde donde estaba |
+| Deshacer universal | Cualquier cambio (añadir, mover, cambiar, cargar…) se deshace |
+| Desde toda la app | «Al set» en la biblioteca, en «Sonando» y en «Mezcla con»; la radio se guarda como set |
+| Probado | Playlist real → reordenado 77 % → 100 % sin choques → deshacer → exportar .nml → reimportar: 69/69 |
+
+### Qué aprendí
+- **`useReducer`:** cuando el estado tiene muchas formas de cambiar, cada una es una acción con nombre y el reducer es una función pura que se prueba sin navegador.
+- **Historial en el reducer:** guardar el estado anterior en cada acción da un «Deshacer» para todo, casi gratis.
+- **FLIP** (First, Last, Invert, Play): mido dónde estaba cada fila, dónde está ahora, y animo la diferencia con la Web Animations API.
+- **Arrastrar y soltar nativo:** `draggable`, `dragover` y `drop`; en el móvil no existe, así que hay botones.
+- **Exportar sin servidor:** `Blob` + enlace de descarga.

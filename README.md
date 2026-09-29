@@ -13,6 +13,7 @@ Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, dis
 - **Panel «Sonando»**: vinilo que gira al tempo con la mascota de galleta, rueda armónica y los 6 mejores temas para mezclar con nota 0–100.
 - **Mascota viva**: Disco a poco BPM, Asterisco a tope. Late al tempo, cambia de cara con el ánimo y el fondo toma el color del BPM.
 - **Suena tu biblioteca**: reproductor único con barra inferior. Temas enteros desde tus carpetas (se eligen una vez) o **fragmentos privados de 90 s** desde tu hosting, con login de Supabase y enlaces firmados que caducan ([servidor/LEEME.md](./servidor/LEEME.md)).
+- **Sets**: montar, ordenar arrastrando, salud y curva de energía, reordenado automático con deshacer, cambiazos, portada Pantone generada y exportar a Traktor (`.nml`), `.m3u`, TXT y CSV.
 - **Tap y escucha** (pensado para móvil): cuenta el BPM a toques o escucha por el micro y calcula BPM y clave en el navegador (FFT, cromagrama y perfiles de Krumhansl). Sugiere qué pinchar de tu biblioteca.
 - **Radio**: suena sola con tu biblioteca. Encadena por armonía desde la clave que elijas, sube el BPM poco a poco y funde cada tema con el siguiente (dos platos, curva de igual potencia).
 - Sin colección propia, arranca con una demo: los temas de mis sets.
@@ -34,6 +35,7 @@ src/
 │   ├── tap/             tap BPM y escucha por micro
 │   ├── musica/          reproductor, fuentes de audio y ventana «Tu música»
 │   ├── radio/           radio automática con tu música
+│   ├── sets/            sets: contexto con useReducer, página, curva, portada
 │   └── proximamente/    estados vacíos con la mascota
 ├── components/marca/    Logo, Mascota y Vinilo
 ├── hooks/               useMascota (rAF), useEscucha (micro + AudioWorklet), useProgresivo…

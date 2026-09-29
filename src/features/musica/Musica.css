@@ -425,6 +425,10 @@
   color: var(--negro);
 }
 
+.escena__set {
+  margin-top: 12px;
+}
+
 .escena__tiempo input {
   width: 100%;
   accent-color: var(--rosa);

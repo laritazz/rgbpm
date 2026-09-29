@@ -4,7 +4,7 @@ import { IconoMasSimple, IconoPlay } from '../../components/Iconos'
 import { CATEGORIAS } from '../../lib/armonia'
 import { colorBpm } from '../../lib/color'
 import { descargar } from '../../lib/descargar'
-import { reloj } from '../../lib/formato'
+import { duracionLarga } from '../../lib/formato'
 import { cambiazos, candidatosTras, duracionTotal, exportarCsv, exportarM3u, exportarNml, exportarTxt, importarSet, reordenar, saludSet, transicion } from '../../lib/set'
 import { useMovimientoReducido } from '../../hooks/useMovimientoReducido'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
@@ -33,6 +33,7 @@ export default function Sets() {
   const [arrastre, setArrastre] = useState(null) // { desde, sobre, lado }
   const [aviso, setAviso] = useState(null)
   const entradaArchivo = useRef(null)
+  const menuExportar = useRef(null)
 
   const temas = set.temas
   const ancla = temas.find((t) => t.id === anclaElegida) ?? temas.at(-1) ?? null
@@ -90,6 +91,7 @@ export default function Sets() {
   }
 
   function exportar(formato) {
+    menuExportar.current.open = false // el menú se cierra al elegir
     const nombre = set.nombre.trim() || 'Set RGBPM'
     const archivo = nombre.replace(/[^\w\sáéíóúñüÁÉÍÓÚÑÜ-]/g, '').trim() || 'set'
     const formatos = {
@@ -99,6 +101,9 @@ export default function Sets() {
       csv: [exportarCsv(temas), 'text/csv', 'Hoja de cálculo con BPM, clave y duración.'],
     }
     const [texto, tipo, pista] = formatos[formato]
+    if ((formato === 'nml' || formato === 'm3u') && !temas.some((t) => t.ruta)) {
+      return avisar('Los temas de la demo no tienen archivo: importa tu collection.nml para exportar a Traktor.')
+    }
     descargar(`${archivo}.${formato}`, texto, tipo)
     avisar(pista)
   }
@@ -128,7 +133,7 @@ export default function Sets() {
             <input id="nombre-set" value={set.nombre} onChange={(e) => set.renombrar(e.target.value)} spellCheck={false} />
             <p>
               {temas.length} {temas.length === 1 ? 'tema' : 'temas'}
-              {temas.length > 0 && ` · ${reloj(duracionTotal(temas))}`}
+              {temas.length > 0 && ` · ${duracionLarga(duracionTotal(temas))}`}
               {bpms.length > 1 && ` · ${Math.round(Math.min(...bpms))}–${Math.round(Math.max(...bpms))} BPM`}
             </p>
           </div>
@@ -147,7 +152,7 @@ export default function Sets() {
           <button className="boton boton--fantasma" onClick={() => (set.guardar(), avisar(`«${set.nombre}» guardado.`))} disabled={!temas.length || !sinGuardar}>
             {sinGuardar ? 'Guardar' : 'Guardado'}
           </button>
-          <details className="sets__menu">
+          <details ref={menuExportar} className="sets__menu">
             <summary className="boton boton--fantasma">Exportar</summary>
             <div>
               <button onClick={() => exportar('nml')} disabled={!temas.length}>
@@ -218,7 +223,7 @@ export default function Sets() {
         {temas.length === 0 ? (
           <div className="sets__vacio">
             <Mascota bpm={124} variante="icono" tamano={120} />
-            <p>Tu set está vacío. Añade temas desde la derecha, desde la biblioteca o carga una de tus playlists.</p>
+            <p>Tu set está vacío. Añade temas desde «Buscar», con el botón «Al set» de la biblioteca o carga una de tus playlists.</p>
           </div>
         ) : (
           <ol ref={lista} className="lista-set" onDragEnd={() => setArrastre(null)}>
