@@ -25,7 +25,7 @@ function resumenSet(playlist, porId) {
   }
 }
 
-export default function BarraLateral({ abierta }) {
+export default function BarraLateral({ abierta, alCerrar }) {
   const { playlists, porId, origen, nombre, temas, estado, error, importar, volverADemo } = useBiblioteca()
   const musica = useMusica()
   const entrada = useRef(null)
@@ -34,7 +34,10 @@ export default function BarraLateral({ abierta }) {
   async function alElegirArchivo(e) {
     const archivo = e.target.files?.[0]
     e.target.value = ''
-    if (archivo && (await importar(archivo))) navegar('/')
+    if (archivo && (await importar(archivo))) {
+      navegar('/')
+      alCerrar?.() // en el móvil, el cajón se cierra para ver la colección
+    }
   }
 
   return (

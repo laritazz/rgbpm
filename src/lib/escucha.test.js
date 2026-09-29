@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { claveDeAudio } from './tonalidad'
 import { bpmDeAudio, bpmDeToques } from './tempo'
+import { esEstable, puedeSer } from './escucha'
+import { leerClave } from './claves'
 
 const FS = 22050
 
@@ -53,5 +55,23 @@ describe('escucha', () => {
   it('Sol mayor: Sol, Si, Re y Fa# → 2d', () => {
     const { clave } = claveDeAudio(acordes([[55, 1], [59, 0.7], [62, 0.8], [67, 0.6], [66, 0.3], [60, 0.3]]), FS)
     expect(clave.id).toBe('2d')
+  })
+})
+
+describe('escucha continua', () => {
+  const lectura = (bpm, id) => ({ tempo: { bpm }, tono: { clave: leerClave(id) } })
+  it('para cuando tres lecturas seguidas coinciden', () => {
+    expect(esEstable([lectura(128, '8m'), lectura(128.4, '8m'), lectura(127.8, '8m')])).toBe(true)
+    expect(esEstable([lectura(128, '8m'), lectura(128, '9m'), lectura(128, '8m')])).toBe(false)
+    expect(esEstable([lectura(128, '8m'), lectura(128, '8m')])).toBe(false)
+  })
+  it('propone temas de la biblioteca con la misma clave y BPM cercano', () => {
+    const temas = [
+      { id: 'a', bpm: 128, clave: leerClave('8m') },
+      { id: 'b', bpm: 64, clave: leerClave('8m') },
+      { id: 'c', bpm: 128, clave: leerClave('9m') },
+      { id: 'd', bpm: 135, clave: leerClave('8m') },
+    ]
+    expect(puedeSer(temas, { bpm: 127.6, clave: leerClave('8m') }).map((o) => o.tema.id)).toEqual(['a', 'b'])
   })
 })

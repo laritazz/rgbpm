@@ -196,3 +196,27 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **`setInterval` en vez de `requestAnimationFrame`** para el fundido: el segundo se para con la pestaña en segundo plano.
 - **Curva de igual potencia** (seno y coseno): a mitad del fundido no hay bajón de volumen.
 - **Pruebas con azar controlado:** paso una función aleatoria fija para que el test dé siempre lo mismo.
+
+## Sesión 7 · 29 sep 2026 · Móvil y escucha
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Pestañas en el móvil | Biblioteca · Radio · **mascota = Escuchar** · Sets · Más |
+| Mini reproductor → pantalla completa | Mascota bailando, tiempo, play, siguiente, drop y «Mezcla con». Se cierra deslizando hacia abajo |
+| Escucha continua | Primera lectura a los 6 s, afina cada 2 s y para sola cuando 3 lecturas coinciden; drop de la mascota al fijarla |
+| Web Worker | La FFT va en otro hilo: la animación no se traba |
+| «¿Es uno de tus temas?» | Busca en mi biblioteca por clave y BPM (±2 %) con play directo |
+| Cazados | Historial de escuchas y taps, guardado en el dispositivo |
+| Paridad | `docs/PARIDAD.md`: cada utilidad de mi web original y su estado |
+
+### Decisiones
+- **Fragmentos de 90 s** para el servidor: la colección entera ocupa ~102 GB y el plan de IONOS tiene 50 GB. Con fragmentos son ~14 GB.
+- **Al escuchar se pausa lo que suena en RGBPM**, para que el micro no se oiga a sí mismo.
+
+### Qué aprendí
+- **Web Workers con Vite:** `new Worker(new URL('./x.worker.js', import.meta.url), { type: 'module' })` y pasar el audio como *transferable* (sin copiarlo).
+- **Ventana deslizante:** analizo siempre los últimos 14 s, no todo lo grabado.
+- **Callbacks en refs:** el aviso de «terminado» cambia sin reiniciar la escucha.
+- **`<dialog>` + gestos:** `setPointerCapture` para arrastrar y cerrar.
+- **`env(safe-area-inset-*)`:** respeta la muesca y la barra de inicio del iPhone.

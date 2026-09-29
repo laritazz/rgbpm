@@ -3,17 +3,30 @@
   overflow-y: auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    'modos lectura'
-    'escenario lectura'
-    'escenario sugerencias';
+  grid-auto-rows: min-content;
+  align-content: start;
   gap: 20px 32px;
   padding: 28px 32px;
 }
 
+/* Escritorio: el escenario se queda fijo a la izquierda y la información baja a la derecha */
+.tap > * {
+  grid-column: 2;
+}
+
+.tap > .tap__modos,
+.tap > .tap__escenario {
+  grid-column: 1;
+}
+
+.tap > .tap__escenario {
+  grid-row: 2 / span 6;
+  position: sticky;
+  top: 0;
+  height: min(72dvh, 640px);
+}
+
 .tap__modos {
-  grid-area: modos;
   justify-self: start;
   display: flex;
   padding: 4px;
@@ -38,7 +51,6 @@
 
 /* El escenario entero es la tecla del tap: cuanto más grande, más fácil acertar */
 .tap__escenario {
-  grid-area: escenario;
   position: relative;
   display: grid;
   place-items: center;
@@ -68,6 +80,31 @@
   color: var(--gris-1);
 }
 
+.tap__escenario--escuchando {
+  cursor: pointer;
+}
+
+/* Anillo de progreso alrededor de la mascota mientras escucha */
+.tap__anillo {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: min(92%, 92vh);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  rotate: -90deg;
+  pointer-events: none;
+}
+
+.tap__anillo circle {
+  fill: none;
+  stroke: var(--rosa);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--avance));
+  transition: stroke-dashoffset 2s linear;
+}
+
 .tap__progreso {
   position: absolute;
   left: 24px;
@@ -79,7 +116,6 @@
 }
 
 .tap__lectura {
-  grid-area: lectura;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -105,6 +141,30 @@
   line-height: 0.9;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
+}
+
+/* Cada cifra nueva entra con un pequeño salto */
+.tap__bpm {
+  animation: cifra-entra 360ms var(--curva-muelle);
+}
+
+@keyframes cifra-entra {
+  from {
+    translate: 0 12px;
+    opacity: 0;
+  }
+}
+
+.tap__lectura--provisional .tap__bpm {
+  animation:
+    cifra-entra 360ms var(--curva-muelle),
+    provisional 1.2s ease-in-out infinite;
+}
+
+@keyframes provisional {
+  50% {
+    opacity: 0.55;
+  }
 }
 
 .tap__bpm--vacio {
@@ -164,7 +224,6 @@
 }
 
 .tap__sugerencias {
-  grid-area: sugerencias;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -228,6 +287,11 @@
     gap: 16px;
   }
 
+  .tap > .tap__escenario {
+    position: relative;
+    height: auto;
+  }
+
   .tap__modos {
     align-self: center;
   }
@@ -236,5 +300,122 @@
     min-height: 0;
     aspect-ratio: 1;
     flex-shrink: 0;
+  }
+}
+
+.tap__fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tap__fila .boton {
+  flex: 1;
+  padding: 0 12px;
+}
+
+.tap__fila-tema {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tap__fila-tema .tap__tema {
+  flex: 1;
+  min-width: 0;
+}
+
+.tap__play {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--linea-2);
+  font-size: 13px;
+}
+
+.tap__play--on {
+  background: var(--rosa);
+  border-color: var(--rosa);
+  color: var(--negro);
+}
+
+.tap__puede-ser {
+  padding: 14px 16px 8px;
+  border-radius: var(--radio-l);
+  background: var(--superficie-2);
+}
+
+/* Historial de cazados: fichas en fila que se deslizan */
+.tap__cazados {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tap__cazados ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 6px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.cazado {
+  position: relative;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.cazado__ver {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 96px;
+  padding: 10px 12px;
+  border-radius: var(--radio);
+  background: var(--color);
+  color: var(--negro);
+  text-align: left;
+}
+
+.cazado__ver strong {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cazado__ver span {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cazado__ver small {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.cazado__borrar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0006;
+  color: var(--blanco);
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tap__bpm,
+  .tap__lectura--provisional .tap__bpm {
+    animation: none;
   }
 }

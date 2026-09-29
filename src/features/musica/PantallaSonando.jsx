@@ -1,0 +1,134 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import MascotaEscena from '../../components/marca/MascotaEscena'
+import { IconoBajar, IconoPausa, IconoPlay, IconoSiguiente } from '../../components/Iconos'
+import { compatibles } from '../../lib/armonia'
+import { colorBpm, franjaDe } from '../../lib/color'
+import { reloj } from '../../lib/formato'
+import { useBiblioteca } from '../biblioteca/BibliotecaContext'
+import { useReproductor, useTiempo } from './ReproductorContext'
+
+/**
+ * Lo que suena, a pantalla completa: la mascota baila el tema y te propone con qué seguir.
+ * <dialog> nativo (foco y Esc resueltos) y, en el móvil, se cierra deslizando hacia abajo.
+ */
+export default function PantallaSonando({ abierta, alCerrar }) {
+  const ventana = useRef(null)
+  const { tema, sonando, cola, indice, fundiendo, alternar, buscar, siguiente, reproducir } = useReproductor()
+  const { tiempo, duracion } = useTiempo()
+  const { temas } = useBiblioteca()
+  const [drop, setDrop] = useState(null)
+  const [arrastre, setArrastre] = useState(0)
+  const inicio = useRef(null)
+
+  useEffect(() => {
+    const d = ventana.current
+    if (abierta && tema && !d.open) d.showModal()
+    if ((!abierta || !tema) && d.open) d.close()
+  }, [abierta, tema])
+
+  const opciones = useMemo(() => (abierta && tema?.clave ? compatibles(tema, temas, 5) : []), [abierta, tema, temas])
+  const proximo = cola.length && indice < cola.length - 1 ? cola[indice + 1] : null
+
+  // Deslizar hacia abajo para cerrar (como las apps nativas)
+  const empezarArrastre = (e) => {
+    inicio.current = e.clientY
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const moverArrastre = (e) => inicio.current != null && setArrastre(Math.max(0, e.clientY - inicio.current))
+  const soltarArrastre = () => {
+    if (arrastre > 110) alCerrar()
+    inicio.current = null
+    setArrastre(0)
+  }
+
+  if (!tema) return <dialog ref={ventana} className="escena" onClose={alCerrar} />
+
+  const bpm = tema.bpm
+  return (
+    <dialog
+      ref={ventana}
+      className="escena"
+      onClose={alCerrar}
+      aria-label={`Sonando: ${tema.titulo}`}
+      style={{ '--color': colorBpm(bpm), translate: arrastre ? `0 ${arrastre}px` : undefined, transition: arrastre ? 'none' : undefined }}
+    >
+      <div className="escena__asa" onPointerDown={empezarArrastre} onPointerMove={moverArrastre} onPointerUp={soltarArrastre} onPointerCancel={soltarArrastre}>
+        <button className="escena__cerrar" onClick={alCerrar} aria-label="Cerrar">
+          <IconoBajar />
+        </button>
+        <span className="etiqueta-seccion">{fundiendo ? 'Mezclando…' : cola.length ? `Radio · ${indice + 1} de ${cola.length}` : 'Sonando'}</span>
+      </div>
+
+      <div className="escena__mascota" onDoubleClick={() => setDrop(performance.now())}>
+        <MascotaEscena bpm={bpm} tocando={sonando} drop={drop} tamano={420} />
+      </div>
+
+      <header className="escena__ficha">
+        <h2>{tema.titulo}</h2>
+        <p>{tema.artista}</p>
+        <ul className="escena__datos">
+          <li>{bpm ? `${bpm} BPM` : 'Sin BPM'}</li>
+          {tema.clave && (
+            <li>
+              {tema.clave.id} · {tema.clave.nombre}
+            </li>
+          )}
+          {bpm && <li className="escena__franja">{franjaDe(bpm).nombre}</li>}
+        </ul>
+      </header>
+
+      <div className="escena__tiempo">
+        <input type="range" min="0" max={duracion || 0} step="0.1" value={tiempo} onChange={(e) => buscar(Number(e.target.value))} aria-label="Posición" />
+        <div>
+          <span>{reloj(tiempo)}</span>
+          <span>-{reloj(Math.max(0, duracion - tiempo))}</span>
+        </div>
+      </div>
+
+      <div className="escena__mandos">
+        <button className="escena__drop" onClick={() => setDrop(performance.now())} disabled={!sonando}>
+          Drop
+        </button>
+        <button className="escena__play" onClick={alternar} aria-label={sonando ? 'Pausa' : 'Reproducir'}>
+          {sonando ? <IconoPausa width={34} height={34} /> : <IconoPlay width={34} height={34} />}
+        </button>
+        <button className="escena__siguiente" onClick={siguiente} disabled={!proximo || fundiendo} aria-label="Siguiente con fundido">
+          <IconoSiguiente width={28} height={28} />
+        </button>
+      </div>
+
+      {proximo && (
+        <p className="escena__proximo">
+          Después: <strong>{proximo.titulo}</strong> · {proximo.bpm} BPM · {proximo.clave?.id}
+        </p>
+      )}
+
+      {opciones.length > 0 && (
+        <section className="escena__mezcla" aria-labelledby="titulo-escena-mezcla">
+          <h3 id="titulo-escena-mezcla" className="etiqueta-seccion">
+            Mezcla con
+          </h3>
+          <ul>
+            {opciones.map((o) => (
+              <li key={o.tema.id}>
+                <button onClick={() => reproducir(o.tema)}>
+                  <span className="escena__muestra" style={{ background: colorBpm(o.tema.bpm) }} aria-hidden="true" />
+                  <span className="escena__opcion">
+                    <strong>{o.tema.titulo}</strong>
+                    <small>
+                      <span className="escena__categoria" style={{ '--cat': o.categoria.color }}>
+                        {o.categoria.nombre}
+                      </span>
+                      {o.tema.bpm} BPM · {o.tema.clave.id}
+                    </small>
+                  </span>
+                  <span className="escena__nota">{o.nota}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </dialog>
+  )
+}

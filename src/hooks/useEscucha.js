@@ -1,36 +1,54 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { claveDeAudio } from '../lib/tonalidad'
-import { bpmDeAudio } from '../lib/tempo'
+import { esEstable } from '../lib/escucha'
+
+const PRIMERA = 6 // s de audio antes de la primera lectura
+const CADA = 2 // s entre lecturas
+const VENTANA = 14 // s que se analizan cada vez (los más recientes)
+const MINIMO = 8 // no se da por fijado antes de esto
+const MAXIMO = 20 // si no se aclara, se queda con la última lectura
 
 /**
- * Escucha por el micrófono durante unos segundos y calcula BPM y clave en el propio navegador.
- * El audio no se guarda ni sale del dispositivo.
- * estado: parado · pidiendo · escuchando · analizando · listo · error
+ * Escucha continua por el micro, como Shazam: primera lectura a los 6 s,
+ * la afina cada 2 s y para sola cuando tres lecturas coinciden.
+ * El cálculo va en un Web Worker y el audio no se guarda ni sale del dispositivo.
+ * estado: parado · pidiendo · escuchando · listo · error
  */
-export function useEscucha(segundos = 12) {
+export function useEscucha({ alTerminar } = {}) {
   const [estado, setEstado] = useState('parado')
   const [nivel, setNivel] = useState(0)
-  const [progreso, setProgreso] = useState(0)
-  const [resultado, setResultado] = useState(null)
+  const [segundos, setSegundos] = useState(0)
+  const [lectura, setLectura] = useState(null)
+  const [fijado, setFijado] = useState(false)
+  const [fijadoEn, setFijadoEn] = useState(null) // ms (performance.now): dispara el drop de la mascota
   const [error, setError] = useState(null)
   const recursos = useRef(null)
+  // El aviso de fin se lee de una ref: cambiarlo no reinicia la escucha
+  const avisar = useRef(alTerminar)
+  useEffect(() => {
+    avisar.current = alTerminar
+  }, [alTerminar])
 
   const cerrar = useCallback(() => {
     const r = recursos.current
     if (!r) return
     cancelAnimationFrame(r.raf)
+    clearInterval(r.reloj)
+    r.trabajador.terminate()
     r.flujo.getTracks().forEach((pista) => pista.stop())
     r.ctx.close()
     recursos.current = null
+    setNivel(0)
   }, [])
 
   useEffect(() => cerrar, [cerrar])
 
   const escuchar = useCallback(async () => {
     cerrar()
-    setResultado(null)
+    setLectura(null)
+    setFijado(false)
+    setFijadoEn(null)
     setError(null)
-    setProgreso(0)
+    setSegundos(0)
     setEstado('pidiendo')
     try {
       // Sin cancelación de eco ni control de ganancia: queremos la música tal cual suena
@@ -43,71 +61,91 @@ export function useEscucha(segundos = 12) {
       const analizador = ctx.createAnalyser()
       analizador.fftSize = 1024
       fuente.connect(captura)
+      fuente.connect(analizador)
       // Algunos navegadores solo procesan lo que llega a la salida: se conecta en silencio
       const silencio = ctx.createGain()
       silencio.gain.value = 0
       captura.connect(silencio).connect(ctx.destination)
-      fuente.connect(analizador)
 
+      const trabajador = new Worker(new URL('../workers/analisis.worker.js', import.meta.url), { type: 'module' })
+      const fs = ctx.sampleRate
       const trozos = []
-      const total = Math.round(segundos * ctx.sampleRate)
       let recogidas = 0
-      recursos.current = { flujo, ctx, raf: 0 }
+      let ocupado = false
+      const lecturas = []
+      const r = { flujo, ctx, trabajador, raf: 0, reloj: 0 }
+      recursos.current = r
 
       captura.port.onmessage = ({ data }) => {
         trozos.push(data)
         recogidas += data.length
-        if (recogidas >= total && recursos.current) terminar()
       }
+
+      const terminar = (conFijado) => {
+        setFijado(conFijado)
+        if (conFijado) setFijadoEn(performance.now())
+        setEstado('listo')
+        cerrar()
+        const ultima = lecturas.filter(Boolean).at(-1)
+        if (ultima) avisar.current?.(ultima, conFijado)
+      }
+
+      trabajador.onmessage = ({ data }) => {
+        ocupado = false
+        if (!recursos.current) return
+        lecturas.push(data.lectura)
+        if (data.lectura) setLectura(data.lectura)
+        const t = recogidas / fs
+        if (t >= MINIMO && esEstable(lecturas)) terminar(true)
+        else if (t >= MAXIMO) {
+          if (lecturas.some(Boolean)) terminar(false)
+          else {
+            setError('Casi no se oye nada. Acerca el móvil al altavoz.')
+            setEstado('error')
+            cerrar()
+          }
+        }
+      }
+
+      // Cada 2 s, los últimos 14 s de audio al trabajador (si no está ya pensando)
+      r.reloj = setInterval(() => {
+        const t = recogidas / fs
+        setSegundos(t)
+        if (ocupado || t < PRIMERA) return
+        const tramo = Math.min(recogidas, Math.round(VENTANA * fs))
+        const senal = new Float32Array(tramo)
+        let pos = tramo
+        for (let i = trozos.length - 1; i >= 0 && pos > 0; i--) {
+          const trozo = trozos[i]
+          const n = Math.min(trozo.length, pos)
+          senal.set(trozo.subarray(trozo.length - n), pos - n)
+          pos -= n
+        }
+        ocupado = true
+        trabajador.postMessage({ id: t, senal, frecuencia: fs }, [senal.buffer])
+      }, CADA * 1000)
 
       // Nivel del micro para el ecualizador de la mascota, a ritmo de pantalla
       const muestra = new Float32Array(analizador.fftSize)
       const medir = () => {
         analizador.getFloatTimeDomainData(muestra)
-        const rms = Math.sqrt(muestra.reduce((s, v) => s + v * v, 0) / muestra.length)
-        setNivel(Math.min(1, rms * 6))
-        setProgreso(Math.min(1, recogidas / total))
+        const v = Math.sqrt(muestra.reduce((s, x) => s + x * x, 0) / muestra.length)
+        setNivel(Math.min(1, v * 6))
         if (recursos.current) recursos.current.raf = requestAnimationFrame(medir)
       }
-      recursos.current.raf = requestAnimationFrame(medir)
+      r.raf = requestAnimationFrame(medir)
       setEstado('escuchando')
-
-      function terminar() {
-        const frecuencia = ctx.sampleRate
-        cerrar()
-        setNivel(0)
-        setProgreso(1)
-        setEstado('analizando')
-        // Un respiro para que se pinte «analizando» antes del cálculo
-        setTimeout(() => {
-          const senal = new Float32Array(recogidas)
-          let pos = 0
-          for (const t of trozos) {
-            senal.set(t, pos)
-            pos += t.length
-          }
-          const casiNada = Math.sqrt(senal.reduce((s, v) => s + v * v, 0) / senal.length) < 0.003
-          if (casiNada) {
-            setError('Casi no se oye nada. Acerca el móvil al altavoz.')
-            setEstado('error')
-            return
-          }
-          setResultado({ tempo: bpmDeAudio(senal, frecuencia), tono: claveDeAudio(senal, frecuencia) })
-          setEstado('listo')
-        }, 50)
-      }
     } catch (e) {
       cerrar()
       setError(e.name === 'NotAllowedError' ? 'Necesito permiso para usar el micrófono.' : 'Este navegador no me deja escuchar.')
       setEstado('error')
     }
-  }, [cerrar, segundos])
+  }, [cerrar])
 
   const parar = useCallback(() => {
     cerrar()
-    setNivel(0)
-    setEstado('parado')
-  }, [cerrar])
+    setEstado((e) => (lectura && e === 'escuchando' ? 'listo' : 'parado'))
+  }, [cerrar, lectura])
 
-  return { estado, nivel, progreso, resultado, error, escuchar, parar }
+  return { estado, nivel, segundos, maximo: MAXIMO, lectura, fijado, fijadoEn, error, escuchar, parar }
 }

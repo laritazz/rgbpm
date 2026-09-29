@@ -1,43 +1,50 @@
 import { useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import BarraLateral from './BarraLateral'
+import BarraPestanas from './BarraPestanas'
 import AjustesMusica from '../features/musica/AjustesMusica'
 import BarraReproductor from '../features/musica/BarraReproductor'
+import { useMusica } from '../features/musica/MusicaContext'
+import PantallaSonando from '../features/musica/PantallaSonando'
 import '../features/musica/Musica.css'
 import Logo from '../components/marca/Logo'
 import './Shell.css'
 
-/** Estructura «Vinilo»: menú al lateral, contenido al centro. En móvil, el menú es un cajón. */
+/**
+ * Estructura «Vinilo»: menú al lateral, contenido al centro y reproductor abajo.
+ * En el móvil: cabecera mínima, pestañas abajo y el menú completo en un cajón («Más»).
+ */
 export default function Shell() {
   const [menuAbierto, setMenuAbierto] = useState(false)
+  const [escena, setEscena] = useState(false)
+  const { hayFuente, abrirAjustes } = useMusica()
   const { pathname } = useLocation()
   const [ruta, setRuta] = useState(pathname)
 
-  // Al navegar se cierra el cajón (estado ajustado durante el render, sin efecto)
+  // Al navegar se cierran el cajón y la pantalla completa (estado ajustado durante el render, sin efecto)
   if (ruta !== pathname) {
     setRuta(pathname)
     setMenuAbierto(false)
+    setEscena(false)
   }
 
   return (
     <div className="shell">
       <header className="shell__movil">
         <Logo ancho={112} />
-        {/* En móvil, el tap va a mano: un toque desde cualquier pantalla */}
-        <Link to="/tap" className="shell__atajo">
-          Tap BPM
-        </Link>
-        <button className="shell__hamburguesa" aria-expanded={menuAbierto} aria-controls="menu-principal" onClick={() => setMenuAbierto((v) => !v)}>
-          <span className="solo-lectores">Menú</span>
-          <span aria-hidden="true" />
+        <button className="shell__musica" onClick={abrirAjustes}>
+          <span className={`lateral__luz${hayFuente ? ' lateral__luz--on' : ''}`} aria-hidden="true" />
+          Tu música
         </button>
       </header>
-      <BarraLateral abierta={menuAbierto} />
+      <BarraLateral abierta={menuAbierto} alCerrar={() => setMenuAbierto(false)} />
       {menuAbierto && <button className="shell__velo" aria-label="Cerrar menú" onClick={() => setMenuAbierto(false)} />}
       <div className="shell__contenido">
         <Outlet />
       </div>
-      <BarraReproductor />
+      <BarraReproductor alAbrir={() => setEscena(true)} />
+      <BarraPestanas alAbrirMenu={() => setMenuAbierto(true)} />
+      <PantallaSonando abierta={escena} alCerrar={() => setEscena(false)} />
       <AjustesMusica />
     </div>
   )
