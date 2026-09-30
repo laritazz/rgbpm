@@ -15,7 +15,8 @@ export function islaCompacta({ y, anterior, compacta }) {
 
 /** Qué pestaña corresponde a la ruta actual (la que queda visible en la isla compacta). */
 export function pestanaDe(ruta) {
-  if (ruta === '/' || ruta.startsWith('/set/')) return 'biblioteca'
+  if (ruta === '/') return 'inicio'
+  if (ruta.startsWith('/biblioteca') || ruta.startsWith('/set/')) return 'biblioteca'
   if (ruta.startsWith('/radio')) return 'radio'
   if (ruta.startsWith('/tap')) return 'tap'
   if (ruta === '/sets') return 'sets'

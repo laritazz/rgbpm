@@ -95,9 +95,9 @@ export default function Sets() {
   const pedirCambio = useCallback((id) => setCambiando((c) => (c === id ? null : id)), [])
 
   function autoOrden() {
-    const { orden, arranques } = reordenar(temas, { corregir })
+    const { orden } = reordenar(temas, { corregir })
     set.reemplazar(orden.map((t) => t.id))
-    avisar(`Reordenado: encadena por armonía y evita saltos de BPM. Probé ${arranques} arranques y me quedé con el mejor.`)
+    avisar('Reordenado por armonía y BPM.')
   }
 
   function exportar(formato) {
@@ -105,14 +105,14 @@ export default function Sets() {
     const nombre = set.nombre.trim() || 'Set RGBPM'
     const archivo = nombre.replace(/[^\w\sáéíóúñüÁÉÍÓÚÑÜ-]/g, '').trim() || 'set'
     const formatos = {
-      nml: [exportarNml(temas, nombre), 'application/xml', 'En Traktor: clic derecho en Playlists → Import Playlist → elige el .nml.'],
+      nml: [exportarNml(temas, nombre), 'application/xml', 'En Traktor: Playlists → Import Playlist.'],
       m3u: [exportarM3u(temas), 'audio/x-mpegurl', 'Lista .m3u lista para cualquier reproductor.'],
       txt: [exportarTxt(temas, nombre), 'text/plain', 'Tracklist en texto: para Instagram o SoundCloud.'],
       csv: [exportarCsv(temas), 'text/csv', 'Hoja de cálculo con BPM, clave y duración.'],
     }
     const [texto, tipo, pista] = formatos[formato]
     if ((formato === 'nml' || formato === 'm3u') && !temas.some((t) => t.ruta)) {
-      return avisar('Los temas de la demo no tienen archivo: importa tu collection.nml para exportar a Traktor.')
+      return avisar('La demo no tiene archivos: importa tu collection.nml.')
     }
     descargar(`${archivo}.${formato}`, texto, tipo)
     avisar(pista)
@@ -233,7 +233,7 @@ export default function Sets() {
         {temas.length === 0 ? (
           <div className="sets__vacio">
             <Mascota bpm={124} variante="icono" tamano={120} />
-            <p>Tu set está vacío. Añade temas desde «Buscar», con el botón «Al set» de la biblioteca o carga una de tus playlists.</p>
+            <p>Set vacío. Añade temas o carga una playlist.</p>
           </div>
         ) : (
           <ol ref={lista} className="lista-set" onDragEnd={() => setArrastre(null)}>
@@ -347,7 +347,7 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
 
       {pestana === 'pegan' && (
         <>
-          <p className="anadir__nota">{ancla ? <>Pegan después de <strong>{ancla.titulo}</strong>. Pulsa ◎ en otra fila para cambiar de ancla.</> : 'Añade un tema y te digo qué pega después.'}</p>
+          <p className="anadir__nota">{ancla ? <>Pegan después de <strong>{ancla.titulo}</strong>.</> : 'Añade un tema y te digo qué pega.'}</p>
           <ListaAnadir items={candidatos.map((c) => ({ tema: c.tema, detalle: `${c.categoria.nombre} · ${c.nota}`, color: c.categoria.color }))} alAnadir={(t) => set.anadir(t.id, ancla?.id)} />
         </>
       )}
@@ -369,7 +369,7 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
               <button
                 onClick={() => {
                   set.reemplazar(p.temas, p.nombre)
-                  avisar(`«${p.nombre}» cargada como set (${p.temas.length} temas). Puedes deshacer.`)
+                  avisar(`«${p.nombre}» cargada. Puedes deshacer.`)
                 }}
               >
                 <PortadaSet temas={p.temas.map((id) => porId.get(id)).filter(Boolean)} tamano={44} />
@@ -385,7 +385,7 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
 
       {pestana === 'guardados' &&
         (set.guardados.length === 0 ? (
-          <p className="anadir__nota">Todavía no has guardado ningún set.</p>
+          <p className="anadir__nota">Sin sets guardados.</p>
         ) : (
           <ul className="anadir__guardados">
             {set.guardados.map((g) => (

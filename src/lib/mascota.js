@@ -55,6 +55,8 @@ export const animoDe = (bpm) => ANIMOS.find((a) => (bpm ?? 120) < a.hasta) ?? AN
 export function paleta(bpm, variante) {
   const fondo = colorBpm(bpm)
   if (variante === 'libre') return { fondo: null, cuerpo: ROSA_MASCOTA, cara: '#000000', eco: fondo }
+  // Negra: para fondos rosas (la home), plana como los círculos que la rodean: cuerpo negro, cara rosa, sin eco
+  if (variante === 'negra') return { fondo: null, cuerpo: '#000000', cara: ROSA, eco: null }
   return { fondo, cuerpo: '#000000', cara: ROSA, eco: ROSA }
 }
 
@@ -67,4 +69,67 @@ export const conRebote = (x) => {
   const c = 1.9
   const v = Math.max(0, Math.min(1, x))
   return 1 + (c + 1) * (v - 1) ** 3 + c * (v - 1) ** 2
+}
+
+// ——— Vida: lo que hace la mascota aunque no suene nada ———
+// Parpadea, mira alrededor, se mece un poco y, en pausa, se duerme.
+
+const hash = (n) => {
+  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453
+  return x - Math.floor(x)
+}
+
+/** Curva de un parpadeo: cierra rápido y abre algo más lento (0 abierto → 1 cerrado). */
+function parpadeo(t, semilla) {
+  const periodo = 3.4 + hash(semilla) * 1.6
+  const fase = (t + semilla * 0.37) % periodo
+  const cierra = 0.07
+  const abre = 0.14
+  if (fase < cierra) return fase / cierra
+  if (fase < cierra + abre) return 1 - (fase - cierra) / abre
+  return 0
+}
+
+// Punto al que mira en el tramo i: uno de cada tres vuelve al centro (mirar de frente también es mirar)
+const destino = (i, semilla) => (i % 3 === 0 ? [0, 0] : [hash(semilla + i * 7.3) * 2 - 1, (hash(semilla + i * 5.9) * 2 - 1) * 0.6])
+
+/** Mirada que vaga: cada ~2 s cambia de punto con un vistazo rápido, en un momento distinto de cada tramo. */
+function vistazo(t, semilla) {
+  const TRAMO = 2.1
+  const i = Math.floor(t / TRAMO)
+  const salta = hash(semilla + i * 1.7) * 0.9
+  const x = Math.max(0, Math.min(1, (t - i * TRAMO - salta) / 0.16))
+  const e = x * x * (3 - 2 * x)
+  const [a, b] = [destino(i - 1, semilla), destino(i, semilla)]
+  return [a[0] + (b[0] - a[0]) * e, a[1] + (b[1] - a[1]) * e]
+}
+
+/**
+ * Estado de vida en el instante `t` (s).
+ * @param despierta  false = dormida: ojos cerrados y respiración lenta
+ * @param desde      segundos desde que se despertó (abre los ojos poco a poco)
+ * @param mira       { x, y } de −1 a 1: adónde mira (si no, mira alrededor sola)
+ * @returns parpado (0–1), ojo [x, y] de −1 a 1, deriva [x, y] en unidades del dibujo, respira (escala)
+ */
+export function vida(t, { despierta = true, desde = 99, mira = null, semilla = 0 } = {}) {
+  if (!despierta) {
+    return { parpado: 1, ojo: [0, 0.35], deriva: [0, Math.sin(t * 1.3) * 3], respira: 1 + 0.025 * Math.sin(t * 1.3) }
+  }
+  const despertar = Math.max(0, 1 - desde / 0.45)
+  const ojo = mira ? [Math.max(-1, Math.min(1, mira.x)), Math.max(-1, Math.min(1, mira.y))] : vistazo(t, semilla)
+  return {
+    parpado: Math.max(parpadeo(t, semilla), despertar),
+    ojo,
+    deriva: [Math.sin(t * 0.7 + semilla) * 5, Math.cos(t * 0.9 + semilla) * 4],
+    respira: 1,
+  }
+}
+
+/** Transformaciones de la cara para un instante: se usan igual desde React o escribiendo en el DOM. */
+export function movimientoCara({ parpado = 0, ojo = [0, 0], pulso = 0 }) {
+  return {
+    cara: `translate(${(ojo[0] * 14).toFixed(1)} ${(ojo[1] * 10).toFixed(1)})`,
+    ojos: `translate(0 -14) scale(1 ${(1 - parpado * 0.88).toFixed(3)}) translate(0 14)`,
+    boca: `translate(0 4) scale(${(1 + 0.22 * pulso).toFixed(3)}) translate(0 -4)`,
+  }
 }

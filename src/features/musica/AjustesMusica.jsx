@@ -82,7 +82,7 @@ export default function AjustesMusica() {
 
       <section className="ajustes__bloque">
         <h3>Tu música privada</h3>
-        <p>Fragmentos de 90 s en tu servidor, para escuchar desde el móvil. Solo entras tú y cada enlace caduca a los 20 minutos.</p>
+        <p>Fragmentos de 90 s para el móvil. Solo entras tú.</p>
 
         {p.estado === 'sin-configurar' && <p className="ajustes__estado">Falta terminar de conectar el servidor. Muy pronto.</p>}
 

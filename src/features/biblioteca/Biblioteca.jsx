@@ -76,7 +76,7 @@ export default function Biblioteca() {
   const { visibles, quedan, centinela } = useProgresivo(filtrados)
   const tema = temaId ? porId.get(temaId) : null
 
-  if (setId && !playlist && estado !== 'cargando') return <Navigate to="/" replace />
+  if (setId && !playlist && estado !== 'cargando') return <Navigate to="/biblioteca" replace />
 
   return (
     <div className={`biblioteca${tema ? ' biblioteca--con-tema' : ''}`}>

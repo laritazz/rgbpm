@@ -10,7 +10,7 @@ export default function Proximamente({ titulo, texto, sprint, bpm }) {
       <span className="etiqueta-seccion">Sprint {sprint}</span>
       <h1>{titulo}</h1>
       <p>{texto}</p>
-      <Link to="/" className="boton boton--rosa">
+      <Link to="/biblioteca" className="boton boton--rosa">
         Ir a la biblioteca
       </Link>
     </main>

@@ -181,3 +181,11 @@ a {
     animation: none;
   }
 }
+
+/* Capa de la transición en círculo (app/circulo.js) */
+.circulo-transicion {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}

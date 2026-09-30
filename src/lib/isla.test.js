@@ -14,7 +14,8 @@ describe('isla', () => {
     expect(islaCompacta({ y: 20, anterior: 0, compacta: true })).toBe(false)
   })
   it('cada ruta tiene su pestaña', () => {
-    expect(pestanaDe('/')).toBe('biblioteca')
+    expect(pestanaDe('/')).toBe('inicio')
+    expect(pestanaDe('/biblioteca')).toBe('biblioteca')
     expect(pestanaDe('/set/p1')).toBe('biblioteca')
     expect(pestanaDe('/tap')).toBe('tap')
     expect(pestanaDe('/sets')).toBe('sets')

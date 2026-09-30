@@ -1,0 +1,152 @@
+/* Home: fondo rosa, la mascota en el centro de un racimo de círculos (las secciones, en negro) */
+.home {
+  --tinta: #000000;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rosa);
+  color: var(--tinta);
+  overflow: hidden;
+}
+
+.home__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: max(20px, env(safe-area-inset-top)) 28px 0;
+}
+
+.home__musica {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--pildora);
+  background: var(--tinta);
+  color: var(--blanco);
+  font-size: 14px;
+  font-weight: 800;
+  transition: scale 160ms var(--curva-muelle);
+}
+
+.home__musica:active {
+  scale: 0.96;
+}
+
+.home__luz {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gris-3);
+}
+
+.home__luz--on {
+  background: var(--rosa);
+  box-shadow: 0 0 8px var(--rosa);
+}
+
+.home__zona {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px 20px 28px;
+  container-type: size;
+}
+
+.burbujas {
+  position: relative;
+  width: min(100cqw, calc(100cqh * var(--aspecto)));
+  aspect-ratio: var(--aspecto);
+  container-type: inline-size;
+}
+
+.burbuja {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* dos animaciones sin pisarse: «scale» para aparecer y «translate» para flotar */
+  animation:
+    burbuja-aparece 520ms var(--curva-muelle) calc(var(--i) * 40ms) backwards,
+    burbuja-flota var(--dur) ease-in-out var(--retraso) infinite alternate;
+}
+
+.burbuja--seccion {
+  display: grid;
+  place-items: center;
+  padding: 0 0.4em;
+  background: var(--tinta);
+  color: var(--blanco);
+  font-size: clamp(13px, calc(var(--r) * 0.2cqw), 26px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-align: center;
+  line-height: 1;
+  transition:
+    scale 260ms var(--curva-muelle),
+    color 200ms;
+}
+
+.burbuja--seccion:hover,
+.burbuja--seccion:focus-visible {
+  scale: 1.07;
+  color: var(--rosa);
+}
+
+.burbuja--seccion:active {
+  scale: 0.95;
+}
+
+.burbuja--seccion:focus-visible {
+  outline: 3px solid var(--blanco);
+  outline-offset: 4px;
+}
+
+/* La mascota ocupa su hueco: el disco mide 2/3 del dibujo, así que el SVG se agranda para llenarlo */
+.burbuja--mascota {
+  display: grid;
+  place-items: center;
+}
+
+.burbuja--mascota .mascota {
+  width: 128%;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.burbuja--adorno {
+  pointer-events: none;
+}
+
+@keyframes burbuja-aparece {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes burbuja-flota {
+  from {
+    translate: 0 -0.35cqw;
+  }
+  to {
+    translate: 0.25cqw 0.4cqw;
+  }
+}
+
+@media (max-width: 700px) {
+  .home__cabecera {
+    padding-inline: 16px;
+  }
+
+  .home__zona {
+    padding: 8px 12px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .burbuja {
+    animation: none;
+  }
+}

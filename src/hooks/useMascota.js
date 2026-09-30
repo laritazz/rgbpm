@@ -1,25 +1,56 @@
 import { useEffect, useRef, useState } from 'react'
-import { energia } from '../lib/mascota'
+import { energia, vida } from '../lib/mascota'
 import { useMovimientoReducido } from './useMovimientoReducido'
 
+const foto = (m, ahora) => ({
+  t: m.t,
+  k: m.k,
+  ahora,
+  despierta: m.despierta,
+  vida: vida(m.t, { despierta: m.despierta, desde: m.desde, mira: m.mira, semilla: m.semilla }),
+})
+
 /**
- * Motor de la mascota: un bucle requestAnimationFrame que avanza el tiempo
- * y funde la forma (k) hacia la energía del BPM que suena.
- * El estado vivo va en una ref (no provoca renders); solo se publica una foto por fotograma.
+ * Motor de la mascota: un bucle requestAnimationFrame que avanza el tiempo, funde la forma (k)
+ * hacia la energía del BPM y calcula su «vida» (parpadeo, mirada, sueño).
+ *
+ * Dos maneras de usarlo:
+ * - Sin `alPintar`: devuelve una foto por fotograma (provoca un render). Para la mascota grande.
+ * - Con `alPintar(foto)`: no provoca renders; la función escribe directamente en el SVG. Para las pequeñas.
+ *
+ * `tocando` = false la duerme; al volver a sonar se despierta abriendo los ojos.
  */
-export function useMascota(bpm, activo = true) {
+export function useMascota(bpm, tocando = true, { alPintar = null, mira = null, semilla = 0 } = {}) {
   const quieto = useMovimientoReducido()
   const objetivo = energia(bpm)
-  const motor = useRef({ t: 0, k: objetivo, objetivo })
-  const [foto, setFoto] = useState({ t: 0, k: objetivo, ahora: 0 })
+  const motor = useRef({ t: 0, k: objetivo, objetivo, despierta: tocando, desde: 99, mira, semilla })
+  const pintar = useRef(alPintar)
+  const [ultima, setUltima] = useState(() => foto({ t: 0, k: objetivo, despierta: tocando, desde: 99, mira, semilla }, 0))
+
+  // Las refs se actualizan después de pintar (no durante el render): el bucle lee siempre lo último
+  useEffect(() => {
+    pintar.current = alPintar
+    motor.current.mira = mira
+  })
 
   useEffect(() => {
-    motor.current.objetivo = objetivo
-    if (!activo || quieto) motor.current.k = objetivo
-  }, [objetivo, activo, quieto])
+    const m = motor.current
+    m.objetivo = objetivo
+    if (m.despierta !== tocando) {
+      m.despierta = tocando
+      m.desde = 0
+    }
+    if (quieto) {
+      m.k = objetivo
+      m.desde = 99
+      const f = foto(m, performance.now())
+      if (pintar.current) pintar.current(f)
+      else setUltima(f)
+    }
+  }, [objetivo, tocando, quieto])
 
   useEffect(() => {
-    if (!activo || quieto) return
+    if (quieto) return
     let raf
     let antes = performance.now()
     const paso = (ahora) => {
@@ -27,15 +58,16 @@ export function useMascota(bpm, activo = true) {
       antes = ahora
       const m = motor.current
       m.t += dt
+      m.desde += dt
       m.k += (m.objetivo - m.k) * Math.min(1, dt * 2.5)
-      setFoto({ t: m.t, k: m.k, ahora })
+      const f = foto(m, ahora)
+      if (pintar.current) pintar.current(f)
+      else setUltima(f)
       raf = requestAnimationFrame(paso)
     }
     raf = requestAnimationFrame(paso)
     return () => cancelAnimationFrame(raf)
-  }, [activo, quieto])
+  }, [quieto])
 
-  const enMarcha = activo && !quieto
-  // ahora: marca del fotograma (ms), para medir el tiempo desde un golpe externo (un tap)
-  return { t: foto.t, k: enMarcha ? foto.k : objetivo, ahora: foto.ahora, enMarcha }
+  return { ...ultima, enMarcha: !quieto }
 }

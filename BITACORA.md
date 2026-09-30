@@ -315,3 +315,33 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **SVG accesible:** cada nodo es un `<g role="button" tabIndex={0}>` con `aria-label` y Enter/Espacio.
 - **Dibujar una línea con CSS:** `pathLength="1"` + `stroke-dasharray: 1` y animar `stroke-dashoffset` de 1 a 0. Con `prefers-reduced-motion`, aparece sin animación.
 - **Pasar datos al navegar:** `navigate('/sets', { state: { aviso } })` y en Sets `useLocation().state`.
+
+## Sesión 12 · 30 sep 2026 · Inicio y mascota viva
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Inicio en rosa (`/`) | La mascota en el centro de un racimo de círculos. Los negros son las secciones; el resto, adornos |
+| Entrar en negro | Al tocar un círculo, se abre en negro hasta cubrir la pantalla y entras en la sección |
+| Volver en rosa | El logo (y la mascota de las pestañas en el móvil) abre un círculo rosa y vuelve al inicio |
+| Biblioteca a `/biblioteca` | El inicio ocupa `/`; en el inicio no hay menú lateral ni pestañas: los círculos son el menú |
+| Mascota viva | En pausa se duerme (ojos cerrados, respira); al sonar se despierta. Parpadea, mira alrededor y se mece. En el inicio mira el círculo que tocas |
+| Mascota más ligera | Las pequeñas ya no provocan un render de React por fotograma: el motor escribe directo en el SVG |
+| Carga por pantalla | Tap, Radio, Armonía y Sets se descargan al abrirlas; el inicio las precarga al pasar por su círculo |
+| Transición entre pantallas | Cada pantalla entra con un fundido corto; si la descarga tarda, aparece la mascota |
+| Textos | Fuera explicaciones largas y repeticiones (Armonía, Sets, Radio, ajustes de música) |
+| Juego | Sección nueva en el menú («Pronto») |
+| Probado | 63 pruebas; todas las rutas en escritorio y móvil, sin errores ni desbordes |
+
+### Decisiones
+- **El racimo se calcula, no se dibuja a mano:** cada círculo se apoya en dos que ya están y busca el hueco libre más cercano al centro (`lib/burbujas.js`). Se adapta a la forma de la pantalla.
+- **La transición vive fuera de React:** el círculo se pinta en el `body` para sobrevivir al cambio de pantalla y fundirse cuando la nueva ya está debajo.
+- **Mascota plana en el inicio:** negra, sin eco, como los círculos que la rodean.
+
+### Qué aprendí
+- **`React.lazy` + `Suspense`:** cada pantalla es un archivo aparte que se descarga al usarla; `Suspense` enseña algo mientras llega. El `import()` se puede lanzar antes (al pasar el ratón) y el navegador lo guarda.
+- **Animar sin renders:** con refs y `setAttribute` el bucle cambia el SVG directamente. React solo vuelve a pintar cuando cambia algo de verdad (el ánimo, dormir o despertar).
+- **`key` para reiniciar una animación:** el contenedor de la página lleva `key={pathname}`; al cambiar de ruta se monta de nuevo y su animación de entrada vuelve a sonar.
+- **`clip-path: circle()` animado** con la Web Animations API: el círculo crece desde donde tocas.
+- **Consultas de contenedor (`cqw`, `cqh`):** los círculos y sus textos se miden respecto al racimo, no a la ventana.
+- **Propiedades de transformación sueltas (`scale`, `translate`):** dos animaciones a la vez en el mismo elemento sin pisarse.

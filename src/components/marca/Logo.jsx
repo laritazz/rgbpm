@@ -14,6 +14,7 @@ const TINTAS = {
   color: FRANJAS.map((f) => f.color),
   rosa: Array(5).fill('#FF66C4'),
   blanco: Array(5).fill('#FFFFFF'),
+  negro: Array(5).fill('#000000'),
 }
 
 /** Logotipo RGBPM: cada letra lleva el color de una franja de BPM. `ola` las hace saltar en cadena. */

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Suspense, useRef, useState } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import BarraLateral from './BarraLateral'
 import BarraPestanas from './BarraPestanas'
 import AjustesMusica from '../features/musica/AjustesMusica'
@@ -8,7 +8,10 @@ import { useMusica } from '../features/musica/MusicaContext'
 import PantallaSonando from '../features/musica/PantallaSonando'
 import '../features/musica/Musica.css'
 import Logo from '../components/marca/Logo'
+import Mascota from '../components/marca/Mascota'
 import { useIsla } from '../hooks/useIsla'
+import { ROSA } from '../lib/mascota'
+import { abrirDesde } from './circulo'
 import './Shell.css'
 
 /**
@@ -20,6 +23,8 @@ export default function Shell() {
   const [escena, setEscena] = useState(false)
   const { hayFuente, abrirAjustes } = useMusica()
   const { pathname } = useLocation()
+  const navegar = useNavigate()
+  const enInicio = pathname === '/'
   const [ruta, setRuta] = useState(pathname)
   const contenido = useRef(null)
   const isla = useRef(null)
@@ -34,9 +39,11 @@ export default function Shell() {
   }
 
   return (
-    <div className="shell">
+    <div className={`shell${enInicio ? ' shell--inicio' : ''}`}>
       <header className="shell__movil">
-        <Logo ancho={112} />
+        <button className="shell__logo" onClick={(e) => abrirDesde(e.currentTarget, { color: ROSA, alCubrir: () => navegar('/') })} aria-label="RGBPM, ir al inicio">
+          <Logo ancho={112} />
+        </button>
         <button className="shell__musica" onClick={abrirAjustes}>
           <span className={`lateral__luz${hayFuente ? ' lateral__luz--on' : ''}`} aria-hidden="true" />
           Tu música
@@ -45,7 +52,12 @@ export default function Shell() {
       <BarraLateral abierta={menuAbierto} alCerrar={() => setMenuAbierto(false)} />
       {menuAbierto && <button className="shell__velo" aria-label="Cerrar menú" onClick={() => setMenuAbierto(false)} />}
       <div className="shell__contenido" ref={contenido}>
-        <Outlet />
+        {/* key: cada pantalla entra con su fundido; mientras se descarga, la espera no se ve vacía */}
+        <div className="shell__pagina" key={pathname}>
+          <Suspense fallback={<Cargando />}>
+            <Outlet />
+          </Suspense>
+        </div>
       </div>
       {/* En el móvil, reproductor y pestañas flotan juntos en una isla que se encoge al bajar */}
       <div className={`isla${compacta ? ' isla--compacta' : ''}`} ref={isla}>
@@ -54,6 +66,15 @@ export default function Shell() {
       </div>
       <PantallaSonando abierta={escena} alCerrar={() => setEscena(false)} />
       <AjustesMusica />
+    </div>
+  )
+}
+
+/** Mientras llega una pantalla: la mascota pequeña, que solo aparece si la espera se alarga. */
+function Cargando() {
+  return (
+    <div className="shell__cargando" role="status" aria-label="Cargando">
+      <Mascota bpm={100} variante="icono" tamano={64} etiqueta="" />
     </div>
   )
 }

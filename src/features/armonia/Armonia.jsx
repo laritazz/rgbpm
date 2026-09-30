@@ -76,9 +76,8 @@ export default function Armonia() {
     <div className="armonia">
       <main className="armonia__principal">
         <header className="armonia__cabecera">
-          <span className="etiqueta-seccion">Armonía</span>
-          <h1>Rueda armónica</h1>
-          <p>Toca un tono: se encienden los que pegan y la línea rosa es el set que te propongo desde ahí.</p>
+          <h1>Armonía</h1>
+          <p>Toca un tono y mira qué pega.</p>
         </header>
 
         <div className="armonia__rueda">
@@ -159,7 +158,7 @@ function Controles({ bpm, pasos, poner }) {
           Margen de BPM <output>±{tolerancia} %</output>
         </span>
         <input type="range" min="2" max="16" step="1" value={tolerancia} onChange={(e) => cambiar('tolerancia', Number(e.target.value))} />
-        <small>Lo que estiras el pitch sin que se note. Cuenta doble y mitad de tempo.</small>
+        <small>Cuenta doble y mitad de tempo.</small>
       </label>
 
       <div className="control control--dos">
@@ -180,7 +179,7 @@ function Controles({ bpm, pasos, poner }) {
           Salir de lo que suena · {sonando.titulo}
         </button>
       )}
-      <p className="controles__nota">Notación, desfase y margen valen para toda la app.</p>
+      <p className="controles__nota">Se aplica en toda la app.</p>
     </section>
   )
 }
@@ -200,12 +199,12 @@ function SetSugerido({ semilla, cadena, bpm, alFijar, alOtraTirada }) {
   }
 
   function usarSet() {
-    if (!conTema.length) return setAviso('No tengo temas tuyos en esas claves. Prueba otra salida.')
+    if (!conTema.length) return setAviso('No hay temas en esas claves.')
     set.reemplazar(
       conTema.map((p) => p.elegido.id),
       `Camino desde ${etiqueta(semilla)}`
     )
-    navegar('/sets', { state: { aviso: `Set armado por la rueda: ${conTema.length} de ${cadena.length} pasos con tema. Puedes deshacer, o pulsar «Reordenar» para afinar el BPM.` } })
+    navegar('/sets', { state: { aviso: 'Set armado desde la rueda. Puedes deshacer.' } })
   }
 
   return (
@@ -263,8 +262,8 @@ function PasoSugerido({ paso, numero, abierto, alAbrir, alFijar }) {
         <button className="paso__texto" onClick={alAbrir} disabled={!alternativas.length} aria-expanded={alternativas.length ? abierto : undefined}>
           <strong>{elegido ? elegido.titulo : `Sin temas en ${etiqueta(paso.clave)}`}</strong>
           <small>
-            {elegido ? elegido.artista : 'Tu biblioteca no tiene esta clave'}
-            {alternativas.length > 0 && ` · ${alternativas.length} más en este tono`}
+            {elegido?.artista}
+            {alternativas.length > 0 && ` · +${alternativas.length}`}
           </small>
         </button>
         <span className="paso__clave" style={{ '--c': paso.categoria?.color ?? 'var(--rosa)' }}>
@@ -312,7 +311,7 @@ function QuePega({ semilla, bpm, temas, alElegir }) {
   return (
     <section className="pegan">
       <p className="pegan__nota">
-        Con {bpm} BPM y margen ±{opciones.tolerancia} %. Toca una clave para salir desde ella.
+        {bpm} BPM · ±{opciones.tolerancia} %
       </p>
       {grupos.map(({ categoria, claves, temas: lista, total, fuera }) => {
         const abierta = abiertas.has(categoria.id)
@@ -334,7 +333,7 @@ function QuePega({ semilla, bpm, temas, alElegir }) {
                 ))}
               </div>
             ) : (
-              <p className="grupo__texto">Desde {semilla.menor ? 'una menor' : 'una mayor'} no hay salto de este tipo.</p>
+              <p className="grupo__texto">No aplica desde {semilla.menor ? 'una menor' : 'una mayor'}.</p>
             )}
             {visibles.length > 0 && (
               <ul className="grupo__temas">

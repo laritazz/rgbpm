@@ -4,14 +4,17 @@ import Logo from '../components/marca/Logo'
 import { useBiblioteca } from '../features/biblioteca/BibliotecaContext'
 import { useMusica } from '../features/musica/MusicaContext'
 import { colorBpm } from '../lib/color'
+import { ROSA } from '../lib/mascota'
+import { abrirDesde } from './circulo'
 
 const SECCIONES = [
-  { a: '/', nombre: 'Biblioteca', lista: true },
+  { a: '/biblioteca', nombre: 'Biblioteca', lista: true },
   { a: '/tap', nombre: 'Tap y escucha', lista: true },
   { a: '/radio', nombre: 'Radio', lista: true },
   { a: '/armonia', nombre: 'Armonía', lista: true },
   { a: '/sets', nombre: 'Sets', lista: true },
   { a: '/mezclador', nombre: 'Mezclador' },
+  { a: '/juego', nombre: 'Juego' },
 ]
 
 // Muestra de color de un set: su recorrido de BPM, del más lento al más rápido
@@ -35,17 +38,17 @@ export default function BarraLateral({ abierta, alCerrar }) {
     const archivo = e.target.files?.[0]
     e.target.value = ''
     if (archivo && (await importar(archivo))) {
-      navegar('/')
+      navegar('/biblioteca')
       alCerrar?.() // en el móvil, el cajón se cierra para ver la colección
     }
   }
 
   return (
     <nav id="menu-principal" className={`lateral${abierta ? ' lateral--abierta' : ''}`} aria-label="Principal">
-      <div className="lateral__marca">
+      <button className="lateral__marca" onClick={(e) => abrirDesde(e.currentTarget, { color: ROSA, alCubrir: () => navegar('/') })} aria-label="RGBPM, ir al inicio">
         <Logo ancho={168} />
         <span className="lateral__firma">by LaritaZZ</span>
-      </div>
+      </button>
 
       <ul className="lateral__secciones">
         {SECCIONES.map((s) => (

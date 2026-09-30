@@ -68,7 +68,7 @@ export default function Radio() {
       <main className="radio radio--vacia">
         <MascotaEscena bpm={null} tamano={300} />
         <h1>Radio</h1>
-        <p>Suena sola con tu música, encadenando por armonía. Primero dime dónde está tu música.</p>
+        <p>Suena sola, encadenando por armonía. Conecta tu música para empezar.</p>
         <button className="boton boton--rosa" onClick={musica.abrirAjustes}>
           Conectar tu música
         </button>

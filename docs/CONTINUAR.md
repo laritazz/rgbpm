@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 11 (Armonía). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–11), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 12 (Inicio y mascota viva). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–12), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -23,9 +23,11 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (52 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (63 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
+- **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` y `/mezclador` (estos dos, «Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
+- **Transiciones:** `app/circulo.js` abre un círculo negro al entrar y rosa al volver al inicio.
 - **Estado de la vista en la URL** (`useSearchParams`). Las preferencias de armonía (notación, «corregir desfase», margen de BPM) van en `AjustesArmoniaContext` + `localStorage` y valen para toda la app: usar `etiqueta(clave)` para pintar claves y pasar `opciones` a las funciones de `lib/`.
 - **Audio:** dos `<audio>` con fundido de igual potencia (10 s). Fuentes: carpetas locales (File System Access) o fragmentos privados.
 - **Audio privado:** Supabase Auth → `firmar.php` en IONOS valida el token y el email → enlaces HMAC que caducan (20 min) → `audio.php` sirve con Range.
@@ -87,8 +89,10 @@
 ### Ahora
 | # | Tarea | Nota |
 |---|---|---|
-| 1 | Probar en su iPhone | Isla flotante, mascota como play, app instalada, **y la rueda de Armonía con el dedo** |
-| 2 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
+| 1 | **Elegir el estilo de la rueda** | Prototipo con 3 direcciones: A Vinilo, B Secuenciador, C Onda (artifact «RGBPM Home y Armonía»). Pendiente de que Lara elija |
+| 2 | **Juego** (`/juego`, hoy «Pronto») | Empezar por «Adivina el BPM» (tap sobre la mascota con un fragmento). Después: ¿Pega o choca?, ¿Dónde cae?, Cuadra el tempo, Agita el móvil |
+| 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
+| 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
 
 ✅ **Armonía** hecha en la sesión 11: rueda grande, set sugerido → «Usar este set», notación, desfase y margen de BPM.
 
@@ -115,4 +119,4 @@
 >
 > El repo es `laritazz/rgbpm` (clónalo) y mi carpeta del Mac es `~/RGBPM`.
 >
-> Empezamos por el **Mezclador**: dos platos con onda, SYNC y keylock, hotcues, bucles, EQ, filtro y crossfader. Quiero verlo funcionando y publicado, con la bitácora al día.
+> Empezamos por el **Juego «Adivina el BPM»** y el estilo de la rueda que elegí. Quiero verlo funcionando y publicado, con la bitácora al día.

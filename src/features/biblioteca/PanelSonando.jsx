@@ -83,7 +83,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
       <div className="sonando__rueda">
         <RuedaMini semilla={tema.clave} corregir={corregir} etiqueta={etiqueta} />
         <p>
-          En rosa, su clave. En color, con qué mezcla: cada color es una de tus siete categorías.
+          Rosa: su clave. Color: con qué mezcla.
         </p>
       </div>
 

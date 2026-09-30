@@ -15,9 +15,10 @@ const BARRAS = 48
  * - reloj: late sola al `bpm` (modo reproductor).
  * - golpes: late cuando le llega `ultimoGolpe` (ms de performance.now), p. ej. un tap.
  * `nivel` (0–1) empuja el ecualizador con el volumen real del micro. `drop` (ms) dispara el estallido.
+ * En pausa se duerme; siempre parpadea, mira alrededor y se mece.
  */
-export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null, nivel = 0, drop = null, tamano = 360, etiqueta }) {
-  const { t, k, ahora } = useMascota(bpm ?? 110, tocando)
+export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null, nivel = 0, drop = null, tamano = 360, etiqueta, mira = null }) {
+  const { t, k, ahora, vida } = useMascota(bpm ?? 110, tocando, { mira })
   const halo = useId()
   const color = bpm ? colorBpm(bpm) : '#8c8c8c'
 
@@ -35,8 +36,9 @@ export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null,
   const compas = Math.floor(golpes / 4)
   const resto = golpes / 4 - compas
   const giro = (compas + conRebote(Math.max(0, (resto - 0.75) / 0.25))) * 45 * kFinal + estallido * 180
-  const sx = 1 + 0.07 * pulso + estallido * 0.12
-  const sy = 1 - 0.06 * pulso + estallido * 0.12
+  const sx = (1 + 0.07 * pulso + estallido * 0.12) * vida.respira
+  const sy = (1 - 0.06 * pulso + estallido * 0.12) * vida.respira
+  const [dx, dy] = vida.deriva
   const relleno = mezclar(color, '#ffffff', estallido * 0.35)
 
   const eq = []
@@ -56,9 +58,9 @@ export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null,
       </defs>
       <circle r={250 + 60 * pulso + 80 * estallido} fill={`url(#${halo})`} />
       <g>{eq}</g>
-      <g transform={`rotate(${giro.toFixed(2)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})`}>
-        <path d={forma(kFinal)} fill={relleno} />
-        <Cara animo={bpm ? animoDe(bpm).id : 'calma'} color="#000000" parpadea={t % 3.7 < 0.13} pulso={pulso} />
+      <g transform={`translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})`}>
+        <path d={forma(kFinal)} fill={relleno} transform={`rotate(${giro.toFixed(2)})`} />
+        <Cara animo={!tocando ? 'dormida' : bpm ? animoDe(bpm).id : 'calma'} color="#000000" parpado={vida.parpado} ojo={vida.ojo} pulso={pulso} />
       </g>
     </svg>
   )
