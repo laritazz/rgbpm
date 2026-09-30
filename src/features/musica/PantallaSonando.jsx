@@ -60,45 +60,46 @@ export default function PantallaSonando({ abierta, alCerrar }) {
         <span className="etiqueta-seccion">{fundiendo ? 'Mezclando…' : cola.length ? `Radio · ${indice + 1} de ${cola.length}` : 'Sonando'}</span>
       </div>
 
-      <div className="escena__mascota" onDoubleClick={() => setDrop(performance.now())}>
-        <MascotaEscena bpm={bpm} tocando={sonando} drop={drop} tamano={420} />
-      </div>
+      <div className="escena__principal">
+        {/* La mascota es el play: un toque pausa o reanuda */}
+        <button className={`escena__mascota${sonando ? '' : ' escena__mascota--pausa'}`} onClick={alternar} aria-label={sonando ? 'Pausa' : 'Reproducir'}>
+          <MascotaEscena bpm={bpm} tocando={sonando} drop={drop} tamano={420} />
+          <span className="escena__estado" aria-hidden="true">
+            {sonando ? <IconoPausa width={28} height={28} /> : <IconoPlay width={34} height={34} />}
+          </span>
+        </button>
 
-      <header className="escena__ficha">
-        <h2>{tema.titulo}</h2>
-        <p>{tema.artista}</p>
-        <ul className="escena__datos">
-          <li>{bpm ? `${bpm} BPM` : 'Sin BPM'}</li>
-          {tema.clave && (
-            <li>
-              {tema.clave.id} · {tema.clave.nombre}
-            </li>
-          )}
-          {bpm && <li className="escena__franja">{franjaDe(bpm).nombre}</li>}
-        </ul>
-        <div className="escena__set">
+        <header className="escena__ficha">
+          <h2>{tema.titulo}</h2>
+          <p>{tema.artista}</p>
+          <ul className="escena__datos">
+            <li>{bpm ? `${bpm} BPM` : 'Sin BPM'}</li>
+            {tema.clave && (
+              <li>
+                {tema.clave.id} · {tema.clave.nombre}
+              </li>
+            )}
+            {bpm && <li className="escena__franja">{franjaDe(bpm).nombre}</li>}
+          </ul>
+        </header>
+
+        <div className="escena__tiempo">
+          <input type="range" min="0" max={duracion || 0} step="0.1" value={tiempo} onChange={(e) => buscar(Number(e.target.value))} aria-label="Posición" />
+          <div>
+            <span>{reloj(tiempo)}</span>
+            <span>-{reloj(Math.max(0, duracion - tiempo))}</span>
+          </div>
+        </div>
+
+        <div className="escena__mandos">
+          <button className="escena__drop" onClick={() => setDrop(performance.now())} disabled={!sonando}>
+            Drop
+          </button>
           <BotonSet tema={tema} />
+          <button className="escena__siguiente" onClick={siguiente} disabled={!proximo || fundiendo} aria-label="Siguiente con fundido">
+            <IconoSiguiente width={28} height={28} />
+          </button>
         </div>
-      </header>
-
-      <div className="escena__tiempo">
-        <input type="range" min="0" max={duracion || 0} step="0.1" value={tiempo} onChange={(e) => buscar(Number(e.target.value))} aria-label="Posición" />
-        <div>
-          <span>{reloj(tiempo)}</span>
-          <span>-{reloj(Math.max(0, duracion - tiempo))}</span>
-        </div>
-      </div>
-
-      <div className="escena__mandos">
-        <button className="escena__drop" onClick={() => setDrop(performance.now())} disabled={!sonando}>
-          Drop
-        </button>
-        <button className="escena__play" onClick={alternar} aria-label={sonando ? 'Pausa' : 'Reproducir'}>
-          {sonando ? <IconoPausa width={34} height={34} /> : <IconoPlay width={34} height={34} />}
-        </button>
-        <button className="escena__siguiente" onClick={siguiente} disabled={!proximo || fundiendo} aria-label="Siguiente con fundido">
-          <IconoSiguiente width={28} height={28} />
-        </button>
       </div>
 
       {proximo && (

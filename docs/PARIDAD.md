@@ -87,3 +87,5 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Móvil: pestañas con la mascota, mini reproductor y pantalla completa | ✨ |
 | Audio privado: login, fragmentos anónimos de 90 s y enlaces que caducan | ✨ |
 | Todo el estado de la vista en la URL (compartible) | ✨ |
+| La mascota es el play en «Sonando» | ✨ |
+| Instalable en el móvil (PWA), sin barras del navegador | ✨ |

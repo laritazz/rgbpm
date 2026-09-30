@@ -264,3 +264,19 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **FLIP** (First, Last, Invert, Play): mido dónde estaba cada fila, dónde está ahora, y animo la diferencia con la Web Animations API.
 - **Arrastrar y soltar nativo:** `draggable`, `dragover` y `drop`; en el móvil no existe, así que hay botones.
 - **Exportar sin servidor:** `Blob` + enlace de descarga.
+
+## Sesión 10 · 30 sep 2026 · Suena en el móvil
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Fragmentos de LN 27J | 79 de 79, subidos a IONOS; el script encuentra solo los temas movidos (Spotlight) |
+| Demo con audio | Los temas sin ruta encuentran su fragmento por artista y título |
+| «Sonando» en el móvil | La mascota es el play; todo cabe en pantalla, también con las barras del navegador |
+| Instalable | «Añadir a pantalla de inicio» la abre como app, sin barras del navegador |
+
+### Qué aprendí
+- **Diagnosticar antes de arreglar:** «sin archivo» podía ser un permiso de macOS o un tema movido. El script ahora distingue `EPERM` de `ENOENT`.
+- **Una segunda llave anónima:** el servidor guarda `resumen(artista + título) → fragmento`, nunca el texto.
+- **Flexbox que se adapta a la altura:** la mascota tiene `flex: 1 1 0` y el SVG va en `position: absolute` al 100 %: crece o encoge con el hueco libre.
+- **Web App Manifest:** `display: standalone`, iconos y `theme-color` convierten la web en app instalable (PWA).
