@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 13 (Iconos y rueda vinilo). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–13), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 14 (Cartel vivo y primer juego). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–14), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -23,10 +23,10 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (65 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (81 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
-- **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` y `/mezclador` (estos dos, «Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
+- **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` (con `/juego/bpm`) y `/mezclador` («Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
 - **Transiciones:** `app/circulo.js` abre un círculo negro al entrar y rosa al volver al inicio.
 - **Estado de la vista en la URL** (`useSearchParams`). Las preferencias de armonía (notación, «corregir desfase», margen de BPM) van en `AjustesArmoniaContext` + `localStorage` y valen para toda la app: usar `etiqueta(clave)` para pintar claves y pasar `opciones` a las funciones de `lib/`.
 - **Audio:** dos `<audio>` con fundido de igual potencia (10 s). Fuentes: carpetas locales (File System Access) o fragmentos privados.
@@ -90,7 +90,7 @@
 | # | Tarea | Nota |
 |---|---|---|
 | 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
-| 2 | **Juego** (`/juego`, hoy «Pronto») | Empezar por «Adivina el BPM» (tap sobre la mascota con un fragmento). Después: ¿Pega o choca?, ¿Dónde cae?, Cuadra el tempo, Agita el móvil |
+| 2 | **Más juegos** | Hecho «Adivina el BPM». Siguen: ¿Pega o choca? (categorías), ¿Dónde cae? (rueda), Cuadra el tempo (beatmatching), Agita el móvil. Opcional: ranking en Supabase (tabla `puntuaciones` con RLS) |
 | 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
 | 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
 
@@ -119,4 +119,4 @@
 >
 > El repo es `laritazz/rgbpm` (clónalo) y mi carpeta del Mac es `~/RGBPM`.
 >
-> Empezamos por el **Juego «Adivina el BPM»**. Quiero verlo funcionando y publicado, con la bitácora al día.
+> Seguimos con el juego **«¿Pega o choca?»**. Quiero verlo funcionando y publicado, con la bitácora al día.

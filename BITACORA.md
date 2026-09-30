@@ -366,3 +366,28 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Relajación:** repetir «empuja lo que se pisa, mete dentro lo que se sale» hasta que todo encaja. Es un bucle pequeño y se puede probar sin navegador.
 - **`<animateMotion>`:** un elemento de SVG que mueve otro a lo largo de un camino, sin JavaScript.
 - **Componentes como datos:** en la lista de secciones, `Icono` es el propio componente; se pinta con `<s.Icono />`.
+
+## Sesión 14 · 30 sep 2026 · Cartel vivo y primer juego
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Inicio como cartel | Círculos negros de tamaños muy distintos, algunos cortados por el borde (referencias: *Particle Playground*, *Musica Viva*, *Size matters*) |
+| Tinta líquida | Los círculos que se acercan se funden como gotas; unas gotas pequeñas van y vienen. El borde es irregular, como mi tipografía |
+| Tamaño = tus datos | Cada círculo crece con lo que usas: temas, tonos, sets, cazados, récord del juego, temas con audio. Y lo dice dentro («153 temas», «Récord 295») |
+| Resumen en vivo | Bajo el logo: temas, tonos y rango de BPM de tu colección |
+| Iconos de puntos | Cuatro discos, rueda de puntos, gotas encadenadas, ondas, dado, emisión y faders: el mismo lenguaje que los círculos |
+| Juego (`/juego`) | Cuatro juegos; el primero ya se juega |
+| Adivina el BPM (`/juego/bpm`) | 5 rondas repartidas por todo tu rango de BPM. Suena tu tema (archivo o fragmento privado) o, si no hay audio, un ritmo sintetizado. Tocas la mascota, dices «Listo» y te puntúa; vale doble o medio tempo. La mascota reacciona (euforia si lo clavas). Récord guardado |
+| Probado | 81 pruebas; partida completa en el navegador (295/500) y el récord aparece en el inicio |
+
+### Decisiones
+- **Composición a mano, tamaño por datos:** dos composiciones (apaisada y vertical) diseñadas como un cartel; los datos solo escalan cada círculo entre el 82 % y el 112 %, para que nunca se rompa.
+- **El juego suena aparte del reproductor:** si usara la barra de abajo, chivaría el título.
+- **El récord va en el navegador (IndexedDB).** Un ranking compartido necesitaría una tabla en Supabase.
+
+### Qué aprendí
+- **Metaballs con SVG:** `feGaussianBlur` (desenfoca) + `feColorMatrix` (umbral en la transparencia) = formas que se unen al acercarse. `feTurbulence` + `feDisplacementMap` = borde imperfecto.
+- **Texto que cabe:** calculo el tamaño de letra con el ancho del círculo y el número de letras; si no cabe, el dato se esconde.
+- **Web Audio con reloj propio:** los golpes se programan por adelantado con `ctx.currentTime`; un `setInterval` solo rellena la cola. Suena exacto aunque la pantalla vaya lenta.
+- **Un hook que limpia al salir:** `useSonido` para el audio al desmontarse (`useEffect(() => parar, [parar])`).

@@ -102,51 +102,82 @@ export const IconoSubir = (p) => (
   </svg>
 )
 
-// ——— Iconos de sección (inicio, menú lateral y pestañas) ———
+// ——— Iconos de sección: puntos y gotas, el mismo lenguaje que los círculos del inicio ———
+const relleno = { fill: 'currentColor', stroke: 'none' }
 
-/** Biblioteca: un disco asomando de su funda. */
+/** Biblioteca: cuatro discos, tu colección. */
 export const IconoDiscos = (p) => (
   <svg {...base} {...p}>
-    <rect x="3" y="5" width="12" height="14" rx="1.5" />
-    <path d="M15 7.2a6 6 0 1 1 0 9.6" />
-    <circle cx="15" cy="12" r="1.2" />
+    <circle cx="7" cy="7" r="4.2" {...relleno} />
+    <circle cx="17" cy="7" r="4.2" {...relleno} />
+    <circle cx="7" cy="17" r="4.2" {...relleno} />
+    <circle cx="17" cy="17" r="4.2" />
   </svg>
 )
 
-/** Armonía: la rueda de tonos, con un sector encendido. */
+/** Armonía: la rueda de tonos; uno encendido. */
 export const IconoRueda = (p) => (
   <svg {...base} {...p}>
-    <circle cx="12" cy="12" r="8.5" />
-    <circle cx="12" cy="12" r="3.5" />
-    <path d="M12 3.5v5M20.5 12h-5M12 20.5v-5M3.5 12h5" />
-    <path d="M12 3.5A8.5 8.5 0 0 1 20.5 12H15.5A3.5 3.5 0 0 0 12 8.5Z" fill="currentColor" />
+    {Array.from({ length: 12 }, (_, i) => {
+      const a = ((i * 30 - 90) * Math.PI) / 180
+      return <circle key={i} cx={12 + Math.cos(a) * 8.6} cy={12 + Math.sin(a) * 8.6} r={i === 0 ? 2.6 : 1.3} {...relleno} />
+    })}
+    <circle cx="12" cy="12" r="3.2" {...relleno} />
   </svg>
 )
 
-/** Juego: un mando. */
-export const IconoJuego = (p) => (
+/** Sets: temas encadenados, como gotas que se unen. */
+export const IconoCadena = (p) => (
   <svg {...base} {...p}>
-    <path d="M7.5 7h9a4.5 4.5 0 0 1 4.4 5.4l-.8 4a2.4 2.4 0 0 1-4.2 1L14 15.5h-4l-1.9 1.9a2.4 2.4 0 0 1-4.2-1l-.8-4A4.5 4.5 0 0 1 7.5 7Z" />
-    <path d="M8 10v3M6.5 11.5h3" />
-    <circle cx="15.5" cy="10.5" r=".6" fill="currentColor" />
-    <circle cx="17.5" cy="12.5" r=".6" fill="currentColor" />
+    <path d="M5.5 16.5 12 9.5l6.5 5" strokeWidth="3.4" />
+    <circle cx="5.5" cy="16.5" r="3.3" {...relleno} />
+    <circle cx="12" cy="9.5" r="3.3" {...relleno} />
+    <circle cx="18.5" cy="14.5" r="3.3" {...relleno} />
   </svg>
 )
 
-/** Escuchar: un micro captando el ritmo. */
+/** Escuchar: un punto y las ondas que capta. */
 export const IconoEscuchar = (p) => (
   <svg {...base} {...p}>
-    <rect x="9" y="3" width="6" height="11" rx="3" />
-    <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6" />
+    <circle cx="12" cy="12" r="3.4" {...relleno} />
+    <circle cx="12" cy="12" r="6.6" strokeWidth="2" />
+    <circle cx="12" cy="12" r="9.8" strokeWidth="1.6" strokeDasharray="2.2 3" />
+  </svg>
+)
+
+/** Juego: un dado (cinco). */
+export const IconoDado = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="5.5" strokeWidth="2" />
+    {[
+      [8, 8],
+      [16, 8],
+      [12, 12],
+      [8, 16],
+      [16, 16],
+    ].map(([x, y]) => (
+      <circle key={`${x}${y}`} cx={x} cy={y} r="1.7" {...relleno} />
+    ))}
+  </svg>
+)
+
+/** Radio: un punto que emite, en gotas cada vez más pequeñas. */
+export const IconoOndas = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="3" {...relleno} />
+    <circle cx="5.5" cy="12" r="2" {...relleno} />
+    <circle cx="18.5" cy="12" r="2" {...relleno} />
+    <circle cx="1.8" cy="12" r="1.2" {...relleno} />
+    <circle cx="22.2" cy="12" r="1.2" {...relleno} />
   </svg>
 )
 
 /** Mezclador: dos faders y el crossfader. */
 export const IconoMezclador = (p) => (
   <svg {...base} {...p}>
-    <path d="M7 3v10M17 3v10M4 19.5h16" />
-    <rect x="5" y="5.5" width="4" height="3" rx="1" fill="currentColor" />
-    <rect x="15" y="8.5" width="4" height="3" rx="1" fill="currentColor" />
-    <rect x="10" y="18" width="4" height="3" rx="1" fill="currentColor" />
+    <path d="M7 3v12M17 3v12M4 20.5h16" strokeWidth="1.8" />
+    <circle cx="7" cy="7" r="2.8" {...relleno} />
+    <circle cx="17" cy="11" r="2.8" {...relleno} />
+    <circle cx="11" cy="20.5" r="2.8" {...relleno} />
   </svg>
 )

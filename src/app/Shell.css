@@ -366,7 +366,7 @@
   }
 
   /* Nada queda debajo de la isla: cada página deja su hueco al final */
-  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .home__zona) {
+  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .juego, .adivina) {
     padding-bottom: calc(var(--hueco-isla, 140px) + 24px);
   }
 

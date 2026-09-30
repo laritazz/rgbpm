@@ -17,7 +17,7 @@ const BARRAS = 48
  * `nivel` (0–1) empuja el ecualizador con el volumen real del micro. `drop` (ms) dispara el estallido.
  * En pausa se duerme; siempre parpadea, mira alrededor y se mece.
  */
-export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null, nivel = 0, drop = null, tamano = 360, etiqueta, mira = null }) {
+export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null, nivel = 0, drop = null, tamano = 360, etiqueta, mira = null, animo = null }) {
   const { t, k, ahora, vida } = useMascota(bpm ?? 110, tocando, { mira })
   const halo = useId()
   const color = bpm ? colorBpm(bpm) : '#8c8c8c'
@@ -60,7 +60,7 @@ export default function MascotaEscena({ bpm, tocando = true, ultimoGolpe = null,
       <g>{eq}</g>
       <g transform={`translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})`}>
         <path d={forma(kFinal)} fill={relleno} transform={`rotate(${giro.toFixed(2)})`} />
-        <Cara animo={!tocando ? 'dormida' : bpm ? animoDe(bpm).id : 'calma'} color="#000000" parpado={vida.parpado} ojo={vida.ojo} pulso={pulso} />
+        <Cara animo={animo ?? (!tocando ? 'dormida' : bpm ? animoDe(bpm).id : 'calma')} color="#000000" parpado={vida.parpado} ojo={vida.ojo} pulso={pulso} />
       </g>
     </svg>
   )

@@ -94,3 +94,5 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Inicio en rosa: racimo de círculos con la mascota, se entra abriendo el círculo en negro | ✨ |
 | Mascota viva: duerme en pausa, se despierta, parpadea y mira adonde vas | ✨ |
 | Cada pantalla se descarga al abrirla (y se precarga desde el inicio) | ✨ |
+| Inicio como cartel vivo: círculos que se funden como gotas; su tamaño sale de tus datos | ✨ |
+| Juego «Adivina el BPM» con tus temas (o ritmo sintetizado) y récord | ✨ |

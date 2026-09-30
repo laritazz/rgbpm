@@ -16,11 +16,12 @@ const Tap = lazy(cargar.tap)
 const Radio = lazy(cargar.radio)
 const Armonia = lazy(cargar.armonia)
 const Sets = lazy(cargar.sets)
+const Juego = lazy(cargar.juego)
+const AdivinaBpm = lazy(cargar.juegoBpm)
 
 // Lo que llega en los próximos sprints. La mascota cambia de ánimo en cada sección.
 const PRONTO = [
   { ruta: 'mezclador', titulo: 'Mezclador', sprint: 3, bpm: 146, texto: 'Dos platos y crossfader para probar la transición antes del bolo.' },
-  { ruta: 'juego', titulo: 'Juego', sprint: 4, bpm: 150, texto: 'Adivina el BPM y la clave de tus temas.' },
 ]
 
 // HashRouter: GitHub Pages no sabe de rutas, así que van detrás de la almohadilla (#/sets)
@@ -41,6 +42,8 @@ export default function App() {
                     <Route path="radio" element={<Radio />} />
                     <Route path="armonia" element={<Armonia />} />
                     <Route path="sets" element={<Sets />} />
+                    <Route path="juego" element={<Juego />} />
+                    <Route path="juego/bpm" element={<AdivinaBpm />} />
                     {PRONTO.map(({ ruta, ...p }) => (
                       <Route key={ruta} path={ruta} element={<Proximamente {...p} />} />
                     ))}

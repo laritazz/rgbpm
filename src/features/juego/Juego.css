@@ -1,0 +1,332 @@
+/* Juego: se entra en negro. Tarjetas grandes; dentro del juego, la mascota manda. */
+.juego {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  padding: 28px 32px 40px;
+  overflow-y: auto;
+}
+
+.juego__cabecera h1,
+.adivina h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.juego__cabecera p {
+  margin-top: 6px;
+  font-weight: 300;
+  color: var(--gris-2);
+}
+
+.juegos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.juegos__tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  min-height: 220px;
+  padding: 22px;
+  border-radius: 28px;
+  background: var(--rosa);
+  color: var(--negro);
+  text-decoration: none;
+  transition:
+    scale 260ms var(--curva-muelle),
+    background 200ms;
+}
+
+.juegos__tarjeta:hover {
+  scale: 1.02;
+}
+
+.juegos__tarjeta:active {
+  scale: 0.97;
+}
+
+.juegos__tarjeta--pronto {
+  background: var(--superficie-2);
+  color: var(--gris-2);
+}
+
+.juegos__icono {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--negro);
+  color: var(--rosa);
+}
+
+.juegos__tarjeta--pronto .juegos__icono {
+  background: var(--negro);
+  color: var(--gris-3);
+}
+
+.juegos__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.juegos__texto strong {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.juegos__texto small {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.juegos__estado {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: var(--pildora);
+  background: var(--negro);
+  color: var(--blanco);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.juego__nota {
+  font-size: 13px;
+  color: var(--gris-3);
+}
+
+/* ——— Adivina el BPM ——— */
+.adivina {
+  --color: #333333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  padding: 20px 20px 32px;
+  overflow-y: auto;
+  text-align: center;
+  background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--color) 26%, transparent), transparent 62%);
+  transition: background 600ms var(--curva-salida);
+}
+
+.adivina--inicio,
+.adivina--final {
+  justify-content: center;
+}
+
+.adivina p {
+  color: var(--gris-2);
+  font-weight: 300;
+  max-width: 34ch;
+}
+
+.adivina__volver {
+  align-self: flex-start;
+  color: var(--gris-2);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.adivina__principal {
+  min-width: 200px;
+  height: 52px;
+  font-size: 16px;
+}
+
+.adivina__meta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris-3);
+}
+
+.adivina__barra {
+  display: flex;
+  justify-content: space-between;
+  align-self: stretch;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.adivina__escenario {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: scale 120ms;
+}
+
+.adivina__escenario:active:not(:disabled) {
+  scale: 0.97;
+}
+
+.adivina__escenario:disabled {
+  cursor: default;
+}
+
+.adivina__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.adivina__lectura {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.adivina__pista {
+  font-size: 13px;
+  color: var(--gris-2);
+  margin-bottom: 6px;
+}
+
+.adivina__veredicto {
+  font-size: 34px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--rosa);
+  animation: adivina-salta 420ms var(--curva-muelle);
+}
+
+.adivina__cifras {
+  font-size: 18px;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.adivina__cifras b {
+  color: var(--blanco);
+}
+
+.adivina__tema {
+  max-width: 36ch;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.adivina__puntos {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.adivina__sello {
+  padding: 6px 14px;
+  border-radius: var(--pildora);
+  background: var(--rosa);
+  color: var(--negro);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  animation: adivina-salta 520ms var(--curva-muelle);
+}
+
+.adivina--final h1 small {
+  font-size: 0.4em;
+  color: var(--gris-3);
+}
+
+.adivina__repaso {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 420px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.adivina__repaso li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adivina__muestra {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: var(--color);
+}
+
+.adivina__repaso-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.adivina__repaso-texto strong {
+  font-size: 13px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adivina__repaso-texto small {
+  font-size: 12px;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.adivina__repaso b {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.adivina__acciones {
+  display: flex;
+  gap: 10px;
+}
+
+@keyframes adivina-salta {
+  from {
+    scale: 0.6;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .juego {
+    padding: 18px 14px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adivina__veredicto,
+  .adivina__sello {
+    animation: none;
+  }
+}

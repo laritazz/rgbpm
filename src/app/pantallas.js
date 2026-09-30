@@ -5,6 +5,8 @@ export const cargar = {
   radio: () => import('../features/radio/Radio'),
   armonia: () => import('../features/armonia/Armonia'),
   sets: () => import('../features/sets/Sets'),
+  juego: () => import('../features/juego/Juego'),
+  juegoBpm: () => import('../features/juego/AdivinaBpm'),
 }
 
 export const precargar = (id) => cargar[id]?.().catch(() => {})

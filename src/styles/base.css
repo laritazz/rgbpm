@@ -96,6 +96,7 @@ a {
   border-radius: var(--pildora);
   font-size: 14px;
   font-weight: 800;
+  text-decoration: none;
   transition:
     transform 160ms var(--curva-salida),
     background 160ms;

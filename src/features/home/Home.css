@@ -1,22 +1,45 @@
-/* Home: fondo rosa, la mascota en el centro de un racimo de círculos (las secciones, en negro) */
+/* Inicio: un cartel vivo en rosa. Los círculos llegan hasta el borde de la pantalla; la cabecera flota encima. */
 .home {
-  --tinta: #000000;
-  display: flex;
-  flex-direction: column;
+  position: relative;
   height: 100%;
   background: var(--rosa);
-  color: var(--tinta);
+  color: #000000;
   overflow: hidden;
 }
 
 .home__cabecera {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   padding: max(20px, env(safe-area-inset-top)) 28px 0;
+  pointer-events: none;
 }
 
+.home__cabecera > * {
+  pointer-events: auto;
+}
+
+.home__marca {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Tus datos en vivo, como el pie de un cartel */
+.home__resumen {
+  max-width: 30ch;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rosa con borde negro: se lee igual sobre el fondo que sobre un círculo */
 .home__musica {
   display: inline-flex;
   align-items: center;
@@ -24,8 +47,9 @@
   height: 40px;
   padding: 0 16px;
   border-radius: var(--pildora);
-  background: var(--tinta);
-  color: var(--blanco);
+  background: var(--rosa);
+  border: 2px solid #000000;
+  color: #000000;
   font-size: 14px;
   font-weight: 800;
   transition: scale 160ms var(--curva-muelle);
@@ -39,114 +63,129 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--gris-3);
+  background: #00000055;
 }
 
 .home__luz--on {
-  background: var(--rosa);
-  box-shadow: 0 0 8px var(--rosa);
+  background: #000000;
 }
 
 .home__zona {
-  flex: 1;
-  min-height: 0;
-  margin: 8px 24px 24px;
-  display: grid;
-  place-items: center;
-}
-
-/* El racimo mide lo mismo que la zona: se empaqueta ya con su forma */
-.burbujas {
-  position: relative;
-  width: 100%;
-  aspect-ratio: var(--aspecto);
-  max-height: 100%;
-  container-type: inline-size;
-}
-
-.burbuja {
   position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  /* dos animaciones sin pisarse: «scale» para aparecer y «translate» para flotar */
+  inset: 0;
+}
+
+.cartel {
+  display: block;
+  font-family: var(--fuente);
+}
+
+.cartel__tinta,
+.cartel__gota {
+  fill: #000000;
+}
+
+/* Todo flota un poco, cada círculo a su ritmo; la etiqueta va con su círculo */
+.cartel__tinta,
+.cartel__seccion {
   animation:
-    burbuja-aparece 520ms var(--curva-muelle) calc(var(--i) * 40ms) backwards,
-    burbuja-flota var(--dur) ease-in-out var(--retraso) infinite alternate;
+    cartel-aparece 700ms var(--curva-muelle) calc(var(--i) * 60ms) backwards,
+    cartel-flota var(--dur) ease-in-out var(--retraso) infinite alternate;
+  transition: scale 380ms var(--curva-muelle);
 }
 
-.burbuja--seccion {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35em;
-  padding: 0 0.4em;
-  background: var(--tinta);
-  color: var(--blanco);
-  font-size: clamp(13px, calc(var(--r) * 0.19cqw), 30px);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  text-align: center;
-  line-height: 1;
-  transition:
-    scale 260ms var(--curva-muelle),
-    color 200ms;
+.cartel__tinta--quieta {
+  animation: cartel-aparece 700ms var(--curva-muelle) backwards;
 }
 
-.burbuja--seccion:hover,
-.burbuja--seccion:focus-visible {
-  scale: 1.07;
-  color: var(--rosa);
+.cartel__tinta--activa,
+.cartel__seccion--activa {
+  scale: 1.06;
 }
 
-.burbuja--seccion:active {
-  scale: 0.95;
+/* Las gotas van y vienen: al acercarse a un círculo se funden con él */
+.cartel__gota {
+  animation: cartel-gota var(--dur) ease-in-out var(--retraso) infinite alternate;
 }
 
-.burbuja--seccion:focus-visible {
-  outline: 3px solid var(--blanco);
-  outline-offset: 4px;
-}
-
-/* La mascota ocupa su hueco: el disco mide 2/3 del dibujo, así que el SVG se agranda para llenarlo */
-.burbuja--mascota {
-  display: grid;
-  place-items: center;
-}
-
-.burbuja--mascota .mascota {
-  width: 128%;
-  height: auto;
-  flex-shrink: 0;
-}
-
-/* El icono crece con el círculo: un tercio de su diámetro */
-.burbuja__icono {
-  width: calc(var(--r) * 0.62cqw);
-  height: auto;
-  min-width: 26px;
-  max-width: 96px;
-  stroke-width: 1.6;
-}
-
-/* Lo que aún no está: el mismo círculo, un poco apagado */
-.burbuja--pronto {
-  color: #ffffffa6;
-}
-
-@keyframes burbuja-aparece {
+@keyframes cartel-aparece {
   from {
     scale: 0;
   }
 }
 
-@keyframes burbuja-flota {
+@keyframes cartel-flota {
   from {
-    translate: 0 -0.35cqw;
+    translate: -0.5px -0.8px;
   }
   to {
-    translate: 0.25cqw 0.4cqw;
+    translate: 0.6px 0.9px;
   }
+}
+
+@keyframes cartel-gota {
+  from {
+    translate: -2.4px -1.6px;
+  }
+  to {
+    translate: 2.4px 1.8px;
+  }
+}
+
+.cartel__seccion {
+  cursor: pointer;
+  outline: none;
+}
+
+.cartel__toque {
+  fill: transparent;
+}
+
+.cartel__seccion:focus-visible .cartel__toque {
+  stroke: #ffffff;
+  stroke-width: 0.6;
+}
+
+.cartel__icono {
+  color: var(--rosa);
+  pointer-events: none;
+}
+
+.cartel__nombre {
+  fill: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.cartel__dato {
+  fill: var(--rosa);
+  font-weight: 600;
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* Lo que aún no está: el mismo círculo, con el texto apagado */
+.cartel__seccion--pronto .cartel__nombre {
+  fill: #ffffff99;
+}
+
+.cartel__seccion--pronto .cartel__icono,
+.cartel__seccion--pronto .cartel__dato {
+  opacity: 0.6;
+}
+
+.home__mascota {
+  position: absolute;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.home__mascota .mascota {
+  width: 100%;
+  height: auto;
 }
 
 @media (max-width: 700px) {
@@ -154,13 +193,17 @@
     padding-inline: 16px;
   }
 
-  .home__zona {
-    margin: 4px 12px 16px;
+  .home__resumen {
+    max-width: 22ch;
+    font-size: 10px;
+    line-height: 1.4;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .burbuja {
+  .cartel__tinta,
+  .cartel__seccion,
+  .cartel__gota {
     animation: none;
   }
 }
