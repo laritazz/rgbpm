@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 12 (Inicio y mascota viva). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–12), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 13 (Iconos y rueda vinilo). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–13), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (63 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (65 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
 - **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` y `/mezclador` (estos dos, «Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
@@ -89,7 +89,7 @@
 ### Ahora
 | # | Tarea | Nota |
 |---|---|---|
-| 1 | **Elegir el estilo de la rueda** | Prototipo con 3 direcciones: A Vinilo, B Secuenciador, C Onda (artifact «RGBPM Home y Armonía»). Pendiente de que Lara elija |
+| 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
 | 2 | **Juego** (`/juego`, hoy «Pronto») | Empezar por «Adivina el BPM» (tap sobre la mascota con un fragmento). Después: ¿Pega o choca?, ¿Dónde cae?, Cuadra el tempo, Agita el móvil |
 | 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
 | 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
@@ -119,4 +119,4 @@
 >
 > El repo es `laritazz/rgbpm` (clónalo) y mi carpeta del Mac es `~/RGBPM`.
 >
-> Empezamos por el **Juego «Adivina el BPM»** y el estilo de la rueda que elegí. Quiero verlo funcionando y publicado, con la bitácora al día.
+> Empezamos por el **Juego «Adivina el BPM»**. Quiero verlo funcionando y publicado, con la bitácora al día.

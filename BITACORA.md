@@ -345,3 +345,24 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **`clip-path: circle()` animado** con la Web Animations API: el círculo crece desde donde tocas.
 - **Consultas de contenedor (`cqw`, `cqh`):** los círculos y sus textos se miden respecto al racimo, no a la ventana.
 - **Propiedades de transformación sueltas (`scale`, `translate`):** dos animaciones a la vez en el mismo elemento sin pisarse.
+
+## Sesión 13 · 30 sep 2026 · Iconos y rueda vinilo
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Iconos de sección | Disco en su funda (Biblioteca), rueda (Armonía), lista con nota (Sets), micro (Escuchar), mando (Juego), ondas (Radio), faders (Mezclador). En el inicio, el menú lateral y las pestañas |
+| Inicio sin adornos | Solo la mascota y las secciones; lo que aún no está sale algo apagado |
+| Inicio a pantalla completa | Los círculos se inflan hasta llenar la zona: apaisado en escritorio, alto en el móvil, sin scroll. Se recalcula al girar el móvil o estirar la ventana |
+| Rueda vinilo | Mayores en el surco de fuera, menores en el de dentro. El set es la ruta de la aguja por los surcos (nunca cruza el disco) y una aguja la recorre en bucle. La galleta lleva la mascota y el color del BPM de salida; los reflejos giran al tempo |
+| Una sola lista de secciones | `app/secciones.js`: nombre, ruta, icono y tamaño en el inicio, compartida por el inicio y el menú lateral |
+
+### Decisiones
+- **Estilo de la rueda: Vinilo** (dirección A del prototipo). Las otras dos (Secuenciador y Onda) quedan en el prototipo por si se quieren recuperar.
+- **Inflar en vez de escalar:** un racimo escalado deja las esquinas vacías; inflado, cada círculo crece empujando a los demás hasta tocar los bordes.
+
+### Qué aprendí
+- **`ResizeObserver` en un hook (`useMedida`):** mido la zona libre y React vuelve a calcular el racimo solo cuando cambia de verdad.
+- **Relajación:** repetir «empuja lo que se pisa, mete dentro lo que se sale» hasta que todo encaja. Es un bucle pequeño y se puede probar sin navegador.
+- **`<animateMotion>`:** un elemento de SVG que mueve otro a lo largo de un camino, sin JavaScript.
+- **Componentes como datos:** en la lista de secciones, `Icono` es el propio componente; se pinta con `<s.Icono />`.

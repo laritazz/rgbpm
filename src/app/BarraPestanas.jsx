@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Mascota from '../components/marca/Mascota'
-import { IconoBiblioteca, IconoMas, IconoRadio, IconoSets } from '../components/Iconos'
+import { IconoDiscos, IconoMas, IconoRadio, IconoSets } from '../components/Iconos'
 import { useReproductor } from '../features/musica/ReproductorContext'
 import { pestanaDe } from '../lib/isla'
 import { ROSA } from '../lib/mascota'
@@ -34,7 +34,7 @@ export default function BarraPestanas({ alAbrirMenu, compacta = false, alExpandi
   return (
     <nav className="pestanas" aria-label="Secciones">
       <NavLink to="/biblioteca" className={clase('biblioteca')} onClick={abrirSiCompacta('biblioteca')}>
-        <IconoBiblioteca />
+        <IconoDiscos />
         <span>Biblioteca</span>
       </NavLink>
       <NavLink to="/radio" className={clase('radio')} onClick={abrirSiCompacta('radio')}>

@@ -81,7 +81,7 @@ export default function Armonia() {
         </header>
 
         <div className="armonia__rueda">
-          <RuedaGrande semilla={semilla} relacion={relacion} camino={sugerido} cuantos={cuantos} etiqueta={etiqueta} alElegir={elegirClave} />
+          <RuedaGrande semilla={semilla} relacion={relacion} camino={sugerido} cuantos={cuantos} bpm={bpm} etiqueta={etiqueta} alElegir={elegirClave} />
         </div>
 
         <ul className="armonia__leyenda" aria-label="Categorías de mezcla">

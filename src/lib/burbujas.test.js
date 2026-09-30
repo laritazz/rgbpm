@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { empaquetar } from './burbujas'
+import { empaquetar, inflar } from './burbujas'
 
 const circulos = [
   { id: 'mascota', r: 24 },
@@ -36,5 +36,27 @@ describe('empaquetar', () => {
   })
   it('los tamaños mantienen su proporción', () => {
     expect(puestos[1].r / puestos[0].r).toBeCloseTo(16 / 24)
+  })
+})
+
+describe('inflar', () => {
+  const base = empaquetar(circulos, { hueco: 1, aspecto: 2 })
+  const inflados = inflar(base, { aspecto: 2, hueco: 1 })
+
+  it('crecen, pero ninguno pisa a otro ni se sale', () => {
+    expect(inflados[0].r).toBeGreaterThan(base[0].r)
+    for (let i = 0; i < inflados.length; i++) {
+      const a = inflados[i]
+      expect(a.x - a.r).toBeGreaterThan(-0.1)
+      expect(a.y + a.r).toBeLessThan(50.1)
+      for (let j = i + 1; j < inflados.length; j++) {
+        const b = inflados[j]
+        expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThan(a.r + b.r + 0.9)
+      }
+    }
+  })
+  it('la mascota se queda en el centro', () => {
+    expect(inflados[0].x).toBeCloseTo(50)
+    expect(inflados[0].y).toBeCloseTo(25)
   })
 })

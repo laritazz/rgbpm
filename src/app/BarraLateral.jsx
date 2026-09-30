@@ -6,16 +6,8 @@ import { useMusica } from '../features/musica/MusicaContext'
 import { colorBpm } from '../lib/color'
 import { ROSA } from '../lib/mascota'
 import { abrirDesde } from './circulo'
+import { SECCIONES } from './secciones'
 
-const SECCIONES = [
-  { a: '/biblioteca', nombre: 'Biblioteca', lista: true },
-  { a: '/tap', nombre: 'Tap y escucha', lista: true },
-  { a: '/radio', nombre: 'Radio', lista: true },
-  { a: '/armonia', nombre: 'Armonía', lista: true },
-  { a: '/sets', nombre: 'Sets', lista: true },
-  { a: '/mezclador', nombre: 'Mezclador' },
-  { a: '/juego', nombre: 'Juego' },
-]
 
 // Muestra de color de un set: su recorrido de BPM, del más lento al más rápido
 function resumenSet(playlist, porId) {
@@ -54,7 +46,7 @@ export default function BarraLateral({ abierta, alCerrar }) {
         {SECCIONES.map((s) => (
           <li key={s.a}>
             <NavLink to={s.a} end className="lateral__enlace">
-              <span className="lateral__punto" aria-hidden="true" />
+              <s.Icono className="lateral__icono" />
               {s.nombre}
               {!s.lista && <span className="lateral__pronto">Pronto</span>}
             </NavLink>

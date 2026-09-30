@@ -50,16 +50,17 @@
 .home__zona {
   flex: 1;
   min-height: 0;
+  margin: 8px 24px 24px;
   display: grid;
   place-items: center;
-  padding: 12px 20px 28px;
-  container-type: size;
 }
 
+/* El racimo mide lo mismo que la zona: se empaqueta ya con su forma */
 .burbujas {
   position: relative;
-  width: min(100cqw, calc(100cqh * var(--aspecto)));
+  width: 100%;
   aspect-ratio: var(--aspecto);
+  max-height: 100%;
   container-type: inline-size;
 }
 
@@ -74,12 +75,15 @@
 }
 
 .burbuja--seccion {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
   padding: 0 0.4em;
   background: var(--tinta);
   color: var(--blanco);
-  font-size: clamp(13px, calc(var(--r) * 0.2cqw), 26px);
+  font-size: clamp(13px, calc(var(--r) * 0.19cqw), 30px);
   font-weight: 800;
   letter-spacing: -0.01em;
   text-align: center;
@@ -116,8 +120,18 @@
   flex-shrink: 0;
 }
 
-.burbuja--adorno {
-  pointer-events: none;
+/* El icono crece con el círculo: un tercio de su diámetro */
+.burbuja__icono {
+  width: calc(var(--r) * 0.62cqw);
+  height: auto;
+  min-width: 26px;
+  max-width: 96px;
+  stroke-width: 1.6;
+}
+
+/* Lo que aún no está: el mismo círculo, un poco apagado */
+.burbuja--pronto {
+  color: #ffffffa6;
 }
 
 @keyframes burbuja-aparece {
@@ -141,7 +155,7 @@
   }
 
   .home__zona {
-    padding: 8px 12px 20px;
+    margin: 4px 12px 16px;
   }
 }
 

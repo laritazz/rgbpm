@@ -50,7 +50,7 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 |---|---|---|
 | 7 categorías (Clavado, Subidón, Sube, Baja, Tercera, Abre, Cierra) | ✅ | `lib/armonia.js`, con pruebas |
 | «Corregir desfase» de la hoja original | ✅ | Interruptor en Armonía; vale para toda la app (salud, reordenar, «Pegan», radio) |
-| Rueda armónica grande e interactiva | ✅ | `/armonia` · tocas un tono y se encienden los que pegan; la línea es el set sugerido |
+| Rueda armónica grande e interactiva | ✅ | `/armonia` · estilo vinilo: el set es la ruta de la aguja por los surcos; la galleta lleva la mascota |
 | Tolerancia de BPM ajustable | ✅ | ±2 a ±16 %, cuenta doble y mitad; vale para toda la app |
 | Set sugerido desde una clave → «Usar este set» | ✅ | Con «Usar este» por paso y «Otras canciones»; **mejor que el original:** el camino esquiva claves sin temas a tu tempo |
 | Notación Open Key / Camelot a elegir | ✅ | Y además «Tono» (Am, F…); cambia en toda la app |

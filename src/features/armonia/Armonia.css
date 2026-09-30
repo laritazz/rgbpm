@@ -40,7 +40,12 @@
   width: min(100%, 560px);
 }
 
-/* ——— Rueda ——— */
+/* ——— Rueda: un vinilo ——— */
+.vinilo-rueda {
+  position: relative;
+  --vuelta: 4s;
+}
+
 .rueda {
   display: block;
   width: 100%;
@@ -49,32 +54,52 @@
   user-select: none;
 }
 
-.rueda__fondo {
-  fill: var(--superficie);
+.rueda__surco {
+  fill: none;
+  stroke: #ffffff;
+  stroke-opacity: 0.035;
+  stroke-width: 0.6;
 }
 
-.rueda__guia {
+.rueda__surco--par {
+  stroke-opacity: 0.06;
+}
+
+.rueda__pista {
   fill: none;
-  stroke: #ffffff0f;
+  stroke: #ffffff;
+  stroke-opacity: 0.12;
+}
+
+.rueda__reflejos {
+  fill: #ffffff;
+  opacity: 0.05;
+  transform-origin: 260px 260px;
+  animation: rueda-gira var(--vuelta) linear infinite;
+}
+
+@keyframes rueda-gira {
+  to {
+    rotate: 360deg;
+  }
 }
 
 .rueda__halo,
 .rueda__linea {
   fill: none;
-  stroke: var(--rosa);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1;
-  animation: rueda-dibuja 900ms var(--curva-salida) both;
+  animation: rueda-dibuja 520ms var(--curva-salida) calc(var(--i) * 110ms) both;
 }
 
 .rueda__halo {
-  stroke-width: 9;
-  stroke-opacity: 0.35;
+  stroke-width: 10;
+  stroke-opacity: 0.25;
 }
 
 .rueda__linea {
-  stroke-width: 2;
+  stroke-width: 4;
 }
 
 @keyframes rueda-dibuja {
@@ -84,6 +109,13 @@
   to {
     stroke-dashoffset: 0;
   }
+}
+
+/* La aguja recorre el set en bucle */
+.rueda__aguja {
+  fill: var(--blanco);
+  stroke: var(--rosa);
+  stroke-width: 3;
 }
 
 .rueda__tono {
@@ -103,7 +135,7 @@
 
 .rueda__nodo {
   fill: var(--c);
-  stroke: #ffffff24;
+  stroke: #2c2c2c;
   transition: fill 240ms;
 }
 
@@ -122,13 +154,9 @@
   stroke-dasharray: none;
 }
 
-.rueda__aura {
-  fill: var(--rosa);
-  opacity: 0.45;
-}
-
 .rueda__etiqueta {
   text-anchor: middle;
+  font-size: 13px;
   font-weight: 600;
   fill: var(--gris-3);
   pointer-events: none;
@@ -155,19 +183,38 @@
   pointer-events: none;
 }
 
-.rueda__centro {
-  text-anchor: middle;
-  font-size: 56px;
-  font-weight: 900;
-  letter-spacing: -2px;
-  fill: var(--blanco);
+.rueda__galleta {
+  transition: fill 700ms var(--curva-salida);
 }
 
-.rueda__centro-nombre {
+.rueda__galleta-borde {
+  fill: none;
+  stroke: #000000;
+  stroke-opacity: 0.25;
+  stroke-width: 6;
+}
+
+.rueda__galleta-texto {
   text-anchor: middle;
-  font-size: 14px;
-  font-weight: 500;
-  fill: var(--gris-2);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  fill: var(--negro);
+}
+
+/* La mascota, en la galleta: HTML encima del SVG, centrada un poco hacia arriba */
+.vinilo-rueda__mascota {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 25%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.vinilo-rueda__mascota .mascota {
+  width: 100%;
+  height: auto;
 }
 
 .armonia__leyenda {
@@ -734,8 +781,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .rueda__halo,
-  .rueda__linea {
+  .rueda__linea,
+  .rueda__reflejos {
     animation: none;
+  }
+
+  .rueda__aguja {
+    display: none;
   }
 
   .rueda__tono,

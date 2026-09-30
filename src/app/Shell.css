@@ -124,6 +124,16 @@
   background: var(--superficie-2);
 }
 
+.lateral__icono {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.lateral__enlace.active .lateral__icono {
+  opacity: 1;
+  color: var(--rosa);
+}
+
 .lateral__punto {
   width: 8px;
   height: 8px;
@@ -138,7 +148,17 @@
   font-weight: 600;
 }
 
-.lateral__enlace.active .lateral__punto {
+.lateral__enlace.active .lateral__icono {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.lateral__enlace.active .lateral__icono {
+  opacity: 1;
+  color: var(--rosa);
+}
+
+.lateral__punto {
   background: var(--rosa);
 }
 
