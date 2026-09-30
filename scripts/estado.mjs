@@ -32,6 +32,33 @@ const sesiones = [...leer('BITACORA.md').matchAll(/^## Sesión (\d+) · ([^·]+)
 const paridad = leer('docs/PARIDAD.md')
 const cuenta = (marca) => paridad.split('\n').filter((l) => l.startsWith('|') && l.includes(`| ${marca} |`)).length
 
+// Últimos commits, con cuánto código tocó cada uno (para la sección «En directo desde GitHub»)
+function commits(cuantos = 12) {
+  const salida = git(`log -${cuantos} --format=%x1e%H%x1f%aI%x1f%s --shortstat`)
+  if (!salida) return []
+  return salida
+    .split('\x1e')
+    .filter(Boolean)
+    .map((bloque) => {
+      const [cabecera, ...resto] = bloque.trim().split('\n')
+      const [sha, fecha, mensaje] = cabecera.split('\x1f')
+      const stat = resto.join(' ')
+      const numero = (re) => Number(stat.match(re)?.[1] ?? 0)
+      const area = mensaje.match(/^(\p{L}+(?: \p{L}+)?):\s/u)?.[1] ?? null // «Sonando: …» → Sonando
+      const texto = area ? mensaje.slice(area.length + 1).trim() : mensaje
+      return {
+        sha: sha.slice(0, 7),
+        fecha,
+        area,
+        mensaje: texto.charAt(0).toUpperCase() + texto.slice(1),
+        archivos: numero(/(\d+) files? changed/),
+        mas: numero(/(\d+) insertions?/),
+        menos: numero(/(\d+) deletions?/),
+        url: `https://github.com/laritazz/rgbpm/commit/${sha}`,
+      }
+    })
+}
+
 const codigo = archivos('src').filter((f) => /\.(jsx?|css)$/.test(f))
 const pruebas = codigo.filter((f) => f.endsWith('.test.js'))
 
@@ -41,6 +68,8 @@ const estado = {
   repo: 'https://github.com/laritazz/rgbpm',
   version: process.env.GITHUB_SHA?.slice(0, 7) ?? git('rev-parse --short HEAD'),
   publicado: new Date().toISOString(),
+  commits: commits(),
+  totalCommits: Number(git('rev-list --count HEAD') ?? 0),
   sesiones,
   ultima: sesiones.at(-1) ?? null,
   paridad: { hecho: cuenta('✅'), aMedias: cuenta('🟡'), pendiente: cuenta('⏳'), nuevo: cuenta('✨') },
