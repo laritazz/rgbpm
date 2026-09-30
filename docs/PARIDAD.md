@@ -89,3 +89,4 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Todo el estado de la vista en la URL (compartible) | ✨ |
 | La mascota es el play en «Sonando» | ✨ |
 | Instalable en el móvil (PWA), sin barras del navegador | ✨ |
+| Isla flotante en el móvil: se encoge al bajar | ✨ |

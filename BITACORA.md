@@ -274,9 +274,14 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 | Demo con audio | Los temas sin ruta encuentran su fragmento por artista y título |
 | «Sonando» en el móvil | La mascota es el play; todo cabe en pantalla, también con las barras del navegador |
 | Instalable | «Añadir a pantalla de inicio» la abre como app, sin barras del navegador |
+| Isla flotante | Mini reproductor y pestañas en una sola pieza; al bajar se encoge a la pestaña actual + lo que suena |
+| Portfolio vivo | `estado.json` con sesiones y últimos commits; capturas y vídeos que se regeneran con `npm run capturas` |
 
 ### Qué aprendí
 - **Diagnosticar antes de arreglar:** «sin archivo» podía ser un permiso de macOS o un tema movido. El script ahora distingue `EPERM` de `ENOENT`.
 - **Una segunda llave anónima:** el servidor guarda `resumen(artista + título) → fragmento`, nunca el texto.
 - **Flexbox que se adapta a la altura:** la mascota tiene `flex: 1 1 0` y el SVG va en `position: absolute` al 100 %: crece o encoge con el hueco libre.
+- **Escuchar el scroll de toda la app:** el evento `scroll` no sube, pero se puede capturar (`capture: true`) en el contenedor de las páginas.
+- **`ResizeObserver`:** mido la isla y publico su alto en una variable CSS; así ninguna página queda tapada.
+- **`:has()` en CSS:** la isla cambia si dentro hay reproductor, sin una línea de JavaScript.
 - **Web App Manifest:** `display: standalone`, iconos y `theme-color` convierten la web en app instalable (PWA).
