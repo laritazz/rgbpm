@@ -4,7 +4,18 @@ App web para DJs: importa tu colección de Traktor, ve tu biblioteca como portad
 
 Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, diseño UX/UI y marca: yo. El proceso completo está en [BITACORA.md](./BITACORA.md).
 
-**En vivo:** [laritazz.github.io/rgbpm](https://laritazz.github.io/rgbpm/)
+**En vivo:** [laritazz.github.io/rgbpm](https://laritazz.github.io/rgbpm/) · se instala en el móvil como app
+
+<p>
+  <img src="public/media/mascota.gif" width="220" alt="La mascota de RGBPM latiendo a 128 BPM" />
+  <img src="public/media/tap-bpm.gif" width="220" alt="Tap BPM en el móvil: 20 toques, 128 BPM" />
+</p>
+
+![Biblioteca: el color de cada portada es su BPM](public/media/biblioteca-color.gif)
+
+![Set: reordenar por armonía y deshacer](public/media/set-reordenar.gif)
+
+> Las imágenes se regeneran con `npm run capturas` a partir de la demo pública.
 
 ## Qué hace
 - **Biblioteca** con portadas Pantone: la muestra de color es el BPM, la etiqueta dice clave y tono.

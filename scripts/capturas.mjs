@@ -94,11 +94,21 @@ await grabar('tap-bpm', TAP, async (p) => {
   await esperar(p, 700)
   await p.getByRole('tab', { name: 'Tap BPM' }).click()
   await esperar(p, 600)
-  const zona = p.locator('.tap__escenario')
-  for (let i = 0; i < 20; i++) {
-    await zona.dispatchEvent('pointerdown')
-    await esperar(p, 469) // 128 BPM
-  }
+  // Toques a 128 BPM exactos: se programan dentro de la página para que no los retrase Playwright
+  await p.evaluate(
+    () =>
+      new Promise((listo) => {
+        const zona = document.querySelector('.tap__escenario')
+        const inicio = performance.now()
+        let n = 0
+        const tocar = () => {
+          zona.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+          if (++n < 20) setTimeout(tocar, inicio + n * (60000 / 128) - performance.now())
+          else listo()
+        }
+        tocar()
+      })
+  )
   await esperar(p, 2500)
 })
 convertir('tap-bpm', { desde: 1, ancho: 390 })
