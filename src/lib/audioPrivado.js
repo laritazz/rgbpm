@@ -20,8 +20,11 @@ async function llamar(token, cuerpo) {
   return r.json()
 }
 
-/** Qué fragmentos hay en el servidor (solo nombres anónimos). */
-export const listaPrivada = async (token) => new Set((await llamar(token, { accion: 'lista' })).ids)
+/** Qué fragmentos hay en el servidor: nombres anónimos y, si los hay, llaves por título → fragmento. */
+export async function listaPrivada(token) {
+  const { ids = [], titulos = {} } = await llamar(token, { accion: 'lista' })
+  return { ids: new Set(ids), titulos: new Map(Object.entries(titulos)) }
+}
 
 /** Enlaces firmados que caducan, para uno o varios fragmentos. */
 export const firmarPrivado = (token, ids) => llamar(token, { accion: 'firmar', ids })

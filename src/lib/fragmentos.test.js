@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { idFragmento, inicioFragmento } from './fragmentos'
+import { idFragmento, idTitulo, inicioFragmento } from './fragmentos'
 
 describe('fragmentos', () => {
   it('el nombre es anónimo, estable y no depende de mayúsculas ni acentos', async () => {
@@ -8,6 +8,13 @@ describe('fragmentos', () => {
     expect(a).toMatch(/^[a-f0-9]{16}$/)
     expect(a).toBe(b)
     expect(a).not.toContain('amelie')
+  })
+  it('la llave por título ignora mayúsculas y espacios, y distingue artista de título', async () => {
+    const a = await idTitulo({ artista: 'Ana Mena', titulo: 'LAS 12' })
+    expect(a).toMatch(/^[a-f0-9]{16}$/)
+    expect(await idTitulo({ artista: 'ana  mena ', titulo: 'las 12' })).toBe(a)
+    expect(await idTitulo({ artista: 'Ana Mena LAS', titulo: '12' })).not.toBe(a)
+    expect(a).not.toBe(await idFragmento('Ana Mena LAS 12'))
   })
   it('empieza 8 compases antes del primer hotcue', () => {
     // 128 BPM: 8 compases = 15 s

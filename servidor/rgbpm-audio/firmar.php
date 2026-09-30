@@ -2,7 +2,7 @@
 // RGBPM · puerta 1: comprueba tu sesión de Supabase y devuelve enlaces firmados que caducan.
 //
 //   GET  firmar.php?salud=1                    → { ok, fragmentos }         (sin login: para comprobar que funciona)
-//   POST firmar.php  { accion: "lista" }        → { ids: [...] }              (qué fragmentos hay)
+//   POST firmar.php  { accion: "lista" }        → { ids: [...], titulos: { llave: id } }  (qué fragmentos hay)
 //   POST firmar.php  { accion: "firmar", ids }  → { urls: { id: url }, caduca }
 //   Cabecera: Authorization: Bearer <access_token de Supabase>
 declare(strict_types=1);
@@ -28,7 +28,7 @@ if (!is_array($cuerpo)) {
 
 switch ($cuerpo['accion'] ?? '') {
     case 'lista':
-        responder(200, ['ids' => idsDisponibles()]);
+        responder(200, ['ids' => idsDisponibles(), 'titulos' => (object) titulosDisponibles()]);
 
     case 'firmar':
         $ids = $cuerpo['ids'] ?? null;
@@ -128,6 +128,20 @@ function idsDisponibles(): array
         return array_values(array_filter($datos['ids'] ?? [], 'idValido'));
     }
     return array_map(fn ($f) => basename($f, '.mp3'), glob(RAIZ . '/fragmentos/*.mp3') ?: []);
+}
+
+/** Llaves anónimas por artista y título → fragmento (para temas sin ruta, como la demo). */
+function titulosDisponibles(): array
+{
+    $indice = RAIZ . '/fragmentos/fragmentos.json';
+    $datos = is_file($indice) ? json_decode((string) file_get_contents($indice), true) : [];
+    $titulos = [];
+    foreach ($datos['titulos'] ?? [] as $llave => $id) {
+        if (idValido((string) $llave) && idValido((string) $id)) {
+            $titulos[$llave] = $id;
+        }
+    }
+    return $titulos;
 }
 
 function urlDeEstaCarpeta(): string

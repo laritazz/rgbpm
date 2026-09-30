@@ -4,15 +4,27 @@
 /** La ruta de Traktor tal cual la guarda RGBPM, normalizada: sin mayúsculas y con los acentos compuestos. */
 export const claveRuta = (ruta) => ruta.normalize('NFC').toLowerCase()
 
-/** Nombre del fragmento: 16 caracteres del SHA-256 de la ruta. Sin títulos ni artistas. */
-export async function idFragmento(ruta) {
-  const datos = new TextEncoder().encode(claveRuta(ruta))
-  const resumen = await crypto.subtle.digest('SHA-256', datos)
-  return [...new Uint8Array(resumen)]
+/** 16 caracteres del SHA-256 de un texto: sirve de nombre y no deja leer lo que había dentro. */
+async function resumen(texto) {
+  const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto))
+  return [...new Uint8Array(bytes)]
     .slice(0, 8)
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('')
 }
+
+/** Nombre del fragmento: sale de la ruta. Sin títulos ni artistas. */
+export const idFragmento = (ruta) => resumen(claveRuta(ruta))
+
+/** Artista y título normalizados: sin mayúsculas, acentos compuestos y espacios de más. */
+const limpio = (texto) => String(texto ?? '').normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim()
+export const claveTitulo = ({ artista, titulo }) => `${limpio(artista)}\u0000${limpio(titulo)}`
+
+/**
+ * Segunda llave para temas sin ruta (la demo, o un móvil sin tu colección):
+ * el servidor guarda resumen(artista + título) → fragmento, nunca el texto.
+ */
+export const idTitulo = (tema) => resumen(`t:${claveTitulo(tema)}`)
 
 /**
  * Dónde empieza el fragmento: 8 compases antes de tu primer hotcue (la entrada o el drop).

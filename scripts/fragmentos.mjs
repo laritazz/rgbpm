@@ -22,7 +22,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, s
 import { homedir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { XMLParser } from 'fast-xml-parser'
-import { idFragmento, inicioFragmento } from '../src/lib/fragmentos.js'
+import { idFragmento, idTitulo, inicioFragmento } from '../src/lib/fragmentos.js'
 import { esSample } from '../src/lib/traktor.js'
 
 // ——— Opciones ———
@@ -88,7 +88,7 @@ for (const e of entradas) {
   // En el Mac: el disco principal es la raíz; los demás discos cuelgan de /Volumes
   const enDisco = loc.VOLUME && !['Macintosh HD', ''].includes(loc.VOLUME) ? join('/Volumes', loc.VOLUME, ruta) : ruta
   const cues = (e.CUE_V2 ?? []).filter((c) => Number(c.HOTCUE) >= 0 && c.TYPE !== '4').map((c) => Number(c.START) / 1000)
-  trabajos.push({ ruta, enDisco, duracion, bpm: e.TEMPO?.BPM ? Number(e.TEMPO.BPM) : null, cues })
+  trabajos.push({ ruta, enDisco, titulo: String(tema.titulo), artista: String(tema.artista), duracion, bpm: e.TEMPO?.BPM ? Number(e.TEMPO.BPM) : null, cues })
   if (trabajos.length >= LIMITE) break
 }
 
@@ -238,7 +238,15 @@ await Promise.all(
 
 // ——— Índice para el servidor: solo nombres anónimos ———
 const ids = readdirSync(SALIDA).filter((f) => /^[a-f0-9]{16}\.mp3$/.test(f)).map((f) => f.slice(0, 16)).sort()
-writeFileSync(join(SALIDA, 'fragmentos.json'), JSON.stringify({ version: 1, creado: new Date().toISOString(), segundos: SEGUNDOS, ids }))
+// Llave por artista y título → fragmento: así suenan también los temas sin ruta (la demo del móvil)
+const anterior = existsSync(join(SALIDA, 'fragmentos.json')) ? JSON.parse(readFileSync(join(SALIDA, 'fragmentos.json'), 'utf8')) : {}
+const titulos = { ...(anterior.titulos ?? {}) }
+for (const t of trabajos) {
+  const id = await idFragmento(t.ruta)
+  if (ids.includes(id) && t.titulo) titulos[await idTitulo(t)] ??= id
+}
+for (const [llave, id] of Object.entries(titulos)) if (!ids.includes(id)) delete titulos[llave]
+writeFileSync(join(SALIDA, 'fragmentos.json'), JSON.stringify({ version: 2, creado: new Date().toISOString(), segundos: SEGUNDOS, ids, titulos }))
 const bytes = ids.reduce((s, id) => s + statSync(join(SALIDA, `${id}.mp3`)).size, 0)
 
 console.log(`\n\nListo: ${ids.length} fragmentos · ${(bytes / 1024 ** 3).toFixed(2)} GB`)

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { firmarPrivado, listaPrivada, SesionCaducada } from '../../lib/audioPrivado'
 import { SUPABASE_CLAVE } from '../../lib/config'
-import { idFragmento } from '../../lib/fragmentos'
+import { idFragmento, idTitulo } from '../../lib/fragmentos'
 import { supabase } from '../../lib/supabase'
 
 const MARGEN = 60_000 // una firma se renueva si le queda menos de un minuto
@@ -14,6 +14,7 @@ export function usePrivado(temas) {
   const [estado, setEstado] = useState(SUPABASE_CLAVE ? 'fuera' : 'sin-configurar')
   const [email, setEmail] = useState(null)
   const [ids, setIds] = useState(() => new Set())
+  const [titulos, setTitulos] = useState(() => new Map()) // llave por título → fragmento
   const [porTema, setPorTema] = useState(() => new Map()) // tema.id → fragmento
   const [error, setError] = useState(null)
   const firmas = useRef(new Map()) // fragmento → { url, caduca }
@@ -28,6 +29,7 @@ export function usePrivado(temas) {
     await (await supabase()).auth.signOut().catch(() => {})
     firmas.current.clear()
     setIds(new Set())
+    setTitulos(new Map())
     setPorTema(new Map())
     setEmail(null)
     setError(motivo)
@@ -38,7 +40,9 @@ export function usePrivado(temas) {
     async (sesion) => {
       setEstado('entrando')
       try {
-        setIds(await listaPrivada(sesion.access_token))
+        const lista = await listaPrivada(sesion.access_token)
+        setIds(lista.ids)
+        setTitulos(lista.titulos)
         setEmail(sesion.user?.email ?? null)
         setError(null)
         setEstado('dentro')
@@ -80,24 +84,29 @@ export function usePrivado(temas) {
     [cargar]
   )
 
-  // Qué fragmento corresponde a cada tema: el nombre sale de su ruta (igual que en el script)
+  // Qué fragmento corresponde a cada tema: por su ruta (igual que el script) y, si no, por artista y título
   useEffect(() => {
     if (!ids.size) return
     let vivo = true
     ;(async () => {
       const mapa = new Map()
-      const conRuta = temas.filter((t) => t.ruta)
-      for (let i = 0; i < conRuta.length && vivo; i += 500) {
-        const trozo = conRuta.slice(i, i + 500)
-        const nombres = await Promise.all(trozo.map((t) => idFragmento(t.ruta)))
-        trozo.forEach((t, j) => ids.has(nombres[j]) && mapa.set(t.id, nombres[j]))
+      for (let i = 0; i < temas.length && vivo; i += 500) {
+        const trozo = temas.slice(i, i + 500)
+        const nombres = await Promise.all(
+          trozo.map(async (t) => {
+            const porRuta = t.ruta ? await idFragmento(t.ruta) : null
+            if (porRuta && ids.has(porRuta)) return porRuta
+            return titulos.size ? (titulos.get(await idTitulo(t)) ?? null) : null
+          })
+        )
+        trozo.forEach((t, j) => nombres[j] && ids.has(nombres[j]) && mapa.set(t.id, nombres[j]))
       }
       if (vivo) setPorTema(mapa)
     })()
     return () => {
       vivo = false
     }
-  }, [temas, ids])
+  }, [temas, ids, titulos])
 
   /** Enlace firmado para un tema (o null si no tiene fragmento). */
   const resolver = useCallback(
