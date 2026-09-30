@@ -161,10 +161,22 @@ const cola = (a, b) => {
   while (n < x.length && x[n] === y[n]) n++
   return n
 }
+// En el Mac, si no está en --buscar, se lo pregunto a Spotlight (encuentra también discos externos)
+function spotlight(nombre) {
+  if (process.platform !== 'darwin') return []
+  const consulta = `kMDItemFSName == "${nombre.replace(/["\\]/g, '\\$&')}"`
+  const r = spawnSync('mdfind', [consulta], { encoding: 'utf8' })
+  return r.status === 0 ? r.stdout.split('\n').filter((l) => l && estado(l) === 'ok') : []
+}
+const movidos = new Map() // carpeta nueva → cuántos
 function localizar(t) {
   if (estado(t.enDisco) === 'ok') return t.enDisco
-  const candidatos = porNombre.get(basename(t.enDisco).normalize('NFC')) ?? []
-  return candidatos.sort((a, b) => cola(b, t.enDisco) - cola(a, t.enDisco))[0] ?? null
+  const nombre = basename(t.enDisco)
+  let candidatos = porNombre.get(nombre.normalize('NFC')) ?? []
+  if (!candidatos.length) candidatos = spotlight(nombre)
+  const elegido = candidatos.sort((a, b) => cola(b, t.enDisco) - cola(a, t.enDisco))[0] ?? null
+  if (elegido) movidos.set(dirname(elegido), (movidos.get(dirname(elegido)) ?? 0) + 1)
+  return elegido
 }
 
 // ——— Crear cada fragmento ———
@@ -231,5 +243,9 @@ const bytes = ids.reduce((s, id) => s + statSync(join(SALIDA, `${id}.mp3`)).size
 
 console.log(`\n\nListo: ${ids.length} fragmentos · ${(bytes / 1024 ** 3).toFixed(2)} GB`)
 if (cuenta.sinArchivo || cuenta.fallos) console.log(`Revisa ${ERRORES} (${cuenta.sinArchivo} sin archivo, ${cuenta.fallos} fallos)`)
+if (movidos.size) {
+  console.log('Encontrados en otra carpeta:')
+  for (const [carpeta, n] of movidos) console.log(`  ${n} · ${carpeta}`)
+}
 if (cuenta.sinArchivo && !raices.length) console.log(`¿Los moviste de sitio? Añade  --buscar "/Volumes/TuDisco"  y los busco por nombre`)
 console.log(`Sube la carpeta entera por SFTP como  rgbpm-audio/privado/fragmentos/`)
