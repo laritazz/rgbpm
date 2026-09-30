@@ -9,6 +9,7 @@ import { useMusica } from '../musica/MusicaContext'
 import { FUNDIDO, useReproductor } from '../musica/ReproductorContext'
 import { useSet } from '../sets/SetContext'
 import './Radio.css'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 const SUBIDAS = [
   { valor: 0, nombre: 'Mantener el ritmo' },
@@ -26,6 +27,7 @@ export default function Radio() {
   const musica = useMusica()
   const rep = useReproductor()
   const set = useSet()
+  const { etiqueta, completa, corregir } = useAjustesArmonia()
   const navegar = useNavigate()
   const [drop, setDrop] = useState(null)
   const [aviso, setAviso] = useState(null)
@@ -49,12 +51,13 @@ export default function Radio() {
       bpmInicio: Number(ajustes.bpm),
       subida: Number(ajustes.subida),
       cuantos: Math.max(5, Math.min(60, Number(ajustes.cuantos))),
+      corregir,
     })
     if (!lista.length) {
       setAviso('No encuentro temas con clave y BPM para montar la radio.')
       return
     }
-    setAviso(`${lista.length} temas: de ${lista[0].clave.id} · ${lista[0].bpm} BPM a ${lista.at(-1).clave.id} · ${lista.at(-1).bpm} BPM.`)
+    setAviso(`${lista.length} temas: de ${etiqueta(lista[0].clave)} · ${lista[0].bpm} BPM a ${etiqueta(lista.at(-1).clave)} · ${lista.at(-1).bpm} BPM.`)
     rep.ponerCola(lista)
   }
 
@@ -91,7 +94,7 @@ export default function Radio() {
           </div>
           <div>
             <dt>Clave</dt>
-            <dd>{tema?.clave ? `${tema.clave.id} · ${tema.clave.nombre}` : '—'}</dd>
+            <dd>{tema?.clave ? completa(tema.clave) : '—'}</dd>
           </div>
           <div>
             <dt>Color</dt>
@@ -123,7 +126,7 @@ export default function Radio() {
               <select value={ajustes.clave} onChange={cambiar('clave')}>
                 {TODAS_LAS_CLAVES.map((k) => (
                   <option key={k.id} value={k.id}>
-                    {k.id} · {k.nombre}
+                    {completa(k)}
                   </option>
                 ))}
               </select>
@@ -187,7 +190,7 @@ export default function Radio() {
                     <span className="radio__pista-texto">
                       <strong>{t.titulo}</strong>
                       <small>
-                        {t.artista} · {t.bpm} BPM · {t.clave.id}
+                        {t.artista} · {t.bpm} BPM · {etiqueta(t.clave)}
                       </small>
                     </span>
                   </button>

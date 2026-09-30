@@ -1,20 +1,22 @@
 import { memo } from 'react'
 import { colorBpm, tintaSobre } from '../../lib/color'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /**
  * Portada Pantone: la muestra de color es el BPM, la etiqueta blanca dice qué es.
  * memo: con miles de tarjetas, solo se vuelve a pintar la que cambia de estado.
  */
 function TarjetaPantone({ tema, elegida, alElegir, sonando = false, alReproducir }) {
+  const { etiqueta } = useAjustesArmonia()
   const fondo = colorBpm(tema.bpm)
   return (
     <div className={`pantone-caja${sonando ? ' pantone-caja--sonando' : ''}`} style={{ '--muestra': fondo, '--tinta': tintaSobre(fondo) }}>
       <button className={`pantone${elegida ? ' pantone--elegida' : ''}`} onClick={() => alElegir(tema.id)} aria-pressed={elegida}>
         <span className="pantone__muestra">
           <span className="pantone__codigo">
-            RGBPM {tema.bpm ? Math.round(tema.bpm) : '—'}-{tema.clave?.id ?? '?'}
+            RGBPM {tema.bpm ? Math.round(tema.bpm) : '—'}-{tema.clave ? etiqueta(tema.clave) : '?'}
           </span>
-          {tema.clave && <span className="pantone__clave">{tema.clave.id}</span>}
+          {tema.clave && <span className="pantone__clave">{etiqueta(tema.clave)}</span>}
         </span>
         <span className="pantone__etiqueta">
           <span className="pantone__titulo">{tema.titulo}</span>

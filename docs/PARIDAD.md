@@ -49,11 +49,12 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Utilidad | Estado | Dónde / nota |
 |---|---|---|
 | 7 categorías (Clavado, Subidón, Sube, Baja, Tercera, Abre, Cierra) | ✅ | `lib/armonia.js`, con pruebas |
-| «Corregir desfase» de la hoja original | 🟡 | Activado siempre; falta el interruptor |
-| Rueda armónica grande e interactiva | 🟡 | Hay rueda mini en el panel |
-| Tolerancia de BPM ajustable | ⏳ | Fija en ±8 % |
-| Set sugerido desde una clave → «Usar este set» | ⏳ | |
-| Notación Open Key / Camelot a elegir | ⏳ | Se muestran las dos |
+| «Corregir desfase» de la hoja original | ✅ | Interruptor en Armonía; vale para toda la app (salud, reordenar, «Pegan», radio) |
+| Rueda armónica grande e interactiva | ✅ | `/armonia` · tocas un tono y se encienden los que pegan; la línea es el set sugerido |
+| Tolerancia de BPM ajustable | ✅ | ±2 a ±16 %, cuenta doble y mitad; vale para toda la app |
+| Set sugerido desde una clave → «Usar este set» | ✅ | Con «Usar este» por paso y «Otras canciones»; **mejor que el original:** el camino esquiva claves sin temas a tu tempo |
+| Notación Open Key / Camelot a elegir | ✅ | Y además «Tono» (Am, F…); cambia en toda la app |
+| «Qué pega con…» por categoría, con tus temas | ✅ | Pestaña en Armonía, ordenados por cercanía al BPM |
 
 ## Radio
 | Utilidad | Estado | Dónde / nota |

@@ -14,10 +14,10 @@ function sector(r1, r2, desde, hasta) {
  * Rueda Open Key: fuera las mayores (d), dentro las menores (m).
  * En rosa, la clave del tema; en el color de cada categoría, con qué mezcla.
  */
-export default function RuedaMini({ semilla, tamano = 128 }) {
+export default function RuedaMini({ semilla, tamano = 128, corregir = true, etiqueta = (k) => k.id }) {
   const relacion = new Map()
   if (semilla) {
-    const rel = clavesRelacionadas(semilla)
+    const rel = clavesRelacionadas(semilla, corregir)
     for (const c of CATEGORIAS) for (const k of rel[c.id]) if (!relacion.has(k.id)) relacion.set(k.id, c)
   }
 
@@ -35,17 +35,17 @@ export default function RuedaMini({ semilla, tamano = 128 }) {
           fill={esSemilla ? '#FF66C4' : cat ? cat.color : '#1c1c1c'}
           opacity={esSemilla || cat || !semilla ? 1 : 0.7}
         >
-          <title>{`${k.id} · ${k.nombre}${esSemilla ? ' (este tema)' : cat ? ` · ${cat.nombre}` : ''}`}</title>
+          <title>{`${etiqueta(k)} · ${k.nombre}${esSemilla ? ' (este tema)' : cat ? ` · ${cat.nombre}` : ''}`}</title>
         </path>
       )
     }
   }
 
   return (
-    <svg width={tamano} height={tamano} viewBox="-62 -62 124 124" role="img" aria-label={semilla ? `Rueda armónica: clave ${semilla.id}` : 'Rueda armónica'}>
+    <svg width={tamano} height={tamano} viewBox="-62 -62 124 124" role="img" aria-label={semilla ? `Rueda armónica: clave ${etiqueta(semilla)}` : 'Rueda armónica'}>
       {sectores}
       <text x="0" y="7" textAnchor="middle" fill="#fff" fontFamily="Urbanist, sans-serif" fontWeight="800" fontSize="20">
-        {semilla?.id ?? '—'}
+        {semilla ? etiqueta(semilla) : '—'}
       </text>
     </svg>
   )

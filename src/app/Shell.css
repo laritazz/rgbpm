@@ -292,7 +292,7 @@
   }
 
   /* Nada queda debajo de la isla: cada página deja su hueco al final */
-  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .radio, .tap, .pronto) {
+  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto) {
     padding-bottom: calc(var(--hueco-isla, 140px) + 24px);
   }
 

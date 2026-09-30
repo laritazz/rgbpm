@@ -76,13 +76,16 @@ export function notaTransicion(desde, hacia, corregir = true) {
   return { categoria, bpm, nota: Math.round(categoria.peso * 0.62 + bpm.nota * 0.38) }
 }
 
-/** Los mejores temas para mezclar después de `tema`. */
-export function compatibles(tema, biblioteca, limite = 8) {
+/** Margen de tempo por defecto (± %): lo que alcanza el pitch de un plato sin que se note. */
+export const TOLERANCIA = 8
+
+/** Los mejores temas para mezclar después de `tema`, dentro del margen de BPM. */
+export function compatibles(tema, biblioteca, limite = 8, { corregir = true, tolerancia = TOLERANCIA } = {}) {
   const salida = []
   for (const otro of biblioteca) {
     if (otro.id === tema.id) continue
-    const t = notaTransicion(tema, otro)
-    if (t && Math.abs(t.bpm.porcentaje ?? 99) <= 8) salida.push({ tema: otro, ...t })
+    const t = notaTransicion(tema, otro, corregir)
+    if (t && Math.abs(t.bpm.porcentaje ?? 99) <= tolerancia) salida.push({ tema: otro, ...t })
   }
   return salida.sort((a, b) => b.nota - a.nota).slice(0, limite)
 }

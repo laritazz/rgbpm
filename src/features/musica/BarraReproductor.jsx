@@ -4,12 +4,14 @@ import { colorBpm } from '../../lib/color'
 import { reloj } from '../../lib/formato'
 import { useMusica } from './MusicaContext'
 import { useReproductor, useTiempo } from './ReproductorContext'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /** Barra fija abajo: lo que suena, en cualquier pantalla. Al tocar el tema se abre a pantalla completa. */
 export default function BarraReproductor({ alAbrir }) {
   const { tema, estado, sonando, origen, cola, indice, fundiendo, alternar, buscar, siguiente } = useReproductor()
   const { tiempo, duracion } = useTiempo()
   const { abrirAjustes } = useMusica()
+  const { etiqueta } = useAjustesArmonia()
   if (!tema) return null
 
   const sinArchivo = estado === 'sin-archivo' || estado === 'error'
@@ -24,7 +26,7 @@ export default function BarraReproductor({ alAbrir }) {
           <span>
             {tema.artista}
             {tema.bpm ? ` · ${tema.bpm} BPM` : ''}
-            {tema.clave ? ` · ${tema.clave.id}` : ''}
+            {tema.clave ? ` · ${etiqueta(tema.clave)}` : ''}
           </span>
         </span>
       </button>

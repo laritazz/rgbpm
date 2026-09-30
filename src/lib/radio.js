@@ -8,9 +8,10 @@ import { CATEGORIAS, clavesRelacionadas } from './armonia'
  * @param bpmInicio BPM de salida
  * @param subida    cuántos BPM sube de principio a fin (0 = mantener)
  * @param cuantos   largo de la lista
+ * @param corregir  «corregir desfase» de Armonía
  * @param azar      función aleatoria (en las pruebas se fija para que el resultado sea repetible)
  */
-export function generarRadio(temas, { semilla, bpmInicio = 120, subida = 10, cuantos = 15, azar = Math.random }) {
+export function generarRadio(temas, { semilla, bpmInicio = 120, subida = 10, cuantos = 15, azar = Math.random, corregir = true }) {
   const disponibles = temas.filter((t) => t.clave && t.bpm)
   const usados = new Set()
   const lista = []
@@ -23,7 +24,7 @@ export function generarRadio(temas, { semilla, bpmInicio = 120, subida = 10, cua
     if (!actual) {
       candidatos = disponibles.filter((t) => t.clave.id === semilla?.id && !usados.has(t.id))
     } else {
-      const rel = clavesRelacionadas(actual.clave)
+      const rel = clavesRelacionadas(actual.clave, corregir)
       const permitidas = new Set(CATEGORIAS.flatMap((c) => rel[c.id].map((k) => k.id)))
       candidatos = disponibles.filter((t) => !usados.has(t.id) && permitidas.has(t.clave.id))
     }

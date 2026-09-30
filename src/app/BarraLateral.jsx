@@ -9,7 +9,7 @@ const SECCIONES = [
   { a: '/', nombre: 'Biblioteca', lista: true },
   { a: '/tap', nombre: 'Tap y escucha', lista: true },
   { a: '/radio', nombre: 'Radio', lista: true },
-  { a: '/armonia', nombre: 'Armonía' },
+  { a: '/armonia', nombre: 'Armonía', lista: true },
   { a: '/sets', nombre: 'Sets', lista: true },
   { a: '/mezclador', nombre: 'Mezclador' },
 ]

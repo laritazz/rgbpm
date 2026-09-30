@@ -1,11 +1,13 @@
 import { colorBpm } from '../../lib/color'
 import { transicion } from '../../lib/set'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /**
  * La curva de energía del set: el BPM tema a tema.
  * Cada tramo lleva el color de su categoría de mezcla; los choques, en discontinua.
  */
 export default function CurvaSet({ temas, anclaId, alElegir }) {
+  const { etiqueta, corregir } = useAjustesArmonia()
   const conBpm = temas.filter((t) => t.bpm)
   if (conBpm.length < 2) return null
   const bpms = conBpm.map((t) => t.bpm)
@@ -21,7 +23,7 @@ export default function CurvaSet({ temas, anclaId, alElegir }) {
     const a = temas[i - 1]
     const b = temas[i]
     if (!a.bpm || !b.bpm) continue
-    const t = transicion(a, b)
+    const t = transicion(a, b, corregir)
     tramos.push(
       <line
         key={`${a.id}-${b.id}`}
@@ -63,7 +65,7 @@ export default function CurvaSet({ temas, anclaId, alElegir }) {
             onClick={() => alElegir?.(t.id)}
             style={{ cursor: alElegir ? 'pointer' : undefined }}
           >
-            <title>{`${i + 1}. ${t.titulo} · ${t.bpm} BPM · ${t.clave?.id ?? '—'}`}</title>
+            <title>{`${i + 1}. ${t.titulo} · ${t.bpm} BPM · ${etiqueta(t.clave)}`}</title>
           </circle>
         ) : null
       )}

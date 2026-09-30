@@ -2,9 +2,11 @@ import { memo } from 'react'
 import { IconoAncla, IconoArrastrar, IconoBajar, IconoCambiar, IconoPausa, IconoPlay, IconoQuitar, IconoSubir } from '../../components/Iconos'
 import { colorBpm } from '../../lib/color'
 import { reloj } from '../../lib/formato'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /** Una fila del set. memo: al arrastrar o reproducir solo se repintan las filas que cambian. */
 function FilaSet({ tema, indice, total, esAncla, sonando, arrastre, alArrastrar, alSoltar, alMover, alAnclar, alCambiar, alQuitar, alReproducir }) {
+  const { etiqueta } = useAjustesArmonia()
   return (
     <div
       data-fila={tema.id}
@@ -42,7 +44,7 @@ function FilaSet({ tema, indice, total, esAncla, sonando, arrastre, alArrastrar,
         </small>
       </span>
       <span className="fila-set__bpm">{tema.bpm ?? '—'}</span>
-      <span className="fila-set__clave">{tema.clave?.id ?? '—'}</span>
+      <span className="fila-set__clave">{etiqueta(tema.clave)}</span>
       <span className="fila-set__acciones">
         <button onClick={() => alMover(indice, indice - 1)} disabled={indice === 0} aria-label="Subir">
           <IconoSubir width={18} height={18} />

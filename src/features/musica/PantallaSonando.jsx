@@ -7,6 +7,7 @@ import { reloj } from '../../lib/formato'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import BotonSet from '../sets/BotonSet'
 import { useReproductor, useTiempo } from './ReproductorContext'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /**
  * Lo que suena, a pantalla completa: la mascota baila el tema y te propone con qué seguir.
@@ -27,7 +28,8 @@ export default function PantallaSonando({ abierta, alCerrar }) {
     if ((!abierta || !tema) && d.open) d.close()
   }, [abierta, tema])
 
-  const opciones = useMemo(() => (abierta && tema?.clave ? compatibles(tema, temas, 5) : []), [abierta, tema, temas])
+  const { etiqueta, completa, opciones: ajustes } = useAjustesArmonia()
+  const opciones = useMemo(() => (abierta && tema?.clave ? compatibles(tema, temas, 5, ajustes) : []), [abierta, tema, temas, ajustes])
   const proximo = cola.length && indice < cola.length - 1 ? cola[indice + 1] : null
 
   // Deslizar hacia abajo para cerrar (como las apps nativas)
@@ -76,7 +78,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
             <li>{bpm ? `${bpm} BPM` : 'Sin BPM'}</li>
             {tema.clave && (
               <li>
-                {tema.clave.id} · {tema.clave.nombre}
+                {completa(tema.clave)}
               </li>
             )}
             {bpm && <li className="escena__franja">{franjaDe(bpm).nombre}</li>}
@@ -104,7 +106,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
 
       {proximo && (
         <p className="escena__proximo">
-          Después: <strong>{proximo.titulo}</strong> · {proximo.bpm} BPM · {proximo.clave?.id}
+          Después: <strong>{proximo.titulo}</strong> · {proximo.bpm} BPM · {etiqueta(proximo.clave)}
         </p>
       )}
 
@@ -124,7 +126,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
                       <span className="escena__categoria" style={{ '--cat': o.categoria.color }}>
                         {o.categoria.nombre}
                       </span>
-                      {o.tema.bpm} BPM · {o.tema.clave.id}
+                      {o.tema.bpm} BPM · {etiqueta(o.tema.clave)}
                     </small>
                   </span>
                   <span className="escena__nota">{o.nota}</span>

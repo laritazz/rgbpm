@@ -9,11 +9,11 @@ import { TODAS_LAS_CLAVES, openAPc } from './claves.js'
  * Cómo de bien engancha el set: % de transiciones que pegan, nota media,
  * choques de tono, saltos grandes de BPM y cuántas de cada categoría.
  */
-export function saludSet(temas, tolerancia = 6) {
+export function saludSet(temas, { tolerancia = 6, corregir = true } = {}) {
   const res = { total: Math.max(0, temas.length - 1), choques: 0, saltos: 0, media: 0, porcentaje: 0, categorias: {} }
   let suma = 0
   for (let i = 1; i < temas.length; i++) {
-    const t = notaTransicion(temas[i - 1], temas[i])
+    const t = notaTransicion(temas[i - 1], temas[i], corregir)
     if (!t) {
       res.choques++
       continue
@@ -29,8 +29,8 @@ export function saludSet(temas, tolerancia = 6) {
 }
 
 /** Transición entre dos temas seguidos, para pintarla entre filas. null = chocan (o falta clave). */
-export function transicion(a, b) {
-  const t = notaTransicion(a, b)
+export function transicion(a, b, corregir = true) {
+  const t = notaTransicion(a, b, corregir)
   const diferencia = a.bpm && b.bpm ? Math.round((b.bpm - a.bpm) * 10) / 10 : null
   return { ...(t ?? { categoria: null, nota: null }), diferencia }
 }
@@ -41,22 +41,24 @@ export function duracionTotal(temas) {
 
 // ——— Reordenar automáticamente ———
 
-// Peso de la mejor categoría entre dos claves, precalculado una vez (24 × 24)
-const PESOS = new Map(
-  TODAS_LAS_CLAVES.map((desde) => {
-    const rel = clavesRelacionadas(desde)
-    const interior = new Map()
-    for (const c of CATEGORIAS) for (const k of rel[c.id]) if (!interior.has(k.id) || interior.get(k.id) < c.peso) interior.set(k.id, c.peso)
-    return [desde.id, interior]
-  })
-)
+// Peso de la mejor categoría entre dos claves, precalculado una vez (24 × 24), con y sin corregir el desfase
+const tablaPesos = (corregir) =>
+  new Map(
+    TODAS_LAS_CLAVES.map((desde) => {
+      const rel = clavesRelacionadas(desde, corregir)
+      const interior = new Map()
+      for (const c of CATEGORIAS) for (const k of rel[c.id]) if (!interior.has(k.id) || interior.get(k.id) < c.peso) interior.set(k.id, c.peso)
+      return [desde.id, interior]
+    })
+  )
+const PESOS = { corregido: tablaPesos(true), original: tablaPesos(false) }
 
 /**
  * Nota de poner `b` después de `a` para el orden automático.
  * El BPM pesa más que el tono a propósito: armando el set solo, no debe dar saltos de tempo grandes.
  */
-export function puntosPar(a, b, tolerancia = 6) {
-  const peso = PESOS.get(a.clave.id)?.get(b.clave.id)
+export function puntosPar(a, b, tolerancia = 6, corregir = true) {
+  const peso = PESOS[corregir ? 'corregido' : 'original'].get(a.clave.id)?.get(b.clave.id)
   if (peso === undefined) return -1 // choque armónico
   const bpm = notaBpm(a.bpm, b.bpm, tolerancia)
   let s = peso * 0.3 + bpm.nota * 0.7
@@ -66,7 +68,7 @@ export function puntosPar(a, b, tolerancia = 6) {
   return s
 }
 
-function cadena(pool, inicio, tolerancia) {
+function cadena(pool, inicio, tolerancia, corregir) {
   const resto = pool.slice()
   const orden = [resto.splice(inicio, 1)[0]]
   let total = 0
@@ -75,7 +77,7 @@ function cadena(pool, inicio, tolerancia) {
     let mejor = -Infinity
     let indice = 0
     for (let i = 0; i < resto.length; i++) {
-      const s = puntosPar(ultimo, resto[i], tolerancia)
+      const s = puntosPar(ultimo, resto[i], tolerancia, corregir)
       if (s > mejor) {
         mejor = s
         indice = i
@@ -92,7 +94,7 @@ function cadena(pool, inicio, tolerancia) {
  * Prueba varios arranques (los de BPM más bajo) y se queda con la mejor cadena.
  * Los temas sin clave quedan al final, en su orden.
  */
-export function reordenar(temas, tolerancia = 6) {
+export function reordenar(temas, { tolerancia = 6, corregir = true } = {}) {
   const pool = temas.filter((t) => t.clave)
   const sinClave = temas.filter((t) => !t.clave)
   if (pool.length < 2) return { orden: temas, arranques: 0 }
@@ -100,7 +102,7 @@ export function reordenar(temas, tolerancia = 6) {
   const arranques = pool.length > 400 ? 3 : pool.length > 120 ? 8 : Math.min(25, pool.length)
   let mejor = null
   for (let s = 0; s < arranques; s++) {
-    const r = cadena(pool, porBpm[s], tolerancia)
+    const r = cadena(pool, porBpm[s], tolerancia, corregir)
     if (!mejor || r.total > mejor.total) mejor = r
   }
   return { orden: [...mejor.orden, ...sinClave], arranques }
@@ -120,9 +122,9 @@ export function cambiazos(tema, biblioteca, excluir = new Set(), limite = 8) {
 }
 
 /** Qué meter después del tema ancla, sin repetir lo que ya está en el set. */
-export function candidatosTras(ancla, biblioteca, excluir = new Set(), limite = 12) {
+export function candidatosTras(ancla, biblioteca, excluir = new Set(), limite = 12, opciones = {}) {
   if (!ancla?.clave) return []
-  return compatibles(ancla, biblioteca.filter((t) => !excluir.has(t.id)), limite)
+  return compatibles(ancla, biblioteca.filter((t) => !excluir.has(t.id)), limite, opciones)
 }
 
 // ——— Exportar ———

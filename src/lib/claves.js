@@ -60,3 +60,24 @@ export function leerClave(bruto) {
 }
 
 export const TODAS_LAS_CLAVES = Array.from({ length: 12 }, (_, i) => [clave(i + 1, false), clave(i + 1, true)]).flat()
+
+// Cómo se escribe una clave en pantalla: la elige cada uno en Armonía
+export const NOTACIONES = [
+  { id: 'open', nombre: 'Open Key', ejemplo: '1m' },
+  { id: 'camelot', nombre: 'Camelot', ejemplo: '8A' },
+  { id: 'nombre', nombre: 'Tono', ejemplo: 'Am' },
+]
+
+/** «1m», «8A» o «Am», según la notación elegida. */
+export function etiquetaClave(k, notacion = 'open') {
+  if (!k) return '—'
+  if (notacion === 'camelot') return k.camelot
+  if (notacion === 'nombre') return k.nombre
+  return k.id
+}
+
+/** La etiqueta elegida y, al lado, el tono (o el Open Key si ya se ve el tono): «8A · Am». */
+export function etiquetaCompleta(k, notacion = 'open') {
+  if (!k) return '—'
+  return `${etiquetaClave(k, notacion)} · ${notacion === 'nombre' ? k.id : k.nombre}`
+}

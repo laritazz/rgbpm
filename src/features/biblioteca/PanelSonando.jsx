@@ -7,6 +7,7 @@ import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import BotonSet from '../sets/BotonSet'
 import RuedaMini from './RuedaMini'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '—')
 
@@ -14,7 +15,8 @@ const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, 
 export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
   const rep = useReproductor()
   const { hayFuente, abrirAjustes } = useMusica()
-  const opciones = useMemo(() => (tema ? compatibles(tema, temas, 6) : []), [tema, temas])
+  const { etiqueta, notacion, opciones: ajustes, corregir, tolerancia } = useAjustesArmonia()
+  const opciones = useMemo(() => (tema ? compatibles(tema, temas, 6, ajustes) : []), [tema, temas, ajustes])
 
   if (!tema) {
     return (
@@ -62,7 +64,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
           </div>
           <div>
             <dt>Clave</dt>
-            <dd>{tema.clave ? `${tema.clave.id} · ${tema.clave.camelot}` : '—'}</dd>
+            <dd>{tema.clave ? (notacion === 'camelot' ? `${tema.clave.camelot} · ${tema.clave.id}` : `${tema.clave.id} · ${tema.clave.camelot}`) : '—'}</dd>
           </div>
           <div>
             <dt>Tono</dt>
@@ -79,7 +81,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
       </header>
 
       <div className="sonando__rueda">
-        <RuedaMini semilla={tema.clave} />
+        <RuedaMini semilla={tema.clave} corregir={corregir} etiqueta={etiqueta} />
         <p>
           En rosa, su clave. En color, con qué mezcla: cada color es una de tus siete categorías.
         </p>
@@ -89,7 +91,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
         <h3 id="titulo-mezcla" className="etiqueta-seccion">
           Mezcla con
         </h3>
-        {opciones.length === 0 && <p className="sonando__nada">{tema.clave ? 'Nada en ±8 % de tempo que case de clave.' : 'Sin clave no puedo recomendar: analízalo en Traktor.'}</p>}
+        {opciones.length === 0 && <p className="sonando__nada">{tema.clave ? `Nada en ±${tolerancia} % de tempo que case de clave.` : 'Sin clave no puedo recomendar: analízalo en Traktor.'}</p>}
         <ul>
           {opciones.map((o) => (
             <li key={o.tema.id}>
@@ -101,7 +103,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
                     <span className="sonando__categoria" style={{ '--cat': o.categoria.color }}>
                       {o.categoria.nombre}
                     </span>
-                    {o.tema.clave.id} · {o.bpm.porcentaje >= 0 ? '+' : ''}
+                    {etiqueta(o.tema.clave)} · {o.bpm.porcentaje >= 0 ? '+' : ''}
                     {o.bpm.porcentaje.toFixed(1)} %{o.bpm.relacion !== 1 ? ' (doble/mitad)' : ''}
                   </span>
                 </span>

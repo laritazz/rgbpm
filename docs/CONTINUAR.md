@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, commit `6e5b878`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–10), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 11 (Armonía). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–11), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -23,10 +23,10 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (42 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (52 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
-- **Proveedores:** Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
-- **Estado de la vista en la URL** (`useSearchParams`).
+- **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
+- **Estado de la vista en la URL** (`useSearchParams`). Las preferencias de armonía (notación, «corregir desfase», margen de BPM) van en `AjustesArmoniaContext` + `localStorage` y valen para toda la app: usar `etiqueta(clave)` para pintar claves y pasar `opciones` a las funciones de `lib/`.
 - **Audio:** dos `<audio>` con fundido de igual potencia (10 s). Fuentes: carpetas locales (File System Access) o fragmentos privados.
 - **Audio privado:** Supabase Auth → `firmar.php` en IONOS valida el token y el email → enlaces HMAC que caducan (20 min) → `audio.php` sirve con Range.
 - **Fragmentos:** 90 s, 128 kbps, sin metadatos. Nombre = 16 hex del SHA-256 de la ruta de Traktor. Segunda llave: resumen de artista + título (para la demo sin rutas).
@@ -35,8 +35,8 @@
 
 | Carpeta | Contenido |
 |---|---|
-| `src/lib/` | armonia, claves, color, traktor, set, setEstado, radio, fragmentos, audioPrivado, isla, tempo, tonalidad, escucha… |
-| `src/features/` | biblioteca, musica, tap, radio, sets, proximamente |
+| `src/lib/` | armonia, rueda, claves, color, traktor, set, setEstado, radio, fragmentos, audioPrivado, isla, tempo, tonalidad, escucha… |
+| `src/features/` | biblioteca, musica, tap, radio, armonia, sets, proximamente |
 | `src/app/` | Shell, BarraLateral, BarraPestanas |
 | `src/hooks/` | useMascota, useEscucha, useIsla, useProgresivo… |
 | `scripts/` | fragmentos.mjs, capturas.mjs, estado.mjs, configurar-servidor.mjs, demo.py |
@@ -87,8 +87,10 @@
 ### Ahora
 | # | Tarea | Nota |
 |---|---|---|
-| 1 | **Armonía** (`/armonia`, hoy «Pronto») | Rueda grande interactiva, interruptor «corregir desfase», tolerancia de BPM ajustable (hoy ±8 %), notación Open Key / Camelot a elegir, **set sugerido desde una clave → «Usar este set»** |
-| 2 | Probar en su iPhone | Isla flotante, mascota como play, app instalada |
+| 1 | Probar en su iPhone | Isla flotante, mascota como play, app instalada, **y la rueda de Armonía con el dedo** |
+| 2 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
+
+✅ **Armonía** hecha en la sesión 11: rueda grande, set sugerido → «Usar este set», notación, desfase y margen de BPM.
 
 ### Después
 | # | Tarea | Nota |
@@ -113,4 +115,4 @@
 >
 > El repo es `laritazz/rgbpm` (clónalo) y mi carpeta del Mac es `~/RGBPM`.
 >
-> Empezamos por **Armonía**: rueda grande interactiva, tolerancia de BPM, Open Key / Camelot, «corregir desfase» y **set sugerido desde una clave → «Usar este set»**. Quiero verlo funcionando y publicado, con la bitácora al día.
+> Empezamos por el **Mezclador**: dos platos con onda, SYNC y keylock, hotcues, bucles, EQ, filtro y crossfader. Quiero verlo funcionando y publicado, con la bitácora al día.

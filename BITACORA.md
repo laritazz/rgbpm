@@ -285,3 +285,33 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **`ResizeObserver`:** mido la isla y publico su alto en una variable CSS; así ninguna página queda tapada.
 - **`:has()` en CSS:** la isla cambia si dentro hay reproductor, sin una línea de JavaScript.
 - **Web App Manifest:** `display: standalone`, iconos y `theme-color` convierten la web en app instalable (PWA).
+
+## Sesión 11 · 30 sep 2026 · Armonía
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Rueda grande interactiva | 24 tonos como nodos: mayores fuera, menores dentro. Tocas uno y se encienden los que pegan, cada uno en el color de su categoría |
+| Set sugerido desde una clave | Un tema mío por paso, enlazado por BPM; la línea rosa de la rueda dibuja ese mismo camino, con el número de cada paso |
+| «Usar este» y «Otras canciones» | Cambio un tema en un paso y el resto se recalcula; «Otras canciones» da otra tirada |
+| «Usar este set» | Lo que veo pasa tal cual a Sets, con nombre «Camino desde 1m» y un aviso; se puede deshacer |
+| «Qué pega con…» | Las siete categorías con mis temas, ordenados por cercanía al BPM de salida |
+| Notación Open Key / Camelot / Tono | Se elige en Armonía y cambia en **toda** la app: tarjetas, set, radio, «Sonando», Tap |
+| Interruptor «corregir desfase» | Con él, Clavado es la relativa real (Am con C); sin él, las reglas tal cual mi hoja. Afecta a salud, reordenar, «Pegan» y radio |
+| Margen de BPM ajustable | De ±2 a ±16 % (antes fijo en ±8 %); cuenta doble y mitad de tempo |
+| Probado | 52 pruebas; en el navegador: tocar la rueda, fijar un tema, Camelot sin corregir, «Usar este set» → Sets con 8 de 8 y 100 % sin choques |
+
+### Decisiones
+- **El camino mira mi biblioteca.** En la original, el camino de claves era teórico y luego se buscaban temas: salían saltos de +35 BPM cuando una clave no tenía nada a mi tempo. Ahora clave y tema se eligen juntos; pesa más no romper el tempo (65 %) que la categoría (35 %).
+- **Azar con semilla.** La misma tirada siempre da el mismo set: «Usar este set» guarda justo lo que veo.
+- **Preferencias fuera de la URL.** Clave, BPM, pasos y pestaña van en la URL (se comparten). Notación, desfase y margen son míos y me acompañan por toda la app: van en un contexto y se guardan en el navegador.
+
+### Qué aprendí
+- **Contexto de preferencias:** `AjustesArmoniaContext` da a cualquier pantalla la notación y las reglas, y una función `etiqueta(clave)` que ya escribe «1m», «8A» o «Am».
+- **Inicializar el estado con una función:** `useState(leerGuardados)` lee `localStorage` una sola vez, al montar, no en cada render.
+- **Derivar en vez de sincronizar:** los temas fijados guardan para qué clave eran; si cambio de clave, se ignoran solos. Sin `useEffect` que los borre.
+- **Subir el estado:** el set sugerido lo necesitan la rueda (la línea) y el panel (la lista), así que se calcula en el padre, `Armonia`, y baja a los dos.
+- **`key` para reiniciar:** `<SetSugerido key={contexto}>` vuelve a empezar (filas cerradas, sin avisos) al cambiar de clave.
+- **SVG accesible:** cada nodo es un `<g role="button" tabIndex={0}>` con `aria-label` y Enter/Espacio.
+- **Dibujar una línea con CSS:** `pathLength="1"` + `stroke-dasharray: 1` y animar `stroke-dashoffset` de 1 a 0. Con `prefers-reduced-motion`, aparece sin animación.
+- **Pasar datos al navegar:** `navigate('/sets', { state: { aviso } })` y en Sets `useLocation().state`.

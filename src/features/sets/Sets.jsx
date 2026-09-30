@@ -1,4 +1,5 @@
-import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Mascota from '../../components/marca/Mascota'
 import { IconoMasSimple, IconoPlay } from '../../components/Iconos'
 import { CATEGORIAS } from '../../lib/armonia'
@@ -15,6 +16,7 @@ import FilaSet from './FilaSet'
 import PortadaSet from './PortadaSet'
 import { useSet } from './SetContext'
 import './Sets.css'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 const normalizar = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 
@@ -28,16 +30,24 @@ export default function Sets() {
   const { hayFuente } = useMusica()
   const rep = useReproductor()
   const quieto = useMovimientoReducido()
+  const { corregir } = useAjustesArmonia()
+  const { state: llegada } = useLocation()
   const [anclaElegida, setAnclaElegida] = useState(null)
   const [cambiando, setCambiando] = useState(null)
   const [arrastre, setArrastre] = useState(null) // { desde, sobre, lado }
-  const [aviso, setAviso] = useState(null)
+  // Si vienes de «Usar este set» en Armonía, llega un aviso contando qué se armó
+  const [aviso, setAviso] = useState(() => llegada?.aviso ?? null)
+  useEffect(() => {
+    if (!llegada?.aviso) return
+    const t = setTimeout(() => setAviso((a) => (a === llegada.aviso ? null : a)), 7000)
+    return () => clearTimeout(t)
+  }, [llegada])
   const entradaArchivo = useRef(null)
   const menuExportar = useRef(null)
 
   const temas = set.temas
   const ancla = temas.find((t) => t.id === anclaElegida) ?? temas.at(-1) ?? null
-  const salud = useMemo(() => saludSet(temas), [temas])
+  const salud = useMemo(() => saludSet(temas, { corregir }), [temas, corregir])
   const bpms = temas.map((t) => t.bpm).filter(Boolean)
   const sonandoId = rep.sonando ? rep.tema?.id : null
 
@@ -85,7 +95,7 @@ export default function Sets() {
   const pedirCambio = useCallback((id) => setCambiando((c) => (c === id ? null : id)), [])
 
   function autoOrden() {
-    const { orden, arranques } = reordenar(temas)
+    const { orden, arranques } = reordenar(temas, { corregir })
     set.reemplazar(orden.map((t) => t.id))
     avisar(`Reordenado: encadena por armonía y evita saltos de BPM. Probé ${arranques} arranques y me quedé con el mejor.`)
   }
@@ -228,7 +238,7 @@ export default function Sets() {
         ) : (
           <ol ref={lista} className="lista-set" onDragEnd={() => setArrastre(null)}>
             {temas.map((t, i) => {
-              const tr = i > 0 ? transicion(temas[i - 1], t) : null
+              const tr = i > 0 ? transicion(temas[i - 1], t, corregir) : null
               return (
                 <Fragment key={t.id}>
                   {tr && (
@@ -269,13 +279,14 @@ export default function Sets() {
 
 /** Otros temas para el mismo hueco: misma clave y BPM parecido. */
 function Cambiazo({ tema, alElegir, alCerrar }) {
+  const { etiqueta } = useAjustesArmonia()
   const { temas: biblioteca } = useBiblioteca()
   const { enSet } = useSet()
   const opciones = useMemo(() => cambiazos(tema, biblioteca, enSet), [tema, biblioteca, enSet])
   return (
     <div className="cambiazo">
       <div className="cambiazo__cabecera">
-        <span className="etiqueta-seccion">Cambiar por · {tema.clave?.id} · ±4 %</span>
+        <span className="etiqueta-seccion">Cambiar por · {etiqueta(tema.clave)} · ±4 %</span>
         <button onClick={alCerrar} aria-label="Cerrar">
           ✕
         </button>
@@ -306,10 +317,11 @@ function Cambiazo({ tema, alElegir, alCerrar }) {
 /** Panel derecho: qué pega con el ancla, buscar en la biblioteca, tus playlists y tus sets guardados. */
 function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
   const set = useSet()
+  const { opciones } = useAjustesArmonia()
   const [pestana, setPestana] = useState('pegan')
   const [busqueda, setBusqueda] = useState('')
 
-  const candidatos = useMemo(() => candidatosTras(ancla, biblioteca, set.enSet, 12), [ancla, biblioteca, set.enSet])
+  const candidatos = useMemo(() => candidatosTras(ancla, biblioteca, set.enSet, 12, opciones), [ancla, biblioteca, set.enSet, opciones])
   const resultados = useMemo(() => {
     const q = normalizar(busqueda.trim())
     if (q.length < 2) return []
@@ -406,6 +418,7 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
 
 function ListaAnadir({ items, alAnadir }) {
   const { hayFuente } = useMusica()
+  const { etiqueta } = useAjustesArmonia()
   const { reproducir } = useReproductor()
   if (!items.length) return null
   return (
@@ -417,7 +430,7 @@ function ListaAnadir({ items, alAnadir }) {
             <strong>{tema.titulo}</strong>
             <small>
               {color && <i style={{ background: color }} aria-hidden="true" />}
-              {detalle} · {tema.bpm} BPM · {tema.clave?.id ?? '—'}
+              {detalle} · {tema.bpm} BPM · {etiqueta(tema.clave)}
             </small>
           </span>
           {hayFuente && (

@@ -12,6 +12,7 @@ import RuedaMini from '../biblioteca/RuedaMini'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import './Tap.css'
+import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 const REINICIO = 2000 // más de 2 s sin tocar: empieza una cuenta nueva
 
@@ -168,6 +169,7 @@ function ModoTap({ alGuardar }) {
 /* ——— Piezas comunes ——— */
 
 function Lectura({ bpm, clave, confianza, provisional = false, children }) {
+  const { etiqueta, completa, corregir } = useAjustesArmonia()
   return (
     <section className={`tap__lectura${provisional && bpm ? ' tap__lectura--provisional' : ''}`} aria-live="polite">
       <div className="tap__cifras">
@@ -184,10 +186,10 @@ function Lectura({ bpm, clave, confianza, provisional = false, children }) {
         </div>
         {clave !== undefined && (
           <div className="tap__clave">
-            <RuedaMini semilla={clave} tamano={104} />
+            <RuedaMini semilla={clave} tamano={104} corregir={corregir} etiqueta={etiqueta} />
             {clave && (
               <span>
-                {clave.nombre} · {clave.camelot}
+                {completa(clave)}
                 {confianza != null && confianza < 0.35 && <em> (dudosa)</em>}
               </span>
             )}
@@ -223,6 +225,7 @@ function FilaTema({ tema, detalle }) {
 
 /** Si lo que suena está en tu biblioteca, suele salir aquí: misma clave y BPM casi igual. */
 function PuedeSer({ bpm, clave }) {
+  const { etiqueta } = useAjustesArmonia()
   const { temas } = useBiblioteca()
   const opciones = useMemo(() => puedeSer(temas, { bpm, clave }), [temas, bpm, clave])
   if (!opciones.length) return null
@@ -233,7 +236,7 @@ function PuedeSer({ bpm, clave }) {
       </h2>
       <ul>
         {opciones.map((o) => (
-          <FilaTema key={o.tema.id} tema={o.tema} detalle={`${o.tema.artista} · ${o.tema.bpm} BPM · ${o.tema.clave.id}`} />
+          <FilaTema key={o.tema.id} tema={o.tema} detalle={`${o.tema.artista} · ${o.tema.bpm} BPM · ${etiqueta(o.tema.clave)}`} />
         ))}
       </ul>
     </section>
@@ -242,8 +245,9 @@ function PuedeSer({ bpm, clave }) {
 
 /** Qué pinchar a continuación desde tu biblioteca. */
 function Sugerencias({ bpm, clave }) {
+  const { etiqueta, opciones: ajustes } = useAjustesArmonia()
   const { temas } = useBiblioteca()
-  const opciones = useMemo(() => (clave ? compatibles({ id: 'escucha', bpm, clave }, temas, 6) : porTempo(bpm, temas, 6)), [bpm, clave, temas])
+  const opciones = useMemo(() => (clave ? compatibles({ id: 'escucha', bpm, clave }, temas, 6, ajustes) : porTempo(bpm, temas, 6)), [bpm, clave, temas, ajustes])
   if (!opciones.length) return null
   return (
     <section className="tap__sugerencias" aria-labelledby="titulo-sugerencias">
@@ -252,7 +256,7 @@ function Sugerencias({ bpm, clave }) {
       </h2>
       <ul>
         {opciones.map((o) => (
-          <FilaTema key={o.tema.id} tema={o.tema} detalle={`${o.categoria ? `${o.categoria.nombre} · ` : ''}${o.tema.bpm} BPM${o.tema.clave ? ` · ${o.tema.clave.id}` : ''}`} />
+          <FilaTema key={o.tema.id} tema={o.tema} detalle={`${o.categoria ? `${o.categoria.nombre} · ` : ''}${o.tema.bpm} BPM${o.tema.clave ? ` · ${etiqueta(o.tema.clave)}` : ''}`} />
         ))}
       </ul>
     </section>
@@ -269,6 +273,7 @@ const haceCuanto = (fecha) => {
 
 /** Historial: lo que has cazado en la pista, para mirarlo luego. */
 function Cazados({ cazados, alVer, alBorrar }) {
+  const { etiqueta } = useAjustesArmonia()
   if (!cazados.length) return null
   return (
     <section className="tap__cazados" aria-labelledby="titulo-cazados">
@@ -280,7 +285,7 @@ function Cazados({ cazados, alVer, alBorrar }) {
           <li key={c.fecha} className="cazado" style={{ '--color': c.bpm ? colorBpm(c.bpm) : '#333' }}>
             <button className="cazado__ver" onClick={() => alVer(c)}>
               <strong>{c.bpm ? Math.round(c.bpm) : '—'}</strong>
-              <span>{c.clave ? c.clave.id : c.origen === 'tap' ? 'tap' : '?'}</span>
+              <span>{c.clave ? etiqueta(c.clave) : c.origen === 'tap' ? 'tap' : '?'}</span>
               <small>{haceCuanto(c.fecha)}</small>
             </button>
             <button className="cazado__borrar" onClick={() => alBorrar(c.fecha)} aria-label="Borrar del historial">
