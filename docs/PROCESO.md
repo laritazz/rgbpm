@@ -136,8 +136,7 @@ Sin DJs disponibles, recorro las 5 tareas como lo harían 5 DJs ficticias, inspi
 | Resultado | |
 |---|---|
 | Problemas encontrados | 11 (más 3 oportunidades) |
-| Resueltos hoy | 7 |
-| Pendientes | 4 que cambian reglas: repetir clave, sets largos, notación por defecto, «choca» |
+| Resueltos | 11: 7 en el primer pase y 4 tras decidir yo las reglas (repetir clave, sets largos, notación, «contraste») |
 | Lo más grave | No se podía oír una sugerencia sin perder la referencia; el set sugerido no tenía forma de energía |
 | Giro de producto | El mezclador empieza por **probar la transición** entre dos temas |
 

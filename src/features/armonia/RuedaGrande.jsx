@@ -42,8 +42,14 @@ function tramo(a, b) {
  * Cada tono es un botón: tocarlo cambia la clave de salida.
  */
 function RuedaGrande({ semilla, relacion, camino, cuantos, bpm, etiqueta, alElegir }) {
-  const pasoDe = new Map(camino.map((p, i) => [p.clave.id, i + 1]))
-  const tramos = camino.slice(1).map((p, i) => ({ d: tramo(camino[i].clave, p.clave), color: p.categoria?.color ?? '#ffffff' }))
+  // Un tono puede repetirse en el set (quedarse en la clave): guarda todos sus pasos
+  const pasoDe = new Map()
+  camino.forEach((p, i) => pasoDe.set(p.clave.id, [...(pasoDe.get(p.clave.id) ?? []), i + 1]))
+  const tramos = camino
+    .slice(1)
+    .map((p, i) => ({ desde: camino[i].clave, hasta: p.clave, color: p.categoria?.color ?? '#ffffff' }))
+    .filter((t) => t.desde.id !== t.hasta.id) // quedarse en el tono no dibuja línea
+    .map((t) => ({ d: tramo(t.desde, t.hasta), color: t.color }))
   const ruta = tramos.map((t) => t.d).join(' ')
   // Una vuelta del brillo cada dos compases, al tempo de salida
   const vuelta = `${((8 * 60) / (bpm || 120)).toFixed(2)}s`
@@ -92,9 +98,11 @@ function RuedaGrande({ semilla, relacion, camino, cuantos, bpm, etiqueta, alEleg
           const [x, y] = punto(angulo(k), surco(k))
           const esSemilla = k.id === semilla.id
           const categoria = relacion.get(k.id)
-          const paso = pasoDe.get(k.id)
+          const pasos = pasoDe.get(k.id)
+          // Si el tono se repite, «3+»: el número del primer paso y la pista de que vuelve (la lista completa va en el texto)
+          const paso = pasos ? `${pasos[0]}${pasos.length > 1 ? '+' : ''}` : null
           const temas = cuantos.get(k.id) ?? 0
-          const texto = `${etiqueta(k)} · ${k.nombre}${esSemilla ? ' (salida)' : categoria ? ` · ${categoria.nombre}` : ''} · ${temas} ${temas === 1 ? 'tema' : 'temas'}${paso ? ` · paso ${paso}` : ''}`
+          const texto = `${etiqueta(k)} · ${k.nombre}${esSemilla ? ' (salida)' : categoria ? ` · ${categoria.nombre}` : ''} · ${temas} ${temas === 1 ? 'tema' : 'temas'}${pasos ? ` · ${pasos.length > 1 ? 'pasos' : 'paso'} ${pasos.join(', ')}` : ''}`
           const elegir = () => alElegir(k)
           const [bx, by] = punto(angulo(k), surco(k) + (k.menor ? -23 : 25))
           return (
@@ -116,7 +124,7 @@ function RuedaGrande({ semilla, relacion, camino, cuantos, bpm, etiqueta, alEleg
               </text>
               {paso && (
                 <g className="rueda__paso" aria-hidden="true">
-                  <circle cx={f(bx)} cy={f(by)} r="9" />
+                  {pasos.length === 1 ? <circle cx={f(bx)} cy={f(by)} r="9" /> : <rect x={f(bx - 4 - paso.length * 3)} y={f(by - 9)} width={f(8 + paso.length * 6)} height="18" rx="9" />}
                   <text x={f(bx)} y={f(by + 3.4)}>
                     {paso}
                   </text>

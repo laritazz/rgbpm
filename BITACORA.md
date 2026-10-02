@@ -492,14 +492,22 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 | Tempo doble | «(doble/mitad)» pasa a «×2» / «½» |
 | Botones | El rosa desactivado pasa a gris; el play de las filas del set deja de ser verde |
 | Heurística | 8 de 9 resueltos |
+| Mis cuatro decisiones | Repetir tono, sets de 40, «¿Con qué pinchas?» y «Contraste»: 11 de 11 problemas del recorrido resueltos |
 
 ### Decisiones
 - **Sin puntuaciones inventadas:** con personas ficticias anoto qué pasa en la app, no un SUS de mentira.
 - **El mezclador empieza por probar la transición:** es lo que las personas pedían.
-- **Cuatro reglas del producto las decide Lara:** repetir clave, sets largos, notación por defecto y cómo se llama un choque.
+- **Las cuatro reglas que decidí yo:**
+  - El set **puede quedarse en el tono** (cuenta como Clavado); cada repetición resta 5 puntos para que no se vuelva monótono.
+  - **Hasta 40 pasos**; la subida se reparte para no pasar de ±24 BPM.
+  - La notación se **pregunta la primera vez**: «¿Con qué pinchas?».
+  - Un choque de tono es un **Contraste**, en gris.
 
 ### Qué aprendí
 - **Una opción nueva sin romper lo viejo:** `sugerirSet` recibe `subida`; si vale 0, hace exactamente lo de antes (las pruebas viejas siguen pasando y hay una nueva).
 - **Estado en la URL también para la energía:** `?energia=sube` se comparte con el enlace, como la clave o los pasos.
 - **`title` no basta:** en el móvil no hay ratón; lo que explica tiene que poder tocarse (`aria-pressed` en la leyenda).
+- **De `Set` a `Map` para contar:** las claves usadas pasan de «¿ha salido?» a «¿cuántas veces?», y eso decide el castigo por repetir.
+- **`key` por posición cuando el dato se repite:** si un tono sale dos veces en el set, su id ya no sirve como `key` de React.
+- **Una pregunta que se va sola:** `ElegirNotacion` se pinta mientras `elegida` sea falso; al elegir (aquí o en Armonía) desaparece para siempre.
 - **Flexbox y `min-width: 0`:** un hijo flexible no encoge por debajo de su texto si no se lo permites; por eso los botones se salían del panel.

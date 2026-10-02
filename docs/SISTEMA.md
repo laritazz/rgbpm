@@ -13,7 +13,8 @@
 | 2 | **Solo sale lo que suena** | Un tema sin audio no se sugiere, no entra en juegos ni en sets propuestos |
 | 3 | **La mascota es la interfaz** | Reacciona al BPM, al resultado y al uso; no es un adorno |
 | 4 | **Cartel, no panel** | Composición de cartel suizo: pocos elementos, tamaños muy distintos, cortes en el borde |
-| 5 | **Rosa = acción** | El rosa de marca es para pulsar. El verde existe en la escala, nunca en un botón |
+| 5 | **Rosa = acción** | El rosa de marca es para pulsar. El verde existe en la escala, nunca en un botón. Desactivado = gris |
+| 6 | **Proponer, no corregir** | La armonía es una guía: un choque de tono es un «Contraste» en gris, no un error en rojo |
 
 ---
 

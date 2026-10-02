@@ -8,6 +8,7 @@ import { useReproductor } from '../musica/ReproductorContext'
 import PanelSonando from './PanelSonando'
 import TarjetaPantone from './TarjetaPantone'
 import './Biblioteca.css'
+import ElegirNotacion from '../armonia/ElegirNotacion'
 
 const ORDENES = {
   set: { nombre: 'Orden del set', fn: null },
@@ -93,6 +94,8 @@ export default function Biblioteca() {
             {filtrados.length.toLocaleString('es')} {filtrados.length === 1 ? 'tema' : 'temas'}
           </span>
         </header>
+
+        <ElegirNotacion />
 
         <div className="biblioteca__controles">
           <label className="buscador">

@@ -114,15 +114,15 @@
 | 5 | Tempo doble | Vera | «(doble/mitad)» parece un fallo | 2 | ✅ «×2» / «½», con explicación |
 | 6 | Desactivado | Todas | «Escuchar el set» desactivado seguía rosa | 1 | ✅ Gris: el rosa solo es «puedes pulsar» |
 | 7 | Botones verdes | — | El play de las filas del set tomaba el color del BPM (verde a 128) | 1 | ✅ Blanco; el color queda en el borde |
-| 8 | **Quedarse en el tono** | Vera | El set nunca repite clave | 2 | Pendiente · decisión de Lara |
-| 9 | **Sets largos** | Maddie | Máximo 16 pasos | 2 | Pendiente · va con el 8 |
-| 10 | **Notación** | Noa, Sasha | Camelot no se ve a primera vista | 2 | Pendiente · decisión de Lara |
-| 11 | **Describir, no juzgar** | Irina | «Choca» en rojo suena a error | 2 | Pendiente · decisión de Lara |
+| 8 | **Quedarse en el tono** | Vera | El set nunca repite clave | 2 | ✅ Puede quedarse (cuenta como Clavado); repetir resta puntos para no volverse monótono |
+| 9 | **Sets largos** | Maddie | Máximo 16 pasos | 2 | ✅ Hasta 40 pasos; la subida se reparte (máx. ±24 BPM en todo el set) |
+| 10 | **Notación** | Noa, Sasha | Camelot no se ve a primera vista | 2 | ✅ «¿Con qué pinchas?» la primera vez: Traktor · rekordbox/Serato · por tono |
+| 11 | **Describir, no juzgar** | Irina | «Choca» en rojo suena a error | 2 | ✅ «Contraste», en gris; se cuenta, no se marca como fallo |
 | 12 | Probar la transición | Vera, Maddie | Quieren oír el cruce, no solo saber que pega | — | **Valida el mezclador**: su primera versión = «probar transición» |
 | 13 | Competir y compartir | Sasha | Ranking compartido, set para redes | — | Después |
 | 14 | Modo cabina | Maddie | Letras grandes y poca luz en cabina | — | Idea |
 
-**7 de 11 problemas resueltos hoy.** Los 4 pendientes cambian reglas del producto: los decide Lara.
+**11 de 11 problemas resueltos.** 7 en el primer pase; los 4 que cambiaban reglas del producto, tras la decisión de Lara.
 
 ---
 

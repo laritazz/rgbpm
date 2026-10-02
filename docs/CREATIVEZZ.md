@@ -78,7 +78,7 @@ El proyecto es un diamante doble y cada sesión repite uno pequeño: **uso la ap
 | 15 | 2 oct | Letras y juegos | Tipografía propia sacada del logo; cinco juegos; récords en Supabase | — |
 | 16 | 2 oct | Color v2 | Franjas cortadas con datos; color = tempo + tono; previas de Apple Music; solo sale lo que suena | `/#/sistema` |
 | 17 | 2 oct | Método | Double Diamond documentado, evaluación heurística, kit de test; 2.413 fragmentos de todas mis playlists | `PROCESO.md` |
-| 18 | 2 oct | Personas | 5 DJs ficticias inspiradas en estilos reales recorren la app: 11 problemas, 7 resueltos; el set sugerido gana forma de energía; el mezclador cambia de enfoque | `PERSONAS.md` |
+| 18 | 2 oct | Personas | 5 DJs ficticias inspiradas en estilos reales recorren la app: 11 problemas, 11 resueltos; el set sugerido gana forma de energía y puede quedarse en el tono; «Contraste» en vez de «Choca»; el mezclador cambia de enfoque | `PERSONAS.md` |
 
 ---
 

@@ -210,9 +210,10 @@ export default function Sets() {
                 <strong>{salud.media}</strong>
                 <span>nota media</span>
               </div>
-              <div className={salud.choques ? 'mal' : ''}>
+              {/* Un contraste de tono puede ser buscado: se cuenta, no se pinta como error */}
+              <div>
                 <strong>{salud.choques}</strong>
-                <span>choques de tono</span>
+                <span>{salud.choques === 1 ? 'contraste' : 'contrastes'} de tono</span>
               </div>
               <div className={salud.saltos ? 'regular' : ''}>
                 <strong>{salud.saltos}</strong>
@@ -252,8 +253,8 @@ export default function Sets() {
               return (
                 <Fragment key={t.id}>
                   {tr && (
-                    <li className="transicion" style={{ '--cat': tr.categoria?.color ?? '#555' }} aria-label={tr.categoria ? `Transición ${tr.categoria.nombre}, ${tr.nota} sobre 100` : 'Choque de tono'}>
-                      <span className="transicion__chip">{tr.categoria ? `${tr.categoria.nombre} · ${tr.nota}` : 'Choca'}</span>
+                    <li className="transicion" style={{ '--cat': tr.categoria?.color ?? '#8C8C8C' }} aria-label={tr.categoria ? `Transición ${tr.categoria.nombre}, ${tr.nota} sobre 100` : 'Contraste de tono'}>
+                      <span className="transicion__chip">{tr.categoria ? `${tr.categoria.nombre} · ${tr.nota}` : 'Contraste'}</span>
                       {tr.diferencia != null && <span className="transicion__bpm">{tr.diferencia > 0 ? `+${tr.diferencia}` : tr.diferencia === 0 ? '±0' : tr.diferencia} BPM</span>}
                     </li>
                   )}

@@ -10,7 +10,7 @@ export const FALLO = { id: 'lejos', nombre: 'No era esa', animo: 'calma' }
 
 // ——— ¿Pega o choca? ———
 
-export const RESPUESTAS_PEGA = [...CATEGORIAS.map(({ id, nombre, color, texto }) => ({ id, nombre, color, texto })), { id: 'choque', nombre: 'Choque', color: '#555555', texto: 'No casan: suena a error' }]
+export const RESPUESTAS_PEGA = [...CATEGORIAS.map(({ id, nombre, color, texto }) => ({ id, nombre, color, texto })), { id: 'choque', nombre: 'Contraste', color: '#8C8C8C', texto: 'No casan por tono: contraste buscado o tropiezo' }]
 
 /**
  * Parejas de temas: dos de cada tres pegan (con alguna de tus 7 categorías) y una choca.

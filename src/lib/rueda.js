@@ -36,7 +36,7 @@ function puntosTempo(bpmPrevio, tema, tolerancia) {
 }
 
 /**
- * Set sugerido desde una clave: en cada paso salta a una clave que pega (sin repetir)
+ * Set sugerido desde una clave: en cada paso salta a una clave que pega (o se queda: Clavado)
  * y elige un tema tuyo en ella. Clave y tema se deciden juntos: pesa más no romper
  * el tempo que la categoría, así el camino esquiva las claves sin temas a tu BPM.
  * @param fijados   { [paso]: idTema } — lo que eliges tú en «Usar este»; lo demás se recalcula
@@ -50,7 +50,7 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
   for (const t of biblioteca) if (t.clave) porClave.set(t.clave.id, [...(porClave.get(t.clave.id) ?? []), t])
 
   const usados = new Set()
-  const clavesUsadas = new Set()
+  const clavesUsadas = new Map() // clave → cuántas veces ha salido
   const salida = []
   let actual = null
   let bpmPrevio = bpmInicio
@@ -65,7 +65,7 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
     const pares = []
     for (const o of opciones) {
       for (const tema of porClave.get(o.clave.id) ?? []) {
-        if (!usados.has(tema.id)) pares.push({ ...o, tema, puntos: (o.categoria?.peso ?? 100) * 0.35 + puntosTempo(objetivo, tema, tolerancia) * 0.65 })
+        if (!usados.has(tema.id)) pares.push({ ...o, tema, puntos: (o.categoria?.peso ?? 100) * 0.35 - (o.castigo ?? 0) + puntosTempo(objetivo, tema, tolerancia) * 0.65 })
       }
     }
     pares.sort((a, b) => b.puntos - a.puntos)
@@ -86,7 +86,7 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
       diferencia: tema?.bpm && bpmPrevio && actual ? Math.round((tema.bpm - bpmPrevio) * 10) / 10 : null,
     })
 
-    clavesUsadas.add(clave.id)
+    clavesUsadas.set(clave.id, (clavesUsadas.get(clave.id) ?? 0) + 1)
     actual = clave
     if (tema) {
       usados.add(tema.id)
@@ -97,14 +97,17 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
   return salida
 }
 
-// Claves a las que se puede saltar desde `desde`, sin repetir, cada una con su mejor categoría
+// Claves a las que se puede saltar desde `desde`, cada una con su mejor categoría.
+// Quedarse en el mismo tono es Clavado. Repetir se permite, pero cada vez que una clave
+// ya salió pierde puntos: el set puede quedarse (hipnosis) sin volverse monótono.
+const REPETIR = 5
 function saltosPosibles(desde, usadas, corregir) {
   const rel = clavesRelacionadas(desde, corregir)
   const mejor = new Map()
   for (const c of CATEGORIAS) {
-    for (const k of rel[c.id]) if (!usadas.has(k.id) && (!mejor.has(k.id) || mejor.get(k.id).categoria.peso < c.peso)) mejor.set(k.id, { clave: k, categoria: c })
+    for (const k of rel[c.id]) if (!mejor.has(k.id) || mejor.get(k.id).categoria.peso < c.peso) mejor.set(k.id, { clave: k, categoria: c })
   }
-  return [...mejor.values()].sort((a, b) => b.categoria.peso - a.categoria.peso)
+  return [...mejor.values()].map((o) => ({ ...o, castigo: (usadas.get(o.clave.id) ?? 0) * REPETIR })).sort((a, b) => b.categoria.peso - b.castigo - (a.categoria.peso - a.castigo))
 }
 
 /**

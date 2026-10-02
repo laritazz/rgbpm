@@ -5,6 +5,10 @@
 
 | # | Fecha | Decisión | Por qué | Descartado |
 |---|---|---|---|---|
+| 33 | 2 oct 2026 | Un choque de tono se llama **Contraste** y va en gris | Puede ser buscado; la app describe, no juzga | «Choca» en rojo |
+| 32 | 2 oct 2026 | La notación se **pregunta la primera vez** («¿Con qué pinchas?») | Traktor usa Open Key; rekordbox y Serato, Camelot | Open Key fijo; Camelot fijo |
+| 31 | 2 oct 2026 | Set sugerido de **hasta 40 pasos**; la subida total no pasa de ±24 BPM | Sets de 4–6 h; que un set largo no acabe a 180 | Elegir por duración |
+| 30 | 2 oct 2026 | El set sugerido **puede quedarse en el tono** (Clavado); repetir resta 5 puntos cada vez | Hipnosis sin monotonía | Prohibir repetir; interruptor Viaje/Hipnosis |
 | 29 | 2 oct 2026 | El **mezclador** empieza por **probar la transición** (final de uno + principio de otro) | Vera y Maddie quieren oír el cruce, no dos platos completos | Dos platos completos como primera versión |
 | 28 | 2 oct 2026 | La sección «Escuchar» pasa a **Detectar** (modos Micro · Tap BPM) | «Escuchar» ya es la acción de reproducir | Cazar, Oído |
 | 27 | 2 oct 2026 | El set sugerido tiene **forma de energía**: Mantiene · Sube · Baja (±1,5 BPM por paso) | Un set es un arco; plano solo sirve para un tramo | Dibujar la curva a mano (más adelante) |

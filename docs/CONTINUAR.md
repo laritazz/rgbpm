@@ -93,7 +93,6 @@
 | # | Tarea | Nota |
 |---|---|---|
 | 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
-| 1 | **Decidir los 4 pendientes de `PERSONAS.md` §3** | Repetir clave en el set sugerido · sets de más de 16 pasos · notación por defecto (Camelot u Open Key) · «Choca» como error o como contraste |
 | 2 | **Test con DJs reales** | Kit en `docs/PRUEBA_USUARIOS.md`. Incluir 2 principiantes (las proto-personas son todas profesionales) |
 | 3 | Ayuda de la primera vez en Armonía y Sets | Último pendiente de la heurística; esperar al test |
 | 3 | **Supabase: crear la tabla** | Lara pega `servidor/supabase/puntuaciones.sql` en el SQL Editor. Sin ella, los récords siguen en el navegador |

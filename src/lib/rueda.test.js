@@ -29,11 +29,11 @@ describe('corregir desfase', () => {
 describe('set sugerido', () => {
   const biblioteca = [t('a', 124, '1m'), t('b', 150, '1m'), t('c', 125, '1d'), t('d', 126, '2d'), t('e', 125, '12m'), t('lejos', 170, '2m')]
 
-  it('sale de la semilla, no repite clave ni tema y respeta los pasos', () => {
+  it('sale de la semilla, no repite tema y respeta los pasos', () => {
     const set = sugerirSet(k('1m'), biblioteca, { pasos: 4, bpmInicio: 124, azar: () => 0 })
     expect(set).toHaveLength(4)
     expect(set[0].clave.id).toBe('1m')
-    expect(new Set(set.map((p) => p.clave.id)).size).toBe(4)
+    expect(new Set(set.map((p) => p.elegido?.id).filter(Boolean)).size).toBe(set.filter((p) => p.elegido).length)
     expect(set[0].elegido.id).toBe('a')
   })
   it('cada salto es una relación válida y va a la clave con tema a tu tempo', () => {
@@ -53,12 +53,21 @@ describe('set sugerido', () => {
     expect(set).toHaveLength(3)
   })
   it('con subida, el set va ganando tempo; sin ella, se queda en el suyo', () => {
-    const escalera = [t('s1', 120, '1m'), t('s2', 120, '1d'), t('s3', 126, '1d'), t('s4', 120, '12m'), t('s5', 132, '12m'), t('s6', 120, '2m'), t('s7', 132, '2m'), t('s8', 138, '2m')]
-    const sube = sugerirSet(k('1m'), escalera, { pasos: 4, bpmInicio: 120, subida: 4, azar: () => 0 }).map((p) => p.elegido?.bpm).filter(Boolean)
+    const claves = ['1m', '1d', '12m', '2m', '2d', '12d', '3m', '11m']
+    const surtido = claves.flatMap((c) => [120, 124, 128, 132, 136].map((b) => t(`${c}-${b}`, b, c)))
+    const sube = sugerirSet(k('1m'), surtido, { pasos: 6, bpmInicio: 120, subida: 3, azar: () => 0 }).map((p) => p.elegido.bpm)
+    const plano = sugerirSet(k('1m'), surtido, { pasos: 6, bpmInicio: 120, azar: () => 0 }).map((p) => p.elegido.bpm)
     expect(sube[0]).toBe(120)
-    expect(sube.at(-1)).toBeGreaterThan(120)
-    const plano = sugerirSet(k('1m'), escalera, { pasos: 4, bpmInicio: 120, azar: () => 0 }).map((p) => p.elegido?.bpm).filter(Boolean)
+    expect(sube.at(-1)).toBeGreaterThanOrEqual(132)
     expect(plano.every((b) => b === 120)).toBe(true)
+  })
+  it('puede quedarse en el tono (Clavado), pero no siempre: repetir cuesta', () => {
+    const surtido = [t('x1', 124, '1m'), t('x2', 124, '1m'), t('x3', 124, '1m'), t('x4', 124, '1m'), t('y1', 124, '1d'), t('y2', 124, '2m')]
+    const set = sugerirSet(k('1m'), surtido, { pasos: 5, bpmInicio: 124, azar: () => 0 })
+    const claves = set.map((p) => p.clave.id)
+    expect(claves.filter((c) => c === '1m').length).toBeGreaterThan(1)
+    expect(new Set(claves).size).toBeGreaterThan(1)
+    expect(new Set(set.map((p) => p.elegido?.id).filter(Boolean)).size).toBe(set.filter((p) => p.elegido).length)
   })
   it('con la misma semilla de azar sale la misma tirada', () => {
     const a = azarConSemilla(7)

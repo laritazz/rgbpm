@@ -4,7 +4,7 @@ import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /**
  * La curva de energía del set: el BPM tema a tema.
- * Cada tramo lleva el color de su categoría de mezcla; los choques, en discontinua.
+ * Cada tramo lleva el color de su categoría de mezcla; los contrastes de tono, en discontinua.
  */
 export default function CurvaSet({ temas, anclaId, alElegir }) {
   const { etiqueta, corregir } = useAjustesArmonia()
@@ -31,12 +31,12 @@ export default function CurvaSet({ temas, anclaId, alElegir }) {
         y1={y(a.bpm)}
         x2={x(i)}
         y2={y(b.bpm)}
-        stroke={t.categoria?.color ?? '#555'}
+        stroke={t.categoria?.color ?? '#8C8C8C'}
         strokeWidth="3"
         strokeLinecap="round"
         strokeDasharray={t.categoria ? undefined : '4 5'}
       >
-        <title>{t.categoria ? `${t.categoria.nombre} · ${t.nota}/100` : 'Choque de tono'}</title>
+        <title>{t.categoria ? `${t.categoria.nombre} · ${t.nota}/100` : 'Contraste de tono'}</title>
       </line>
     )
   }

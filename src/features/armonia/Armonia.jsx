@@ -10,10 +10,14 @@ import { useReproductor } from '../musica/ReproductorContext'
 import BotonSet from '../sets/BotonSet'
 import { useSet } from '../sets/SetContext'
 import { useAjustesArmonia } from './AjustesArmoniaContext'
+import ElegirNotacion from './ElegirNotacion'
 import RuedaGrande from './RuedaGrande'
 import './Armonia.css'
 
 // Forma de energía del set sugerido: BPM que gana o pierde en cada paso
+// (±1,5 por paso, pero nunca más de ±24 en todo el set: un set largo no acaba a 180)
+const SUBIDA_MAXIMA = 24
+const subidaPorPaso = (energia, pasos) => Math.sign(energia.subida) * Math.min(Math.abs(energia.subida), SUBIDA_MAXIMA / Math.max(1, pasos - 1))
 const ENERGIAS = [
   { id: 'mantiene', nombre: 'Mantiene', detalle: 'mismo tempo', subida: 0 },
   { id: 'sube', nombre: 'Sube', detalle: 'calienta la pista', subida: 1.5 },
@@ -41,7 +45,7 @@ export default function Armonia() {
   const bpmTipico = useMemo(() => Math.round(mediana(temas.map((t) => t.bpm).filter(Boolean))), [temas])
   const semilla = leerClave(params.get('clave')) ?? rep.tema?.clave ?? clave(1, true)
   const bpm = entre(Number(params.get('bpm')) || Math.round(rep.tema?.bpm ?? bpmTipico), 60, 200)
-  const pasos = entre(Number(params.get('pasos')) || 8, 4, 16)
+  const pasos = entre(Number(params.get('pasos')) || 8, 4, 40)
   const ver = params.get('ver') === 'pegan' ? 'pegan' : 'set'
   const energia = ENERGIAS.find((e) => e.id === params.get('energia')) ?? ENERGIAS[0]
 
@@ -70,7 +74,7 @@ export default function Armonia() {
   const [fijados, setFijados] = useState({ contexto, mapa: SIN_FIJAR })
   const mapa = fijados.contexto === contexto ? fijados.mapa : SIN_FIJAR
   const sugerido = useMemo(
-    () => sugerirSet(semilla, temas, { pasos, bpmInicio: bpm, subida: energia.subida, ...opciones, fijados: mapa, azar: azarConSemilla(tirada * 7919 + semilla.open * 31 + (semilla.menor ? 1 : 0)) }),
+    () => sugerirSet(semilla, temas, { pasos, bpmInicio: bpm, subida: subidaPorPaso(energia, pasos), ...opciones, fijados: mapa, azar: azarConSemilla(tirada * 7919 + semilla.open * 31 + (semilla.menor ? 1 : 0)) }),
     [semilla, temas, pasos, bpm, energia, opciones, mapa, tirada]
   )
   const fijar = (paso, id) => setFijados({ contexto, mapa: { ...mapa, [paso]: id } })
@@ -88,6 +92,7 @@ export default function Armonia() {
           <h1>Armonía</h1>
           <p>Toca un tono y mira qué pega.</p>
         </header>
+        <ElegirNotacion />
 
         <div className="armonia__rueda">
           <RuedaGrande semilla={semilla} relacion={relacion} camino={sugerido} cuantos={cuantos} bpm={bpm} etiqueta={etiqueta} alElegir={elegirClave} />
@@ -191,7 +196,7 @@ function Controles({ bpm, pasos, poner }) {
           <span className="control__nombre">
             Pasos <output>{pasos}</output>
           </span>
-          <input type="range" min="4" max="16" step="1" value={pasos} onChange={(e) => poner({ pasos: e.target.value })} />
+          <input type="range" min="4" max="40" step="1" value={pasos} onChange={(e) => poner({ pasos: e.target.value })} />
         </label>
       </div>
 
@@ -249,7 +254,8 @@ function SetSugerido({ semilla, cadena, bpm, energia, alEnergia, alFijar, alOtra
 
       <ol className="sugerido__lista">
         {cadena.map((paso, i) => (
-          <li key={paso.clave.id}>
+          // Por posición: un tono puede repetirse en el camino
+          <li key={i}>
             {i > 0 && (
               <div className="sugerido__salto" style={{ '--c': paso.categoria?.color }}>
                 <i aria-hidden="true" />

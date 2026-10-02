@@ -4,7 +4,7 @@ import { NOTACIONES, etiquetaClave, etiquetaCompleta } from '../../lib/claves'
 
 const AjustesArmoniaContext = createContext(null)
 const CLAVE = 'rgbpm:armonia'
-const POR_DEFECTO = { notacion: 'open', corregir: true, tolerancia: TOLERANCIA }
+const POR_DEFECTO = { notacion: 'open', elegida: false, corregir: true, tolerancia: TOLERANCIA }
 
 // localStorage puede fallar (modo privado, permisos): sin él, valen los de por defecto
 function leerGuardados() {
@@ -12,6 +12,7 @@ function leerGuardados() {
     const g = JSON.parse(localStorage.getItem(CLAVE) ?? '{}')
     return {
       notacion: NOTACIONES.some((n) => n.id === g.notacion) ? g.notacion : POR_DEFECTO.notacion,
+      elegida: g.elegida === true, // ¿ya dijo con qué pincha? Si no, se le pregunta una vez
       corregir: typeof g.corregir === 'boolean' ? g.corregir : POR_DEFECTO.corregir,
       tolerancia: Number.isFinite(g.tolerancia) ? Math.min(16, Math.max(2, g.tolerancia)) : POR_DEFECTO.tolerancia,
     }
@@ -35,7 +36,8 @@ export function AjustesArmoniaProvider({ children }) {
     }
   }, [ajustes])
 
-  const cambiar = useCallback((campo, valor) => setAjustes((a) => ({ ...a, [campo]: valor })), [])
+  // Cambiar la notación, desde donde sea, cuenta como haberla elegido
+  const cambiar = useCallback((campo, valor) => setAjustes((a) => ({ ...a, [campo]: valor, ...(campo === 'notacion' ? { elegida: true } : {}) })), [])
   const etiqueta = useCallback((k) => etiquetaClave(k, ajustes.notacion), [ajustes.notacion])
   const completa = useCallback((k) => etiquetaCompleta(k, ajustes.notacion), [ajustes.notacion])
 
