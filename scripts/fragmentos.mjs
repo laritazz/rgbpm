@@ -51,8 +51,10 @@ const HILOS = Math.max(1, Number(args.hilos || 4))
 const LIMITE = args.limite ? Number(args.limite) : Infinity
 
 // ——— ffmpeg: el del proyecto (ffmpeg-static) o el del sistema ———
-const FFMPEG = await import('ffmpeg-static').then((m) => m.default).catch(() => 'ffmpeg')
-if (spawnSync(FFMPEG, ['-version']).status !== 0) {
+const funciona = (ruta) => ruta && spawnSync(ruta, ['-version']).status === 0
+const estatico = await import('ffmpeg-static').then((m) => m.default).catch(() => null)
+const FFMPEG = funciona(estatico) ? estatico : 'ffmpeg' // el estático puede ser de otro sistema
+if (!funciona(FFMPEG)) {
   console.error('No encuentro ffmpeg. Instálalo con:  npm i --no-save ffmpeg-static')
   process.exit(1)
 }
@@ -62,17 +64,19 @@ const lector = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '',
 const nml = lector.parse(readFileSync(NML, 'utf8')).NML
 const entradas = nml.COLLECTION.ENTRY ?? []
 
+// --playlist «LN 14F» → solo esa · --playlist todas → todas menos las de sistema («_RECORDINGS», «_LOOPS»)
 let permitidas = null
 if (args.playlist) {
   const nodos = []
   const recorrer = (n) => (n?.NODE ?? []).forEach((x) => (nodos.push(x), recorrer(x.SUBNODES)))
   recorrer(nml.PLAYLISTS)
-  const lista = nodos.find((n) => n.TYPE === 'PLAYLIST' && n.NAME === args.playlist)
-  if (!lista) {
+  const listas = nodos.filter((n) => n.TYPE === 'PLAYLIST' && (args.playlist === 'todas' ? !String(n.NAME).startsWith('_') : n.NAME === args.playlist))
+  if (!listas.length) {
     console.error(`No encuentro la playlist «${args.playlist}»`)
     process.exit(1)
   }
-  permitidas = new Set((lista.PLAYLIST?.ENTRY ?? []).map((e) => e.PRIMARYKEY?.[0]?.KEY))
+  permitidas = new Set(listas.flatMap((l) => (l.PLAYLIST?.ENTRY ?? []).map((e) => e.PRIMARYKEY?.[0]?.KEY)))
+  console.log(`Playlists: ${listas.map((l) => l.NAME).join(' · ')}`)
 }
 
 const trabajos = []
