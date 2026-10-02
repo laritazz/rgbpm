@@ -28,6 +28,7 @@
 
 .tap__modos {
   justify-self: start;
+  align-self: start; /* si no, se estira con la columna de la derecha */
   display: flex;
   padding: 4px;
   border-radius: var(--pildora);

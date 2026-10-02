@@ -28,7 +28,7 @@ function useDatos() {
     const conAudio = hayFuente ? temas.filter(tieneArchivo).length : 0
     const sets = guardados.length + playlists.length
     return {
-      resumen: bpms.length ? `${temas.length.toLocaleString('es')} temas · ${tonos} tonos · ${Math.round(Math.min(...bpms))}–${Math.round(Math.max(...bpms))} BPM` : '',
+      resumen: bpms.length ? `${temas.length.toLocaleString('es')}\u00a0temas · ${tonos}\u00a0tonos · ${Math.round(Math.min(...bpms))}–${Math.round(Math.max(...bpms))}\u00a0BPM` : '',
       secciones: {
         biblioteca: `${temas.length.toLocaleString('es')} temas`,
         armonia: `${tonos} tonos`,

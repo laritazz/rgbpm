@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Mascota from '../../components/marca/Mascota'
 import { IconoMasSimple, IconoPlay } from '../../components/Iconos'
 import { CATEGORIAS } from '../../lib/armonia'
@@ -233,7 +233,17 @@ export default function Sets() {
         {temas.length === 0 ? (
           <div className="sets__vacio">
             <Mascota bpm={124} variante="icono" tamano={120} />
-            <p>Set vacío. Añade temas o carga una playlist.</p>
+            <p>Set vacío.</p>
+            <div className="sets__empezar">
+              {playlists[0] && (
+                <button className="boton boton--rosa" onClick={() => (set.reemplazar(playlists[0].temas, playlists[0].nombre), avisar(`«${playlists[0].nombre}» cargada. Puedes deshacer.`))}>
+                  Cargar {playlists[0].nombre}
+                </button>
+              )}
+              <Link className="boton boton--fantasma" to="/armonia">
+                Set sugerido
+              </Link>
+            </div>
           </div>
         ) : (
           <ol ref={lista} className="lista-set" onDragEnd={() => setArrastre(null)}>

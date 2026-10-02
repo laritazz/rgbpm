@@ -94,7 +94,7 @@ function ModoEscucha({ alCazar, vista, alSoltarVista }) {
       </button>
 
       <Lectura bpm={bpm} clave={clave} confianza={actual.confianza} provisional={escuchando}>
-        <p className="tap__privacidad">El audio se analiza en tu móvil y no se guarda.</p>
+        <p className="tap__privacidad">El audio se analiza aquí y no se guarda.</p>
       </Lectura>
 
       {bpm && clave && <PuedeSer bpm={bpm} clave={clave} />}

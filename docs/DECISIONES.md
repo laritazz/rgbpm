@@ -5,6 +5,9 @@
 
 | # | Fecha | Decisión | Por qué | Descartado |
 |---|---|---|---|---|
+| 25 | 2 oct 2026 | **Test con 5 DJs** antes de tocar los pendientes de la heurística | Confirmar con personas antes de rediseñar: la jerga o el nombre «Escuchar» pueden no molestar | Arreglarlo todo por intuición |
+| 24 | 2 oct 2026 | **Evaluación heurística** (Nielsen) en cada entrega grande | Detecta lo obvio barato y con método; 5 de 9 hallazgos resueltos en la misma sesión | Revisar «a ojo» |
+| 23 | 2 oct 2026 | Método **Double Diamond en bucles cortos** | Cada sesión descubre usando y entrega publicando; el proyecto entero es el diamante grande | Fases largas con documento antes de prototipo |
 | 22 | 2 oct 2026 | **Solo se sugiere lo que suena** (`audibles`) | Un set propuesto con temas mudos no sirve en cabina | Mostrar todo con un aviso |
 | 21 | 2 oct 2026 | **Previas de Apple Music** como 3.ª fuente de audio | Legal y pública: la demo suena para cualquiera. Tiene CORS, sin claves | Deezer (sin CORS), Spotify (ya no da previas a apps nuevas), subir audio (derechos) |
 | 20 | 2 oct 2026 | **El tono también tiene color** (rueda cromática por Open Key) y el tema es un degradado BPM → clave | El tempo y la armonía juntos son el producto; el color debe contarlo | Solo posición en la rueda (brief v1) |

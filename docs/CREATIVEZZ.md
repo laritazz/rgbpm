@@ -45,6 +45,18 @@ Ordena mi biblioteca de Traktor, me dice qué tema pinchar después por tono y B
 
 ## 4 · El proceso, sesión a sesión
 
+### Método: Double Diamond en bucles cortos
+El proyecto es un diamante doble y cada sesión repite uno pequeño: **uso la app → defino el problema → pruebo soluciones → publico**. Detalle y pruebas: `docs/PROCESO.md`.
+
+| Fase | Qué hice | Prueba |
+|---|---|---|
+| Descubrir | Autoetnografía como DJ, análisis de mis 10.554 temas, benchmark de 5 productos, límites de APIs y derechos | Histograma de BPM; tabla de competencia |
+| Definir | Brief, perfiles, trabajo por hacer, «¿cómo podríamos…?», 5 principios, métricas | `PRODUCTO.md`, `SISTEMA.md` §1 |
+| Desarrollar | Varias opciones por pieza (inicio, color, iconos, conexiones de Armonía), siempre como prototipo publicado | `DECISIONES.md`: qué gané y qué descarté |
+| Entregar | Sistema de diseño vivo, 114 pruebas automáticas, evaluación heurística de Nielsen, test con 5 DJs | `/#/sistema`, `PROCESO.md` §6, `PRUEBA_USUARIOS.md` |
+
+**Frase para la web:** *No diseño en Figma y luego programo: cada idea se publica como prototipo, la pruebo con mi música y decido con datos.*
+
 > Cada sesión queda en la bitácora del repo: qué hice, qué decidí y qué aprendí.
 
 | # | Fecha | Sesión | Qué pasó | Imagen |
@@ -59,6 +71,13 @@ Ordena mi biblioteca de Traktor, me dice qué tema pinchar después por tono y B
 | 8 | 29 sep | Audio privado | Login y fragmentos de 90 s en mi hosting: suena, no se descarga | Diagrama (punto 9) |
 | 9 | 29 sep | Sets | Curva de energía, reordenado automático, deshacer, exportar a Traktor | `escritorio-set` · `set-reordenar` |
 | 10 | 30 sep | Suena en el móvil | 79 temas reales sonando en el iPhone; la mascota es el play; app instalable | Captura del iPhone *(la aporto yo)* |
+| 11 | 30 sep | Armonía | Rueda grande, set sugerido desde una clave, Open Key / Camelot | — |
+| 12 | 30 sep | Inicio y mascota | Inicio rosa de círculos; transiciones en círculo; mascota que reacciona | — |
+| 13 | 30 sep | Iconos y vinilo | Rueda de Armonía como vinilo con arcos musicales | — |
+| 14 | 30 sep | Cartel y juego | Cartel suizo con gotas que se funden; primer juego | — |
+| 15 | 2 oct | Letras y juegos | Tipografía propia sacada del logo; cinco juegos; récords en Supabase | — |
+| 16 | 2 oct | Color v2 | Franjas cortadas con datos; color = tempo + tono; previas de Apple Music; solo sale lo que suena | `/#/sistema` |
+| 17 | 2 oct | Método | Double Diamond documentado, evaluación heurística, kit de test; 2.413 fragmentos de todas mis playlists | `PROCESO.md` |
 
 ---
 
@@ -68,7 +87,9 @@ Lo que cuenta un proceso de verdad: lo que probé, lo que descarté y por qué.
 
 | Momento | Decisión | Por qué |
 |---|---|---|
-| Colores de la app | **Color = BPM**, no color = tono | Es mi sistema de marca; el tono ya se ve en la rueda armónica |
+| Colores de la app | Primero **color = BPM**; en la v2, **tempo + tono = un degradado** | El tempo es mi sistema de marca; usando la app vi que el tono también tenía que verse |
+| Cortes de color | De franjas «de manual» a franjas **con datos** de mi colección | El violeta se comía el 32 % de la música y el rojo empezaba en 168 |
+| Lo que no suena | **No se sugiere** | Un set propuesto con temas mudos no sirve en cabina |
 | Verde | Solo en la escala de color, nunca en botones | Se asocia a Spotify |
 | Tipografía | Urbanist para leer y **RGBPM Letras**, propia, sacada del logo, para menús y títulos; Codec fuera del repo | La licencia de Codec no permite distribuirla; una letra propia es de la marca y pesa 2 KB |
 | Iconos | Propios, de gotas: puntos que se unen al tocarse | El mismo lenguaje que los círculos del inicio |
@@ -140,7 +161,7 @@ Cómo aprendo: la IA escribe, yo pregunto y la bitácora lo explica con mis pala
 
 | Pieza | Qué es |
 |---|---|
-| **Color = BPM** | Violeta (<120), Turquesa (120–132), Oliva (132–153), Amarillo (153–168)… Cuanto más rápido, más cálido |
+| **Color = tempo + tono** | Franja de BPM con datos reales: violeta < 110 · turquesa 110–124 · oliva 124–132 · amarillo 132–150 · carmesí ≥ 150. Cada clave tiene su color; un tema es un degradado del BPM a su clave |
 | **Portadas Pantone** | Cada tema es una ficha de color con su BPM y su clave |
 | **Mascota viva** | Late al tempo, cambia de forma (Disco ↔ Asterisco), de cara y de color con el tema |
 | **Curva de energía** | El set dibujado tema a tema, cada tramo en el color de su relación armónica |

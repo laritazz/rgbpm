@@ -452,3 +452,28 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Una fuente más sin tocar las pantallas:** el reproductor pide «la dirección de este tema» y `MusicaContext` decide de dónde sale. Añadir Apple fue cambiar un sitio.
 - **Datos derivados en el contexto:** `audibles` se calcula una vez (`useMemo`) y lo usan todas las pantallas.
 - **Documentación viva:** la guía `/sistema` importa las mismas funciones que la interfaz; si cambio un color, la guía cambia.
+
+## Sesión 17 · 2 oct 2026 · Método de diseño y toda mi música
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Método | **Double Diamond en bucles cortos**, documentado con pruebas de cada fase: `docs/PROCESO.md` |
+| Evaluación heurística | Las 10 heurísticas de Nielsen en escritorio y móvil: 9 problemas, 5 resueltos hoy |
+| Set vacío | Ya no es un callejón: «Cargar playlist» y «Set sugerido» |
+| Escuchar | El selector de modo ya no se estira; el aviso de privacidad vale para ordenador y móvil |
+| Inicio y Biblioteca | «BPM» no se queda solo en otra línea; las franjas avisan de que hay más con un fundido |
+| Test con usuarios | Kit listo: 5 DJs, 5 tareas, SEQ, SUS e hipótesis (`docs/PRUEBA_USUARIOS.md`) |
+| Fragmentos | **2.413 de 2.416** temas de todas mis playlists, 3,2 GB, listos para subir a IONOS |
+| Script | `--playlist todas` junta todas menos las de sistema; usa el ffmpeg del sistema si el del proyecto no arranca |
+
+### Decisiones
+- **Primero evaluar, luego rediseñar:** la heurística encuentra lo obvio; lo dudoso (jerga, el nombre «Escuchar») lo decide el test con personas.
+- **Gravedad de 0 a 4:** arreglo primero lo que bloquea (el set vacío era un 3).
+- **El caso del portfolio cuenta el método**, no solo las pantallas.
+
+### Qué aprendí
+- **Grid y `align-self`:** en una rejilla, cada hijo se estira por defecto hasta la altura de su fila. Si la columna de al lado es alta, un botón pequeño se convierte en una mancha. `align-self: start` lo deja a su tamaño.
+- **Espacio que no se parte (` `):** une palabras que deben ir juntas («188 BPM») sin tocar el CSS.
+- **`mask-image`:** un degradado de opaco a transparente hace que el borde de una fila con scroll se desvanezca. Es la pista visual de «hay más».
+- **Un estado vacío es una pantalla:** también necesita su acción principal (en rosa).

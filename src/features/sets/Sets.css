@@ -477,6 +477,13 @@
   color: var(--gris-2);
 }
 
+.sets__empezar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
 /* ——— Panel «Añadir» ——— */
 .anadir {
   display: flex;
