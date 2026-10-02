@@ -29,6 +29,8 @@ fonts/
 *.otf
 *.woff
 *.woff2
+# …salvo la nuestra: RGBPM Letras es de la marca (scripts/fuente.py)
+!public/fuentes/rgbpm-letras.woff2
 
 # Colecciones de Traktor: son datos personales, se importan en el navegador
 *.nml
