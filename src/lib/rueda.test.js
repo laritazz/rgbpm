@@ -52,6 +52,14 @@ describe('set sugerido', () => {
     expect(set[0].elegido).toBeNull()
     expect(set).toHaveLength(3)
   })
+  it('con subida, el set va ganando tempo; sin ella, se queda en el suyo', () => {
+    const escalera = [t('s1', 120, '1m'), t('s2', 120, '1d'), t('s3', 126, '1d'), t('s4', 120, '12m'), t('s5', 132, '12m'), t('s6', 120, '2m'), t('s7', 132, '2m'), t('s8', 138, '2m')]
+    const sube = sugerirSet(k('1m'), escalera, { pasos: 4, bpmInicio: 120, subida: 4, azar: () => 0 }).map((p) => p.elegido?.bpm).filter(Boolean)
+    expect(sube[0]).toBe(120)
+    expect(sube.at(-1)).toBeGreaterThan(120)
+    const plano = sugerirSet(k('1m'), escalera, { pasos: 4, bpmInicio: 120, azar: () => 0 }).map((p) => p.elegido?.bpm).filter(Boolean)
+    expect(plano.every((b) => b === 120)).toBe(true)
+  })
   it('con la misma semilla de azar sale la misma tirada', () => {
     const a = azarConSemilla(7)
     const b = azarConSemilla(7)

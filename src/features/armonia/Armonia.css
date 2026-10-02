@@ -236,6 +236,34 @@
   gap: 6px;
 }
 
+.armonia__leyenda button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: var(--pildora);
+  border: 1px solid transparent;
+  color: inherit;
+  font: inherit;
+  transition: border-color 160ms, color 160ms;
+}
+
+.armonia__leyenda button:hover,
+.armonia__leyenda button[aria-pressed='true'] {
+  border-color: var(--linea-2);
+  color: var(--blanco);
+}
+
+.armonia__significado {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--gris-2);
+  text-wrap: balance;
+}
+
 .armonia__leyenda i {
   width: 10px;
   height: 10px;
@@ -796,4 +824,8 @@
   .interruptor span {
     transition: none;
   }
+}
+
+.sugerido__energia {
+  margin-top: 12px;
 }

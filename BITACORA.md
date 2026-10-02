@@ -477,3 +477,29 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Espacio que no se parte (` `):** une palabras que deben ir juntas («188 BPM») sin tocar el CSS.
 - **`mask-image`:** un degradado de opaco a transparente hace que el borde de una fila con scroll se desvanezca. Es la pista visual de «hay más».
 - **Un estado vacío es una pantalla:** también necesita su acción principal (en rosa).
+
+## Sesión 18 · 2 oct 2026 · Cinco DJs recorren la app
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Proto-personas | 5 DJs ficticias inspiradas en estilos reales: groove feliz, hipnosis, sorpresa, comunión y velocidad (`docs/PERSONAS.md`) |
+| Recorrido cognitivo | Las 5 tareas del kit, pantalla a pantalla, en la app publicada: 11 problemas y 3 oportunidades |
+| Oír antes de decidir | «Mezcla con» tiene play/pausa en cada candidata: ya no pierdes el tema de referencia |
+| La noche tiene forma | El set sugerido sube, baja o mantiene el tempo (±1,5 BPM por paso) |
+| Detectar | La sección «Escuchar» se llama «Detectar» (Micro · Tap BPM): «escuchar» es reproducir |
+| Leyenda que explica | En Armonía, cada categoría se toca y dice qué hace; también en el móvil |
+| Tempo doble | «(doble/mitad)» pasa a «×2» / «½» |
+| Botones | El rosa desactivado pasa a gris; el play de las filas del set deja de ser verde |
+| Heurística | 8 de 9 resueltos |
+
+### Decisiones
+- **Sin puntuaciones inventadas:** con personas ficticias anoto qué pasa en la app, no un SUS de mentira.
+- **El mezclador empieza por probar la transición:** es lo que las personas pedían.
+- **Cuatro reglas del producto las decide Lara:** repetir clave, sets largos, notación por defecto y cómo se llama un choque.
+
+### Qué aprendí
+- **Una opción nueva sin romper lo viejo:** `sugerirSet` recibe `subida`; si vale 0, hace exactamente lo de antes (las pruebas viejas siguen pasando y hay una nueva).
+- **Estado en la URL también para la energía:** `?energia=sube` se comparte con el enlace, como la clave o los pasos.
+- **`title` no basta:** en el móvil no hay ratón; lo que explica tiene que poder tocarse (`aria-pressed` en la leyenda).
+- **Flexbox y `min-width: 0`:** un hijo flexible no encoge por debajo de su texto si no se lo permites; por eso los botones se salían del panel.

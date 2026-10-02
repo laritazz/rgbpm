@@ -112,7 +112,7 @@ export default function Sets() {
     }
     const [texto, tipo, pista] = formatos[formato]
     if ((formato === 'nml' || formato === 'm3u') && !temas.some((t) => t.ruta)) {
-      return avisar('La demo no tiene archivos: importa tu collection.nml.')
+      return avisar('La demo no tiene archivos: para Traktor importa tu collection.nml. La tracklist (.txt) sí se descarga.')
     }
     descargar(`${archivo}.${formato}`, texto, tipo)
     avisar(pista)

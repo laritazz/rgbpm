@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { IconoPausa, IconoPlay } from '../../components/Iconos'
 import Vinilo from '../../components/marca/Vinilo'
 import { compatibles } from '../../lib/armonia'
 import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
@@ -14,7 +15,7 @@ const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, 
 /** Panel derecho: el tema elegido gira en el vinilo y la mascota propone con qué mezclarlo. */
 export default function PanelSonando({ tema, alElegir, alCerrar }) {
   const rep = useReproductor()
-  const { hayFuente, abrirAjustes, paraSugerir } = useMusica()
+  const { hayFuente, abrirAjustes, paraSugerir, tieneArchivo } = useMusica()
   const { etiqueta, notacion, opciones: ajustes, corregir, tolerancia } = useAjustesArmonia()
   const opciones = useMemo(() => (tema ? compatibles(tema, paraSugerir, 6, ajustes) : []), [tema, paraSugerir, ajustes])
 
@@ -104,11 +105,19 @@ export default function PanelSonando({ tema, alElegir, alCerrar }) {
                       {o.categoria.nombre}
                     </span>
                     {etiqueta(o.tema.clave)} · {o.bpm.porcentaje >= 0 ? '+' : ''}
-                    {o.bpm.porcentaje.toFixed(1)} %{o.bpm.relacion !== 1 ? ' (doble/mitad)' : ''}
+                    {o.bpm.porcentaje.toFixed(1)} %
+                    {o.bpm.relacion === 0.5 && <abbr title="A doble tempo">· ×2</abbr>}
+                    {o.bpm.relacion === 2 && <abbr title="A medio tempo">· ½</abbr>}
                   </span>
                 </span>
                 <span className="sonando__nota">{o.nota}</span>
               </button>
+              {tieneArchivo(o.tema) && (
+                // Escuchar la candidata sin perder el tema de referencia del panel
+                <button className="sonando__escuchar" onClick={() => (rep.tema?.id === o.tema.id ? rep.alternar() : rep.reproducir(o.tema))} aria-label={`${rep.tema?.id === o.tema.id && rep.sonando ? 'Pausar' : 'Escuchar'} ${o.tema.titulo}`}>
+                  {rep.tema?.id === o.tema.id && rep.sonando ? <IconoPausa width={14} height={14} /> : <IconoPlay width={14} height={14} />}
+                </button>
+              )}
               <BotonSet tema={o.tema} compacto />
             </li>
           ))}

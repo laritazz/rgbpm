@@ -53,7 +53,7 @@ El proyecto es un diamante doble y cada sesión repite uno pequeño: **uso la ap
 | Descubrir | Autoetnografía como DJ, análisis de mis 10.554 temas, benchmark de 5 productos, límites de APIs y derechos | Histograma de BPM; tabla de competencia |
 | Definir | Brief, perfiles, trabajo por hacer, «¿cómo podríamos…?», 5 principios, métricas | `PRODUCTO.md`, `SISTEMA.md` §1 |
 | Desarrollar | Varias opciones por pieza (inicio, color, iconos, conexiones de Armonía), siempre como prototipo publicado | `DECISIONES.md`: qué gané y qué descarté |
-| Entregar | Sistema de diseño vivo, 114 pruebas automáticas, evaluación heurística de Nielsen, test con 5 DJs | `/#/sistema`, `PROCESO.md` §6, `PRUEBA_USUARIOS.md` |
+| Entregar | Sistema de diseño vivo, 115 pruebas automáticas, evaluación heurística de Nielsen, recorrido cognitivo con 5 proto-personas, test con DJs reales | `/#/sistema`, `PROCESO.md` §6 y §8, `PERSONAS.md`, `PRUEBA_USUARIOS.md` |
 
 **Frase para la web:** *No diseño en Figma y luego programo: cada idea se publica como prototipo, la pruebo con mi música y decido con datos.*
 
@@ -78,6 +78,7 @@ El proyecto es un diamante doble y cada sesión repite uno pequeño: **uso la ap
 | 15 | 2 oct | Letras y juegos | Tipografía propia sacada del logo; cinco juegos; récords en Supabase | — |
 | 16 | 2 oct | Color v2 | Franjas cortadas con datos; color = tempo + tono; previas de Apple Music; solo sale lo que suena | `/#/sistema` |
 | 17 | 2 oct | Método | Double Diamond documentado, evaluación heurística, kit de test; 2.413 fragmentos de todas mis playlists | `PROCESO.md` |
+| 18 | 2 oct | Personas | 5 DJs ficticias inspiradas en estilos reales recorren la app: 11 problemas, 7 resueltos; el set sugerido gana forma de energía; el mezclador cambia de enfoque | `PERSONAS.md` |
 
 ---
 
@@ -90,6 +91,8 @@ Lo que cuenta un proceso de verdad: lo que probé, lo que descarté y por qué.
 | Colores de la app | Primero **color = BPM**; en la v2, **tempo + tono = un degradado** | El tempo es mi sistema de marca; usando la app vi que el tono también tenía que verse |
 | Cortes de color | De franjas «de manual» a franjas **con datos** de mi colección | El violeta se comía el 32 % de la música y el rojo empezaba en 168 |
 | Lo que no suena | **No se sugiere** | Un set propuesto con temas mudos no sirve en cabina |
+| Sin DJs a mano | **Recorrido cognitivo con proto-personas**, sin puntuaciones inventadas | Llego al test real con lo obvio arreglado; soy honesta con lo que es una hipótesis |
+| Mezclador | Empieza por **probar la transición** | Las personas querían oír el cruce, no dos platos completos |
 | Verde | Solo en la escala de color, nunca en botones | Se asocia a Spotify |
 | Tipografía | Urbanist para leer y **RGBPM Letras**, propia, sacada del logo, para menús y títulos; Codec fuera del repo | La licencia de Codec no permite distribuirla; una letra propia es de la marca y pesa 2 KB |
 | Iconos | Propios, de gotas: puntos que se unen al tocarse | El mismo lenguaje que los círculos del inicio |

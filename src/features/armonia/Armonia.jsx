@@ -13,6 +13,13 @@ import { useAjustesArmonia } from './AjustesArmoniaContext'
 import RuedaGrande from './RuedaGrande'
 import './Armonia.css'
 
+// Forma de energía del set sugerido: BPM que gana o pierde en cada paso
+const ENERGIAS = [
+  { id: 'mantiene', nombre: 'Mantiene', detalle: 'mismo tempo', subida: 0 },
+  { id: 'sube', nombre: 'Sube', detalle: 'calienta la pista', subida: 1.5 },
+  { id: 'baja', nombre: 'Baja', detalle: 'cierra la noche', subida: -1.5 },
+]
+
 const entre = (v, min, max) => Math.min(max, Math.max(min, v))
 const mediana = (valores) => (valores.length ? valores.toSorted((a, b) => a - b)[Math.floor(valores.length / 2)] : 124)
 const SIN_FIJAR = {}
@@ -36,6 +43,7 @@ export default function Armonia() {
   const bpm = entre(Number(params.get('bpm')) || Math.round(rep.tema?.bpm ?? bpmTipico), 60, 200)
   const pasos = entre(Number(params.get('pasos')) || 8, 4, 16)
   const ver = params.get('ver') === 'pegan' ? 'pegan' : 'set'
+  const energia = ENERGIAS.find((e) => e.id === params.get('energia')) ?? ENERGIAS[0]
 
   const poner = (cambios) =>
     setParams(
@@ -56,13 +64,14 @@ export default function Armonia() {
 
   // El set sugerido se calcula aquí porque lo usan la rueda (la línea) y el panel (la lista)
   const [tirada, setTirada] = useState(1)
+  const [significado, setSignificado] = useState(null) // categoría de la leyenda que se está explicando
   // Lo que fijas con «Usar este» vale para esta clave, largo y reglas; si cambian, se olvida solo (sin efectos)
-  const contexto = `${semilla.id}|${pasos}|${opciones.corregir}`
+  const contexto = `${semilla.id}|${pasos}|${opciones.corregir}|${energia.id}`
   const [fijados, setFijados] = useState({ contexto, mapa: SIN_FIJAR })
   const mapa = fijados.contexto === contexto ? fijados.mapa : SIN_FIJAR
   const sugerido = useMemo(
-    () => sugerirSet(semilla, temas, { pasos, bpmInicio: bpm, ...opciones, fijados: mapa, azar: azarConSemilla(tirada * 7919 + semilla.open * 31 + (semilla.menor ? 1 : 0)) }),
-    [semilla, temas, pasos, bpm, opciones, mapa, tirada]
+    () => sugerirSet(semilla, temas, { pasos, bpmInicio: bpm, subida: energia.subida, ...opciones, fijados: mapa, azar: azarConSemilla(tirada * 7919 + semilla.open * 31 + (semilla.menor ? 1 : 0)) }),
+    [semilla, temas, pasos, bpm, energia, opciones, mapa, tirada]
   )
   const fijar = (paso, id) => setFijados({ contexto, mapa: { ...mapa, [paso]: id } })
   const otraTirada = () => {
@@ -90,12 +99,24 @@ export default function Armonia() {
             Salida
           </li>
           {CATEGORIAS.map((c) => (
-            <li key={c.id} title={c.texto}>
-              <i style={{ background: c.color }} />
-              {c.nombre}
+            <li key={c.id}>
+              {/* Botón y no solo «title»: en el móvil no hay ratón para ver la explicación */}
+              <button aria-pressed={significado?.id === c.id} onClick={() => setSignificado((s) => (s?.id === c.id ? null : c))}>
+                <i style={{ background: c.color }} />
+                {c.nombre}
+              </button>
             </li>
           ))}
         </ul>
+        <p className="armonia__significado" aria-live="polite">
+          {significado ? (
+            <>
+              <strong style={{ color: significado.color }}>{significado.nombre}:</strong> {significado.texto.charAt(0).toLowerCase() + significado.texto.slice(1)}.
+            </>
+          ) : (
+            'Toca una categoría y te digo qué hace.'
+          )}
+        </p>
 
         <Controles bpm={bpm} pasos={pasos} poner={poner} />
       </main>
@@ -110,7 +131,7 @@ export default function Armonia() {
           </button>
         </div>
         {ver === 'set' ? (
-          <SetSugerido key={contexto} semilla={semilla} cadena={sugerido} bpm={bpm} alFijar={fijar} alOtraTirada={otraTirada} />
+          <SetSugerido key={contexto} semilla={semilla} cadena={sugerido} bpm={bpm} energia={energia} alEnergia={(id) => poner({ energia: id })} alFijar={fijar} alOtraTirada={otraTirada} />
         ) : (
           <QuePega semilla={semilla} bpm={bpm} temas={temas} alElegir={elegirClave} />
         )}
@@ -185,7 +206,7 @@ function Controles({ bpm, pasos, poner }) {
 }
 
 /** Un tema real por cada tono del camino, enlazado por BPM. Toca una fila para ver otras opciones en ese tono. */
-function SetSugerido({ semilla, cadena, bpm, alFijar, alOtraTirada }) {
+function SetSugerido({ semilla, cadena, bpm, energia, alEnergia, alFijar, alOtraTirada }) {
   const { etiqueta, opciones } = useAjustesArmonia()
   const set = useSet()
   const navegar = useNavigate()
@@ -202,7 +223,7 @@ function SetSugerido({ semilla, cadena, bpm, alFijar, alOtraTirada }) {
     if (!conTema.length) return setAviso('No hay temas en esas claves.')
     set.reemplazar(
       conTema.map((p) => p.elegido.id),
-      `Camino desde ${etiqueta(semilla)}`
+      `Camino desde ${etiqueta(semilla)}${energia.subida ? ` · ${energia.nombre.toLowerCase()}` : ''}`
     )
     navegar('/sets', { state: { aviso: 'Set armado desde la rueda. Puedes deshacer.' } })
   }
@@ -216,6 +237,14 @@ function SetSugerido({ semilla, cadena, bpm, alFijar, alOtraTirada }) {
         <p>
           {conTema.length} de {cadena.length} pasos con tema · margen ±{opciones.tolerancia} %
         </p>
+        <div className="segmentado sugerido__energia" role="radiogroup" aria-label="Energía del set">
+          {ENERGIAS.map((e) => (
+            <button key={e.id} role="radio" aria-checked={energia.id === e.id} onClick={() => alEnergia(e.id)}>
+              {e.nombre}
+              <small>{e.detalle}</small>
+            </button>
+          ))}
+        </div>
       </header>
 
       <ol className="sugerido__lista">

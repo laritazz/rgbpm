@@ -5,6 +5,10 @@
 
 | # | Fecha | Decisión | Por qué | Descartado |
 |---|---|---|---|---|
+| 29 | 2 oct 2026 | El **mezclador** empieza por **probar la transición** (final de uno + principio de otro) | Vera y Maddie quieren oír el cruce, no dos platos completos | Dos platos completos como primera versión |
+| 28 | 2 oct 2026 | La sección «Escuchar» pasa a **Detectar** (modos Micro · Tap BPM) | «Escuchar» ya es la acción de reproducir | Cazar, Oído |
+| 27 | 2 oct 2026 | El set sugerido tiene **forma de energía**: Mantiene · Sube · Baja (±1,5 BPM por paso) | Un set es un arco; plano solo sirve para un tramo | Dibujar la curva a mano (más adelante) |
+| 26 | 2 oct 2026 | **Recorrido cognitivo con 5 proto-personas** mientras no hay DJs reales | Llegar al test real con lo obvio arreglado; sin inventar puntuaciones SUS | Esperar al test real; puntuar personas ficticias |
 | 25 | 2 oct 2026 | **Test con 5 DJs** antes de tocar los pendientes de la heurística | Confirmar con personas antes de rediseñar: la jerga o el nombre «Escuchar» pueden no molestar | Arreglarlo todo por intuición |
 | 24 | 2 oct 2026 | **Evaluación heurística** (Nielsen) en cada entrega grande | Detecta lo obvio barato y con método; 5 de 9 hallazgos resueltos en la misma sesión | Revisar «a ojo» |
 | 23 | 2 oct 2026 | Método **Double Diamond en bucles cortos** | Cada sesión descubre usando y entrega publicando; el proyecto entero es el diamante grande | Fases largas con documento antes de prototipo |

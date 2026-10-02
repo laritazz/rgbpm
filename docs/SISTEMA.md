@@ -100,7 +100,7 @@ Reglas: cifras con `tabular-nums`; títulos con `text-wrap: balance`; RGBPM Letr
 | Biblioteca | Tres discos juntos y uno suelto |
 | Armonía | Cuatro tonos que cierran una rueda |
 | Sets | Temas encadenados |
-| Escuchar | Un punto y el anillo que capta |
+| Detectar | Un punto y el anillo que capta |
 | Juego | El cinco del dado |
 | Radio | Un punto que emite |
 | Mezclador | Dos faders y el crossfader |

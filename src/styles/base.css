@@ -123,6 +123,16 @@ a {
   background: var(--rosa-vivo);
 }
 
+/* Desactivado no es «rosa apagado»: el rosa solo significa «puedes pulsar» */
+.boton--rosa:disabled {
+  background: var(--superficie-2);
+  color: var(--gris-3);
+}
+
+.boton:disabled:active {
+  transform: none;
+}
+
 .boton--negro {
   background: var(--negro);
   color: var(--blanco);

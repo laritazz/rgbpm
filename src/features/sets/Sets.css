@@ -304,7 +304,8 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--color);
+  /* Neutro: el color del BPM ya está en el borde de la fila, y un botón nunca es verde */
+  background: var(--blanco);
   color: var(--negro);
 }
 

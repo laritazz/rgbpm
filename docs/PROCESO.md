@@ -1,7 +1,7 @@
 # RGBPM · Proceso de diseño
 
 > v1 · 2 oct 2026. Cómo diseño RGBPM, con pruebas de cada fase. Sirve para el portfolio (`CREATIVEZZ.md`).
-> Relacionados: `PRODUCTO.md` (mercado) · `DECISIONES.md` (cada giro) · `SISTEMA.md` (lenguaje visual) · `PRUEBA_USUARIOS.md` (test con DJs).
+> Relacionados: `PRODUCTO.md` (mercado) · `DECISIONES.md` (cada giro) · `SISTEMA.md` (lenguaje visual) · `PERSONAS.md` (recorrido con proto-personas) · `PRUEBA_USUARIOS.md` (test con DJs).
 
 ---
 
@@ -26,7 +26,7 @@
 | Descubrir | ¿Qué pasa de verdad? | Autoetnografía, análisis de datos de mi colección, benchmark, límites técnicos y legales |
 | Definir | ¿Qué problema resuelvo y para quién? | Brief, perfiles, JTBD, «¿cómo podríamos…?», principios, métricas |
 | Desarrollar | ¿Cuántas formas hay de resolverlo? | Direcciones visuales, prototipos funcionales publicados, comparativas A/B |
-| Entregar | ¿Funciona y se sostiene? | Sistema de diseño vivo, pruebas automáticas, evaluación heurística, test con usuarios |
+| Entregar | ¿Funciona y se sostiene? | Sistema de diseño vivo, pruebas automáticas, evaluación heurística, recorrido con proto-personas, test con usuarios |
 
 ---
 
@@ -89,7 +89,8 @@ Divergir antes de converger. Cada prototipo se publica y se prueba con música r
 | Calidad automática | 114 pruebas, lint y build en cada push (`ARQUITECTURA.md` §4) |
 | Registro de decisiones | `DECISIONES.md` |
 | Evaluación heurística | §6 |
-| Test con usuarios | `PRUEBA_USUARIOS.md` (siguiente paso) |
+| Recorrido cognitivo con 5 proto-personas | §8 y `PERSONAS.md` |
+| Test con usuarios | `PRUEBA_USUARIOS.md` (pendiente, con DJs reales) |
 
 ---
 
@@ -105,14 +106,14 @@ Gravedad: 0 nada · 1 estética · 2 menor · 3 mayor · 4 catástrofe.
 | 3 | H2 Mundo real | «Se analiza en tu móvil», también en el ordenador | 1 | ✅ «Se analiza aquí» |
 | 4 | H8 Estética | Inicio: «BPM» se quedaba solo en otra línea | 1 | ✅ |
 | 5 | H6 Reconocer | Las franjas de color se cortan sin avisar de que hay más | 1 | ✅ Fundido en el borde |
-| 6 | H2 Mundo real | Jerga (Clavado, Subidón, Tercera) explicada solo al pasar el ratón: en el móvil no se ve | 2 | Pendiente |
-| 7 | H4 Consistencia | «Escuchar» es una sección (detectar BPM) y también una acción («Escuchar el set») | 2 | Pendiente: decidir nombre |
-| 8 | H1 Estado | «Escuchar el set» desactivado parece medio activo | 1 | Pendiente |
+| 6 | H2 Mundo real | Jerga (Clavado, Subidón, Tercera) explicada solo al pasar el ratón: en el móvil no se ve | 2 | ✅ Leyenda que se toca y explica |
+| 7 | H4 Consistencia | «Escuchar» es una sección (detectar BPM) y también una acción («Escuchar el set») | 2 | ✅ La sección pasa a «Detectar» |
+| 8 | H1 Estado | «Escuchar el set» desactivado parece medio activo | 1 | ✅ Gris |
 | 9 | H10 Ayuda | Armonía y Sets no tienen primera vez guiada | 2 | Pendiente: lo dirá el test |
 | 10 | H1 Estado | Lo que no suena se oculta y se cuenta («Con audio 112 · Todos 153») | 0 | ✅ Sesión 16 |
 | 11 | H3 Control | Vaciar o reordenar un set se puede deshacer | 0 | ✅ |
 
-**Resultado:** 5 de 9 problemas resueltos en la misma sesión. Los 4 pendientes pasan al test con usuarios para confirmarlos antes de tocarlos.
+**Resultado:** 8 de 9 problemas resueltos (5 el primer día, 3 tras el recorrido con personas, que los confirmó). Queda la ayuda de la primera vez, para el test real.
 
 ---
 
@@ -125,3 +126,19 @@ Gravedad: 0 nada · 1 estética · 2 menor · 3 mayor · 4 catástrofe.
 | Éxito por tarea | Test moderado | ≥ 80 % |
 | Tiempo en montar un set de 8 | Cronómetro | < 3 min |
 | Sugerencias que suenan | `audibles` / sugeridos | 100 % |
+
+---
+
+## 8 · Recorrido cognitivo con proto-personas · 2 oct 2026
+
+Sin DJs disponibles, recorro las 5 tareas como lo harían 5 DJs ficticias, inspiradas en estilos reales: groove feliz (house), hipnosis (acid techno), sorpresa (ecléctica), comunión (disco, sets largos) y velocidad (hard techno). Detalle en `PERSONAS.md`.
+
+| Resultado | |
+|---|---|
+| Problemas encontrados | 11 (más 3 oportunidades) |
+| Resueltos hoy | 7 |
+| Pendientes | 4 que cambian reglas: repetir clave, sets largos, notación por defecto, «choca» |
+| Lo más grave | No se podía oír una sugerencia sin perder la referencia; el set sugerido no tenía forma de energía |
+| Giro de producto | El mezclador empieza por **probar la transición** entre dos temas |
+
+**Por qué este método y no otro:** el recorrido cognitivo no necesita usuarios y encuentra los fallos de aprendizaje (¿sabría qué hacer aquí?). No sustituye al test real: lo prepara, porque llego con los errores obvios ya arreglados y con hipótesis concretas.

@@ -35,7 +35,7 @@ export default function Tap() {
     <main className="tap">
       <div className="tap__modos" role="tablist" aria-label="Modo">
         <button role="tab" aria-selected={modo === 'escucha'} onClick={() => cambiarModo('escucha')}>
-          Escuchar
+          Micro
         </button>
         <button role="tab" aria-selected={modo === 'tap'} onClick={() => cambiarModo('tap')}>
           Tap BPM

@@ -43,7 +43,8 @@ function puntosTempo(bpmPrevio, tema, tolerancia) {
  * @param bpmInicio de dónde sale el tempo del primer paso
  * @param azar      entre los mejores no siempre el primero: así hay «Otras canciones»
  */
-export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bpmInicio = null, tolerancia = TOLERANCIA, fijados = {}, azar = Math.random } = {}) {
+// `subida`: BPM que sube (o baja, si es negativo) en cada paso. 0 = mantener el tempo.
+export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bpmInicio = null, subida = 0, tolerancia = TOLERANCIA, fijados = {}, azar = Math.random } = {}) {
   if (!semilla) return []
   const porClave = new Map()
   for (const t of biblioteca) if (t.clave) porClave.set(t.clave.id, [...(porClave.get(t.clave.id) ?? []), t])
@@ -53,15 +54,18 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
   const salida = []
   let actual = null
   let bpmPrevio = bpmInicio
+  let base = bpmInicio // de dónde sale la curva de energía
 
   while (salida.length < pasos) {
+    // Con subida, cada paso apunta a su BPM en la curva; sin ella, al tempo del tema anterior
+    const objetivo = subida && base != null ? base + subida * salida.length : bpmPrevio
     const opciones = actual ? saltosPosibles(actual, clavesUsadas, corregir) : [{ clave: semilla, categoria: null }]
     if (!opciones.length) break
 
     const pares = []
     for (const o of opciones) {
       for (const tema of porClave.get(o.clave.id) ?? []) {
-        if (!usados.has(tema.id)) pares.push({ ...o, tema, puntos: (o.categoria?.peso ?? 100) * 0.35 + puntosTempo(bpmPrevio, tema, tolerancia) * 0.65 })
+        if (!usados.has(tema.id)) pares.push({ ...o, tema, puntos: (o.categoria?.peso ?? 100) * 0.35 + puntosTempo(objetivo, tema, tolerancia) * 0.65 })
       }
     }
     pares.sort((a, b) => b.puntos - a.puntos)
@@ -87,6 +91,7 @@ export function sugerirSet(semilla, biblioteca, { pasos = 8, corregir = true, bp
     if (tema) {
       usados.add(tema.id)
       if (tema.bpm) bpmPrevio = tema.bpm
+      if (base == null && tema.bpm) base = tema.bpm
     }
   }
   return salida

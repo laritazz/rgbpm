@@ -1,7 +1,7 @@
 # RGBPM · Test con usuarios
 
 > Kit listo para usar. 5 DJs, 30 minutos cada uno. Con 5 personas salen la mayoría de los problemas de uso (Nielsen).
-> Los resultados van a la tabla del final y a `PROCESO.md`.
+> Los resultados van a la tabla del final y a `PROCESO.md`. Antes de este test hice un recorrido con 5 proto-personas (`PERSONAS.md`): sus 4 pendientes son buenas preguntas para el cierre.
 
 ---
 
@@ -38,7 +38,7 @@
 |---|---|---|
 | T1 | Busca un tema que pegue con «Pobre Diabla» y escúchalo | Suena un tema sugerido |
 | T2 | Monta un set de 8 temas que empiece en 8A y guárdalo | Set guardado con 8 temas |
-| T3 | Averigua el BPM de una canción que suene a tu alrededor | Lee un BPM en Escuchar o Tap |
+| T3 | Averigua el BPM de una canción que suene a tu alrededor | Lee un BPM en Detectar (Micro o Tap) |
 | T4 | Juega una partida de «Adivina el BPM» | Llega a la pantalla de resultado |
 | T5 | Lleva tu set a Traktor | Descarga el .nml (o entiende por qué la demo no puede) |
 
@@ -75,7 +75,7 @@ De 1 (muy en desacuerdo) a 5 (muy de acuerdo).
 |---|---|---|
 | H1 | El color se entiende como tempo sin explicarlo | En el cierre, 3 de 5 dicen «velocidad» o «BPM» |
 | H2 | La jerga de mezcla (Clavado, Subidón…) confunde a quien empieza | Perfiles B y C dudan en T1 o T2 |
-| H3 | «Escuchar» como sección se confunde con reproducir | Alguien busca en Escuchar para oír un tema |
+| H3 | «Detectar» se entiende sin explicarlo (antes «Escuchar», que se confundía con reproducir) | Nadie busca ahí para oír un tema |
 | H4 | Montar un set de 8 cuesta menos de 3 minutos | Tiempo de T2 |
 
 ---

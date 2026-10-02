@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 2 oct 2026, tras la sesión 17 (método de diseño y fragmentos de todas las playlists). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–17), `docs/PROCESO.md` (método, heurística), `docs/PRUEBA_USUARIOS.md` (test con DJs), `docs/SISTEMA.md` (diseño), `docs/ARQUITECTURA.md` (front y back), `docs/DECISIONES.md`, `docs/PRODUCTO.md` (mercado), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 2 oct 2026, tras la sesión 18 (recorrido con proto-personas y mejoras). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–18), `docs/PROCESO.md` (método, heurística), `docs/PERSONAS.md` (5 proto-personas), `docs/PRUEBA_USUARIOS.md` (test con DJs), `docs/SISTEMA.md` (diseño), `docs/ARQUITECTURA.md` (front y back), `docs/DECISIONES.md`, `docs/PRODUCTO.md` (mercado), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -17,7 +17,7 @@
 | Música | `~/Downloads` (2.140 temas de las playlists), `~/Music` y disco `/Volumes/LaritaZZ/_Cosas/_DJ` (Traktor aún guarda rutas antiguas de `~/Downloads/_Cosas/_DJ`) |
 | Lo que se sube a IONOS | `~/RGBPM/SUBIR-A-IONOS/rgbpm-audio/` |
 | Previas públicas | Apple Music (iTunes Search API). Demo: `public/previas.json` (`npm run previas` en el Mac) |
-| Audio privado | https://creativezz.com/rgbpm-audio/ · `firmar.php?salud=1` → hoy `79`; tras subir los nuevos, `2413` |
+| Audio privado | https://creativezz.com/rgbpm-audio/ · `firmar.php?salud=1` → `2413` (subidos el 2 oct) |
 | Supabase | Proyecto `qmsrldxqmtinuzzkjsgh` · clave publicable en `src/lib/config.js` · altas cerradas |
 
 ---
@@ -27,7 +27,7 @@
 - **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (114 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
-- **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` (con `/juego/bpm`) y `/mezclador` («Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
+- **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap` (sección «Detectar»: Micro · Tap BPM), `/juego` (con `/juego/bpm`) y `/mezclador` («Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
 - **Transiciones:** `app/circulo.js` abre un círculo negro al entrar y rosa al volver al inicio.
 - **Estado de la vista en la URL** (`useSearchParams`). Las preferencias de armonía (notación, «corregir desfase», margen de BPM) van en `AjustesArmoniaContext` + `localStorage` y valen para toda la app: usar `etiqueta(clave)` para pintar claves y pasar `opciones` a las funciones de `lib/`.
 - **Audio:** dos `<audio>` con fundido de igual potencia (10 s). Fuentes: carpetas locales (File System Access) o fragmentos privados.
@@ -93,12 +93,13 @@
 | # | Tarea | Nota |
 |---|---|---|
 | 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
-| 2 | **Subir los fragmentos a IONOS** | Hechos 2.413 de 2.416 temas de todas las playlists (3,2 GB) en `~/RGBPM/SUBIR-A-IONOS/rgbpm-audio/privado/fragmentos`. Lara los sube por SFTP y comprueba `salud` |
-| 2 | **Test con 5 DJs** | Kit en `docs/PRUEBA_USUARIOS.md`. Resultados → `PROCESO.md` y pendientes de la heurística |
+| 1 | **Decidir los 4 pendientes de `PERSONAS.md` §3** | Repetir clave en el set sugerido · sets de más de 16 pasos · notación por defecto (Camelot u Open Key) · «Choca» como error o como contraste |
+| 2 | **Test con DJs reales** | Kit en `docs/PRUEBA_USUARIOS.md`. Incluir 2 principiantes (las proto-personas son todas profesionales) |
+| 3 | Ayuda de la primera vez en Armonía y Sets | Último pendiente de la heurística; esperar al test |
 | 3 | **Supabase: crear la tabla** | Lara pega `servidor/supabase/puntuaciones.sql` en el SQL Editor. Sin ella, los récords siguen en el navegador |
 | 3 | Más juegos | Hechos 5. Ideas: Agita el móvil (tempo con el sensor), ¿Qué categoría es? solo de oído, ranking compartido si se abren altas |
 | 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
-| 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
+| 4 | **Mezclador** · solo después de mejorar lo que hay con el test | Primera versión = **probar la transición** (últimos 30 s de A + primeros 30 s de B). Ver «Después» · 3 |
 
 ✅ **Armonía** hecha en la sesión 11: rueda grande, set sugerido → «Usar este set», notación, desfase y margen de BPM.
 
