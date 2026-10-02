@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { componer, escalaPorDato, puntoEtiqueta } from './composicion'
+import { PLANO_JUEGO, componer, puntoEtiqueta } from './composicion'
 
 describe('componer', () => {
-  for (const aspecto of [0.5, 0.75, 1.4, 2]) {
+  for (const [aspecto, plano] of [0.5, 0.75, 1.4, 2].flatMap((a) => [[a, undefined], [a, PLANO_JUEGO]])) {
     it(`todas las etiquetas se leen dentro de la pantalla (aspecto ${aspecto})`, () => {
-      const { ancho, alto, circulos } = componer(aspecto)
+      const { ancho, alto, circulos } = componer(aspecto, {}, null, plano)
       for (const c of circulos) {
         expect(c.etiqueta.x).toBeGreaterThan(0)
         expect(c.etiqueta.x).toBeLessThan(ancho)
@@ -31,8 +31,8 @@ describe('etiquetas y escalas', () => {
     expect(p.y).toBeGreaterThan(0)
     expect(Math.hypot(p.x - 100, p.y - 0)).toBeLessThanOrEqual(40 * 0.62 + 1e-9)
   })
-  it('sin datos, mínimo; con de sobra, máximo', () => {
-    expect(escalaPorDato(0, 100)).toBeCloseTo(0.82)
-    expect(escalaPorDato(500, 100)).toBeCloseTo(1.12)
+  it('el plano de juegos tiene sus propios círculos', () => {
+    const ids = componer(1.6, {}, null, PLANO_JUEGO).circulos.map((c) => c.id)
+    expect(ids).toEqual(['mascota', 'bpm', 'pega', 'corre', 'cae', 'cuadra'])
   })
 })

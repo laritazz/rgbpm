@@ -391,3 +391,34 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Texto que cabe:** calculo el tamaño de letra con el ancho del círculo y el número de letras; si no cabe, el dato se esconde.
 - **Web Audio con reloj propio:** los golpes se programan por adelantado con `ctx.currentTime`; un `setInterval` solo rellena la cola. Suena exacto aunque la pantalla vaya lenta.
 - **Un hook que limpia al salir:** `useSonido` para el audio al desmontarse (`useEffect(() => parar, [parar])`).
+
+## Sesión 15 · 2 oct 2026 · Letras propias y cinco juegos
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Tipografía RGBPM Letras | Sacada del logo: R, G, B, P y M tal cual; el resto con su misma construcción (bloques gruesos, contraformas rectas, vértices torcidos a mano). A–Z, Ñ, acentos, cifras y signos. 2 KB en woff2 |
+| Dónde se usa | Nombres del inicio y de Juego, menú lateral, títulos y veredictos de los juegos |
+| Iconos de gotas | Puntos que se unen con un cuello, como dos gotas al tocarse: 7 de sección y 5 de juegos, todos con el mismo dibujo |
+| Tamaño por uso | Cada visita a una sección cuenta y vale la mitad cada semana. Lo que usas crece; lo que dejas, encoge solo |
+| Menú de Juego como cartel | El mismo cartel del inicio al revés: fondo negro, círculos rosas, mascota rosa |
+| Cuatro juegos nuevos | ¿Pega o choca? (qué salto armónico hay), ¿Dónde cae? (toca el tono en la rueda), ¿Cuál corre más? (cada ronda más fina), Cuadra el tempo (pitch hasta que palmas y bombo caen juntos) |
+| Sin audio también se juega | El ritmo de prueba toca además el acorde y el bajo de la clave del tema |
+| Récords en Supabase | Tabla `puntuaciones` con RLS (`servidor/supabase/puntuaciones.sql`). Si has entrado con tu cuenta, cada partida se apunta en la nube y gana el mejor récord de los dos sitios |
+| Probado | 104 pruebas; las cinco partidas jugadas enteras en el navegador; inicio y Juego en escritorio y móvil |
+
+### Decisiones
+- **La tipografía es solo de mayúsculas,** como el logo: las minúsculas usan las mismas letras. Urbanist sigue para textos largos.
+- **Los vértices se tuercen con la letra ya montada,** no pieza a pieza: así cada letra es una sola forma cortada a mano, sin escalones.
+- **Tamaño por uso con caducidad,** no por contenido: el inicio refleja lo que usas ahora.
+- **Una partida apuntada no se toca:** la tabla no tiene políticas de cambiar ni borrar.
+- **En ¿Cuál corre más? las mascotas no bailan hasta responder:** si no, se vería el tempo.
+
+### Qué aprendí
+- **Una fuente es código:** con `fontTools` y `skia-pathops` dibujo cada letra con cajas, las uno, les resto los huecos y genero el woff2 con un script (`scripts/fuente.py`).
+- **`@font-face` + `preload`:** la fuente se descarga antes que el CSS la pida, así el menú no parpadea.
+- **Componentes como datos:** cada icono es una lista de puntos y uniones; el componente `Gotas` los dibuja.
+- **Un componente para dos pantallas:** el cartel ya no es de la home; recibe composición, colores (variables CSS) y elementos.
+- **Un hook para lo común:** `usePartida` lleva rondas, puntos y récord; cada juego solo dice cómo se crean sus rondas y cómo se puntúa.
+- **Eventos propios del navegador:** al apuntar una visita disparo `rgbpm:uso` y el inicio se entera sin recargar.
+- **RLS en Supabase:** la base de datos decide quién lee y escribe cada fila (`user_id = auth.uid()`), no la web.

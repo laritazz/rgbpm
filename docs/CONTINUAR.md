@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 14 (Cartel vivo y primer juego). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–14), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 15 (Letras propias y cinco juegos). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–15), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (81 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (104 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
 - **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` (con `/juego/bpm`) y `/mezclador` («Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
@@ -50,7 +50,7 @@
 
 - Español en nombres, comentarios y textos. Explicar cada concepto nuevo de React en `BITACORA.md`.
 - Color = BPM (`lib/color.js`). **Verde** solo en la escala, nunca en botones ni acciones principales.
-- Urbanist. **Codec nunca entra en el repo** (licencia).
+- Urbanist para textos; **RGBPM Letras** (propia, `scripts/fuente.py`) para menús y títulos. **Codec nunca entra en el repo** (licencia).
 - **Nunca** se suben al repo colecciones `.nml`, audio ni `config.php`.
 - Toda animación respeta `prefers-reduced-motion`.
 - Antes de publicar: `npm test`, `npm run lint`, `npm run build`.
@@ -90,7 +90,8 @@
 | # | Tarea | Nota |
 |---|---|---|
 | 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
-| 2 | **Más juegos** | Hecho «Adivina el BPM». Siguen: ¿Pega o choca? (categorías), ¿Dónde cae? (rueda), Cuadra el tempo (beatmatching), Agita el móvil. Opcional: ranking en Supabase (tabla `puntuaciones` con RLS) |
+| 2 | **Supabase: crear la tabla** | Lara pega `servidor/supabase/puntuaciones.sql` en el SQL Editor. Sin ella, los récords siguen en el navegador |
+| 3 | Más juegos | Hechos 5. Ideas: Agita el móvil (tempo con el sensor), ¿Qué categoría es? solo de oído, ranking compartido si se abren altas |
 | 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
 | 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |
 
@@ -119,4 +120,4 @@
 >
 > El repo es `laritazz/rgbpm` (clónalo) y mi carpeta del Mac es `~/RGBPM`.
 >
-> Seguimos con el juego **«¿Pega o choca?»**. Quiero verlo funcionando y publicado, con la bitácora al día.
+> Seguimos con lo que haya en «Ahora» de `CONTINUAR_RGBPM.md`. Quiero verlo funcionando y publicado, con la bitácora al día.

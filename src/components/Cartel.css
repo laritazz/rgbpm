@@ -1,0 +1,141 @@
+/* Cartel vivo (components/Cartel.jsx): el inicio y el menú de Juego */
+/* El cartel ocupa toda su caja. Los colores salen de variables: rosa con tinta negra en el inicio, al revés en Juego */
+.cartel-zona {
+  --cartel-tinta: #000000;
+  --cartel-nombre: #ffffff;
+  --cartel-icono: var(--rosa);
+  --cartel-dato: var(--rosa);
+  --cartel-foco: #ffffff;
+  position: absolute;
+  inset: 0;
+}
+
+.cartel {
+  display: block;
+  font-family: var(--fuente);
+}
+
+.cartel__tinta,
+.cartel__gota {
+  fill: var(--cartel-tinta);
+}
+
+/* Todo flota un poco, cada círculo a su ritmo; la etiqueta va con su círculo */
+.cartel__tinta,
+.cartel__item {
+  animation:
+    cartel-aparece 700ms var(--curva-muelle) calc(var(--i) * 60ms) backwards,
+    cartel-flota var(--dur) ease-in-out var(--retraso) infinite alternate;
+  transition: scale 380ms var(--curva-muelle);
+}
+
+.cartel__tinta--quieta {
+  animation: cartel-aparece 700ms var(--curva-muelle) backwards;
+}
+
+.cartel__tinta--activa,
+.cartel__item--activo {
+  scale: 1.06;
+}
+
+/* Las gotas van y vienen: al acercarse a un círculo se funden con él */
+.cartel__gota {
+  animation: cartel-gota var(--dur) ease-in-out var(--retraso) infinite alternate;
+}
+
+@keyframes cartel-aparece {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes cartel-flota {
+  from {
+    translate: -0.5px -0.8px;
+  }
+  to {
+    translate: 0.6px 0.9px;
+  }
+}
+
+@keyframes cartel-gota {
+  from {
+    translate: -2.4px -1.6px;
+  }
+  to {
+    translate: 2.4px 1.8px;
+  }
+}
+
+.cartel__item {
+  cursor: pointer;
+  outline: none;
+}
+
+.cartel__toque {
+  fill: transparent;
+}
+
+.cartel__item:focus-visible .cartel__toque {
+  stroke: var(--cartel-foco);
+  stroke-width: 0.6;
+}
+
+.cartel__icono {
+  color: var(--cartel-icono);
+  pointer-events: none;
+}
+
+/* El nombre, en RGBPM Letras: la tipografía del logo */
+.cartel__nombre {
+  fill: var(--cartel-nombre);
+  font-family: var(--fuente-letras);
+  letter-spacing: 0.01em;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.cartel__dato {
+  fill: var(--cartel-dato);
+  font-weight: 600;
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* Lo que aún no está: el mismo círculo, con el texto apagado */
+.cartel__item--pronto .cartel__nombre {
+  opacity: 0.6;
+}
+
+.cartel__item--pronto .cartel__icono,
+.cartel__item--pronto .cartel__dato {
+  opacity: 0.6;
+}
+
+.cartel__mascota {
+  position: absolute;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.cartel__mascota .mascota {
+  width: 100%;
+  height: auto;
+}
+
+/* El tamaño cambia con el uso: el círculo crece o encoge despacio, sin saltos */
+.cartel__tinta {
+  transition:
+    r 1.2s var(--curva-salida),
+    scale 380ms var(--curva-muelle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartel__tinta,
+  .cartel__item,
+  .cartel__gota {
+    animation: none;
+    transition: none;
+  }
+}

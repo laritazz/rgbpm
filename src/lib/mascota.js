@@ -57,6 +57,8 @@ export function paleta(bpm, variante) {
   if (variante === 'libre') return { fondo: null, cuerpo: ROSA_MASCOTA, cara: '#000000', eco: fondo }
   // Negra: para fondos rosas (la home), plana como los círculos que la rodean: cuerpo negro, cara rosa, sin eco
   if (variante === 'negra') return { fondo: null, cuerpo: '#000000', cara: ROSA, eco: null }
+  // Rosa: lo mismo al revés, para los círculos rosas del menú de Juego
+  if (variante === 'rosa') return { fondo: null, cuerpo: ROSA, cara: '#000000', eco: null }
   return { fondo, cuerpo: '#000000', cara: ROSA, eco: ROSA }
 }
 

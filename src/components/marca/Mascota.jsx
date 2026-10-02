@@ -64,7 +64,7 @@ export default function Mascota({ bpm = 124, tocando = true, variante = 'icono',
   useMascota(bpm, tocando, { alPintar: pintar, mira })
 
   const inicial = forma(energia(bpm))
-  const escala = { libre: 1, negra: 1, icono: 0.78, etiqueta: 0.9 }[variante] ?? 1
+  const escala = { libre: 1, negra: 1, rosa: 1, icono: 0.78, etiqueta: 0.9 }[variante] ?? 1
   const conFondo = variante === 'icono' || variante === 'etiqueta'
 
   return (

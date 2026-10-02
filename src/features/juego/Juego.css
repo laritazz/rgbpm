@@ -1,115 +1,51 @@
-/* Juego: se entra en negro. Tarjetas grandes; dentro del juego, la mascota manda. */
+/* Juego: el cartel del inicio al revés. Fondo negro, círculos rosas, textos en negro. */
 .juego {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  position: relative;
   height: 100%;
-  padding: 28px 32px 40px;
-  overflow-y: auto;
+  overflow: hidden;
+  background: var(--negro);
 }
 
-.juego__cabecera h1,
-.adivina h1 {
-  margin: 0;
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  line-height: 1;
+.juego__cabecera {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  padding: 24px 28px 0;
+  pointer-events: none;
 }
 
 .juego__cabecera p {
-  margin-top: 6px;
-  font-weight: 300;
-  color: var(--gris-2);
-}
-
-.juegos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.juegos__tarjeta {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  height: 100%;
-  min-height: 220px;
-  padding: 22px;
-  border-radius: 28px;
-  background: var(--rosa);
-  color: var(--negro);
-  text-decoration: none;
-  transition:
-    scale 260ms var(--curva-muelle),
-    background 200ms;
-}
-
-.juegos__tarjeta:hover {
-  scale: 1.02;
-}
-
-.juegos__tarjeta:active {
-  scale: 0.97;
-}
-
-.juegos__tarjeta--pronto {
-  background: var(--superficie-2);
-  color: var(--gris-2);
-}
-
-.juegos__icono {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--negro);
-  color: var(--rosa);
-}
-
-.juegos__tarjeta--pronto .juegos__icono {
-  background: var(--negro);
-  color: var(--gris-3);
-}
-
-.juegos__texto {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.juegos__texto strong {
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.05;
-}
-
-.juegos__texto small {
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.juegos__estado {
-  margin-top: auto;
-  align-self: flex-start;
-  padding: 6px 12px;
-  border-radius: var(--pildora);
-  background: var(--negro);
-  color: var(--blanco);
+  margin-top: 8px;
   font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
+  font-weight: 700;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-2);
 }
 
-.juego__nota {
-  font-size: 13px;
-  color: var(--gris-3);
+.cartel-zona--juego {
+  --cartel-tinta: var(--rosa);
+  --cartel-nombre: #000000;
+  --cartel-icono: #000000;
+  --cartel-dato: #000000;
+  --cartel-foco: #000000;
+}
+
+.cartel-zona--juego .cartel__dato {
+  font-weight: 700;
+}
+
+/* Títulos de los juegos, en RGBPM Letras */
+.juego__cabecera h1,
+.adivina h1 {
+  margin: 0;
+  font-family: var(--fuente-letras);
+  font-size: clamp(34px, 5.5vw, 64px);
+  font-weight: 400;
+  line-height: 0.95;
+  color: var(--rosa);
+  text-wrap: balance;
 }
 
 /* ——— Adivina el BPM ——— */
@@ -197,8 +133,8 @@
 }
 
 .adivina__lectura {
-  font-size: 64px;
-  font-weight: 900;
+  font-family: var(--fuente-letras);
+  font-size: 72px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -210,9 +146,8 @@
 }
 
 .adivina__veredicto {
-  font-size: 34px;
-  font-weight: 900;
-  text-transform: uppercase;
+  font-family: var(--fuente-letras);
+  font-size: 38px;
   color: var(--rosa);
   animation: adivina-salta 420ms var(--curva-muelle);
 }
@@ -318,9 +253,329 @@
   }
 }
 
+.adivina__aviso {
+  font-size: 13px;
+  color: var(--rosa);
+}
+
+/* ——— ¿Pega o choca? ——— */
+.pareja {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: min(100%, 560px);
+}
+
+.pareja__tema {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 20px 14px;
+  border-radius: 999px 999px 32px 32px;
+  background: color-mix(in srgb, var(--color) 22%, var(--superficie));
+  border: 2px solid transparent;
+  transition:
+    border-color 200ms,
+    scale 300ms var(--curva-muelle);
+}
+
+.pareja__tema--sonando {
+  border-color: var(--rosa);
+  scale: 1.03;
+}
+
+.pareja__lado {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris-2);
+}
+
+.pareja__clave {
+  font-family: var(--fuente-letras);
+  font-size: 54px;
+  line-height: 1;
+}
+
+.pareja__titulo {
+  max-width: 100%;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pareja__tema small {
+  font-size: 12px;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.respuestas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: min(100%, 560px);
+}
+
+.respuesta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  border-radius: var(--pildora);
+  border: 2px solid var(--linea-2);
+  font-size: 15px;
+  font-weight: 800;
+  transition:
+    border-color 160ms,
+    background 160ms,
+    scale 200ms var(--curva-muelle);
+}
+
+.respuesta i {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.respuesta:hover:not(:disabled) {
+  border-color: var(--c);
+}
+
+.respuesta:active:not(:disabled) {
+  scale: 0.96;
+}
+
+.respuesta:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.respuesta--buena:disabled {
+  opacity: 1;
+  border-color: var(--rosa);
+  background: color-mix(in srgb, var(--rosa) 18%, transparent);
+}
+
+.respuesta--mala:disabled {
+  opacity: 1;
+  text-decoration: line-through;
+}
+
+/* ——— ¿Dónde cae? ——— */
+.cae__rueda {
+  position: relative;
+  width: min(100%, 420px);
+}
+
+.cae__centro {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.rueda-elegir {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--fuente);
+  user-select: none;
+}
+
+.rueda-elegir__fondo {
+  fill: var(--superficie);
+}
+
+.rueda-elegir__tono {
+  cursor: pointer;
+  outline: none;
+  transition: scale 200ms var(--curva-muelle);
+}
+
+.rueda-elegir__tono circle {
+  fill: var(--superficie-2);
+  stroke: var(--linea-2);
+  transition: fill 200ms;
+}
+
+.rueda-elegir__tono text {
+  text-anchor: middle;
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: var(--gris-2);
+  pointer-events: none;
+}
+
+.rueda-elegir__tono:hover circle,
+.rueda-elegir__tono:focus-visible circle {
+  fill: #2c2c2c;
+  stroke: var(--rosa);
+}
+
+.rueda-elegir__tono:hover,
+.rueda-elegir__tono:focus-visible {
+  scale: 1.1;
+}
+
+.rueda-elegir__tono--apagada {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.rueda-elegir__tono--tuya circle {
+  fill: var(--blanco);
+  stroke: none;
+}
+
+.rueda-elegir__tono--real circle {
+  fill: var(--rosa);
+  stroke: none;
+}
+
+.rueda-elegir__tono--tuya text,
+.rueda-elegir__tono--real text {
+  fill: var(--negro);
+  font-weight: 900;
+}
+
+/* ——— ¿Cuál corre más? ——— */
+.corre {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: min(100%, 520px);
+}
+
+.corre__opcion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 10px 22px;
+  border-radius: 40px;
+  background: color-mix(in srgb, var(--color) 30%, var(--superficie));
+  border: 2px solid transparent;
+  transition:
+    border-color 200ms,
+    background 400ms,
+    scale 300ms var(--curva-muelle);
+}
+
+.corre__opcion strong {
+  font-family: var(--fuente-letras);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.corre__opcion small {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.corre__opcion--sonando {
+  border-color: var(--rosa);
+  scale: 1.03;
+}
+
+.corre__opcion--buena {
+  border-color: var(--rosa);
+}
+
+.corre__opcion:active:not(:disabled) {
+  scale: 0.96;
+}
+
+.corre__opcion:disabled {
+  cursor: default;
+}
+
+/* ——— Cuadra el tempo ——— */
+.cuadra {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.cuadra figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+
+.cuadra figcaption {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris-2);
+}
+
+.cuadra__mando {
+  width: min(100%, 460px);
+}
+
+.cuadra__pitch {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.cuadra__pitch span {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris-2);
+}
+
+.cuadra__pitch output {
+  font-size: 16px;
+  letter-spacing: 0;
+  color: var(--blanco);
+  font-variant-numeric: tabular-nums;
+}
+
+.cuadra__pitch input {
+  width: 100%;
+  height: 44px;
+  accent-color: var(--rosa);
+}
+
+/* En el móvil, el cartel termina donde empieza la isla flotante */
+@media (max-width: 900px) {
+  .cartel-zona--juego {
+    bottom: calc(var(--hueco-isla, 120px) + 14px);
+  }
+}
+
 @media (max-width: 700px) {
-  .juego {
-    padding: 18px 14px 28px;
+  .juego__cabecera {
+    padding: 16px 16px 0;
+  }
+
+  .pareja__clave {
+    font-size: 42px;
+  }
+
+  .respuesta {
+    padding: 0 12px;
+    font-size: 14px;
   }
 }
 
@@ -328,5 +583,12 @@
   .adivina__veredicto,
   .adivina__sello {
     animation: none;
+  }
+
+  .pareja__tema,
+  .respuesta,
+  .rueda-elegir__tono,
+  .corre__opcion {
+    transition: none;
   }
 }

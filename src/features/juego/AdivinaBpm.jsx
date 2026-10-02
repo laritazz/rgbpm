@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { colorBpm } from '../../lib/color'
@@ -20,7 +20,7 @@ const TOQUES_MAXIMOS = 12
 export default function AdivinaBpm() {
   const { temas } = useBiblioteca()
   const rep = useReproductor()
-  const record = useRecord()
+  const record = useRecord('bpm')
   const { sonar, parar } = useSonido()
   const [partida, setPartida] = useState(null) // { rondas, i, fase: 'ronda' | 'resultado' | 'final', resultados, fuente }
   const [marcas, setMarcas] = useState([])
@@ -28,7 +28,7 @@ export default function AdivinaBpm() {
   const lectura = bpmDeToques(marcas)
   const ronda = partida ? partida.rondas[partida.i] : null
   const resultado = partida?.fase === 'resultado' ? partida.resultados.at(-1) : null
-  const resumen = useMemo(() => (partida?.fase === 'final' ? resumenPartida(partida.resultados, record.mejor) : null), [partida, record.mejor])
+  const resumen = partida?.resumen ?? null
 
   async function empezarRonda(rondas, i, resultados) {
     setMarcas([])
@@ -52,9 +52,10 @@ export default function AdivinaBpm() {
   function siguiente() {
     const { rondas, i, resultados } = partida
     if (i + 1 < rondas.length) return empezarRonda(rondas, i + 1, resultados)
-    const total = resultados.reduce((s, r) => s + r.puntos, 0)
-    record.apuntar(total)
-    setPartida({ ...partida, fase: 'final' })
+    // El resumen se calcula antes de apuntar: si no, el récord nuevo ya no contaría como nuevo
+    const final = resumenPartida(resultados, record.mejor)
+    record.apuntar(final.total, final.maximo, { rondas: rondas.length, clavados: final.clavados })
+    setPartida({ ...partida, fase: 'final', resumen: final })
   }
 
   function tocar(e) {

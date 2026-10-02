@@ -70,7 +70,9 @@ Lo que cuenta un proceso de verdad: lo que probé, lo que descarté y por qué.
 |---|---|---|
 | Colores de la app | **Color = BPM**, no color = tono | Es mi sistema de marca; el tono ya se ve en la rueda armónica |
 | Verde | Solo en la escala de color, nunca en botones | Se asocia a Spotify |
-| Tipografía | Urbanist en la web; Codec fuera del repo | La licencia de Codec no permite distribuirla |
+| Tipografía | Urbanist para leer y **RGBPM Letras**, propia, sacada del logo, para menús y títulos; Codec fuera del repo | La licencia de Codec no permite distribuirla; una letra propia es de la marca y pesa 2 KB |
+| Iconos | Propios, de gotas: puntos que se unen al tocarse | El mismo lenguaje que los círculos del inicio |
+| Inicio | Cartel vivo cuyo tamaño cambia con el uso | Lo que usas ahora manda; lo que dejas, encoge |
 | Mascota | Sin manos: el Disco y el Asterisco se transforman uno en otro | Más limpia; la forma dice la energía del tema |
 | SoundCloud | **Descartado** | Su API no deja hacer lo que necesito |
 | Shazam | **Mi propio análisis** en el navegador | No tiene API web; el audio no sale del móvil |

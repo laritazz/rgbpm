@@ -10,6 +10,7 @@ import '../features/musica/Musica.css'
 import Logo from '../components/marca/Logo'
 import Mascota from '../components/marca/Mascota'
 import { useIsla } from '../hooks/useIsla'
+import { useApuntarUso } from '../hooks/useUso'
 import { ROSA } from '../lib/mascota'
 import { abrirDesde } from './circulo'
 import './Shell.css'
@@ -25,6 +26,7 @@ export default function Shell() {
   const { pathname } = useLocation()
   const navegar = useNavigate()
   const enInicio = pathname === '/'
+  useApuntarUso(pathname) // cuánto usas cada sección: da tamaño a los círculos del inicio
   const [ruta, setRuta] = useState(pathname)
   const contenido = useRef(null)
   const isla = useRef(null)

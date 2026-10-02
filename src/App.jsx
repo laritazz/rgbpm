@@ -17,7 +17,11 @@ const Radio = lazy(cargar.radio)
 const Armonia = lazy(cargar.armonia)
 const Sets = lazy(cargar.sets)
 const Juego = lazy(cargar.juego)
-const AdivinaBpm = lazy(cargar.juegoBpm)
+const AdivinaBpm = lazy(cargar.juego_bpm)
+const PegaChoca = lazy(cargar.juego_pega)
+const CualCorre = lazy(cargar.juego_corre)
+const DondeCae = lazy(cargar.juego_cae)
+const CuadraTempo = lazy(cargar.juego_cuadra)
 
 // Lo que llega en los próximos sprints. La mascota cambia de ánimo en cada sección.
 const PRONTO = [
@@ -44,6 +48,10 @@ export default function App() {
                     <Route path="sets" element={<Sets />} />
                     <Route path="juego" element={<Juego />} />
                     <Route path="juego/bpm" element={<AdivinaBpm />} />
+                    <Route path="juego/pega" element={<PegaChoca />} />
+                    <Route path="juego/corre" element={<CualCorre />} />
+                    <Route path="juego/cae" element={<DondeCae />} />
+                    <Route path="juego/cuadra" element={<CuadraTempo />} />
                     {PRONTO.map(({ ruta, ...p }) => (
                       <Route key={ruta} path={ruta} element={<Proximamente {...p} />} />
                     ))}

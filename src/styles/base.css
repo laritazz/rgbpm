@@ -1,3 +1,10 @@
+/* RGBPM Letras: sacada de las letras del logo (scripts/fuente.py). Para menús, títulos y cifras grandes */
+@font-face {
+  font-family: 'RGBPM Letras';
+  src: url('/fuentes/rgbpm-letras.woff2') format('woff2');
+  font-display: block;
+}
+
 /* Sistema Laritazz: negro, rosa y blanco. El color de verdad lo pone el BPM. */
 :root {
   --negro: #000000;
@@ -14,6 +21,7 @@
   --magenta: #ff009d;
 
   --fuente: 'Urbanist', system-ui, sans-serif;
+  --fuente-letras: 'RGBPM Letras', 'Urbanist', system-ui, sans-serif;
   --radio-s: 8px;
   --radio: 14px;
   --radio-l: 22px;

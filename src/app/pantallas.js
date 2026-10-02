@@ -6,7 +6,11 @@ export const cargar = {
   armonia: () => import('../features/armonia/Armonia'),
   sets: () => import('../features/sets/Sets'),
   juego: () => import('../features/juego/Juego'),
-  juegoBpm: () => import('../features/juego/AdivinaBpm'),
+  juego_bpm: () => import('../features/juego/AdivinaBpm'),
+  juego_pega: () => import('../features/juego/PegaChoca'),
+  juego_corre: () => import('../features/juego/CualCorre'),
+  juego_cae: () => import('../features/juego/DondeCae'),
+  juego_cuadra: () => import('../features/juego/CuadraTempo'),
 }
 
 export const precargar = (id) => cargar[id]?.().catch(() => {})

@@ -95,4 +95,8 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Mascota viva: duerme en pausa, se despierta, parpadea y mira adonde vas | ✨ |
 | Cada pantalla se descarga al abrirla (y se precarga desde el inicio) | ✨ |
 | Inicio como cartel vivo: círculos que se funden como gotas; su tamaño sale de tus datos | ✨ |
-| Juego «Adivina el BPM» con tus temas (o ritmo sintetizado) y récord | ✨ |
+| Juegos: Adivina el BPM, ¿Pega o choca?, ¿Dónde cae?, ¿Cuál corre más?, Cuadra el tempo | ✨ |
+| Récords en Supabase (si has entrado), además de en el navegador | ✨ |
+| Tipografía propia RGBPM Letras, sacada del logo | ✨ |
+| Iconos propios de gotas | ✨ |
+| El inicio cambia con tu uso: lo que más usas, más grande | ✨ |

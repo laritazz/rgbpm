@@ -102,82 +102,82 @@ export const IconoSubir = (p) => (
   </svg>
 )
 
-// ——— Iconos de sección: puntos y gotas, el mismo lenguaje que los círculos del inicio ———
-const relleno = { fill: 'currentColor', stroke: 'none' }
+// ——— Iconos RGBPM: gotas. Puntos sobre una rejilla de 24 que se unen con un cuello, como dos gotas al tocarse ———
+// Es el mismo lenguaje que los círculos del inicio: cada icono se describe con puntos y uniones, nada más.
 
-/** Biblioteca: cuatro discos, tu colección. */
-export const IconoDiscos = (p) => (
-  <svg {...base} {...p}>
-    <circle cx="7" cy="7" r="4.2" {...relleno} />
-    <circle cx="17" cy="7" r="4.2" {...relleno} />
-    <circle cx="7" cy="17" r="4.2" {...relleno} />
-    <circle cx="17" cy="17" r="4.2" />
-  </svg>
-)
+const f1 = (n) => n.toFixed(2)
 
-/** Armonía: la rueda de tonos; uno encendido. */
-export const IconoRueda = (p) => (
-  <svg {...base} {...p}>
-    {Array.from({ length: 12 }, (_, i) => {
-      const a = ((i * 30 - 90) * Math.PI) / 180
-      return <circle key={i} cx={12 + Math.cos(a) * 8.6} cy={12 + Math.sin(a) * 8.6} r={i === 0 ? 2.6 : 1.3} {...relleno} />
-    })}
-    <circle cx="12" cy="12" r="3.2" {...relleno} />
-  </svg>
-)
+/** Cuello entre dos puntos: sale de cada círculo a ±55° y se estrecha en el medio. */
+function cuello(a, b) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const d = Math.hypot(dx, dy) || 1
+  const [ux, uy] = [dx / d, dy / d]
+  const [nx, ny] = [-uy, ux]
+  const t = (55 * Math.PI) / 180
+  const borde = (c, sentido, lado) => [c.x + c.r * (sentido * ux * Math.cos(t) + lado * nx * Math.sin(t)), c.y + c.r * (sentido * uy * Math.cos(t) + lado * ny * Math.sin(t))]
+  const ancho = Math.min(a.r, b.r) * 0.5
+  const [mx, my] = [(a.x + b.x) / 2, (a.y + b.y) / 2]
+  const [a1, b1, b2, a2] = [borde(a, 1, 1), borde(b, -1, 1), borde(b, -1, -1), borde(a, 1, -1)]
+  return `M${f1(a1[0])} ${f1(a1[1])}Q${f1(mx + nx * ancho)} ${f1(my + ny * ancho)} ${f1(b1[0])} ${f1(b1[1])}L${f1(b2[0])} ${f1(b2[1])}Q${f1(mx - nx * ancho)} ${f1(my - ny * ancho)} ${f1(a2[0])} ${f1(a2[1])}Z`
+}
 
-/** Sets: temas encadenados, como gotas que se unen. */
-export const IconoCadena = (p) => (
-  <svg {...base} {...p}>
-    <path d="M5.5 16.5 12 9.5l6.5 5" strokeWidth="3.4" />
-    <circle cx="5.5" cy="16.5" r="3.3" {...relleno} />
-    <circle cx="12" cy="9.5" r="3.3" {...relleno} />
-    <circle cx="18.5" cy="14.5" r="3.3" {...relleno} />
-  </svg>
-)
+/**
+ * Pinta un icono de gotas.
+ * @param puntos  [[x, y, r]] o [[x, y, r, 'hueco']] para un aro
+ * @param uniones [[i, j]]: qué puntos se tocan
+ */
+function Gotas({ puntos, uniones = [], ...props }) {
+  const p = puntos.map(([x, y, r, tipo]) => ({ x, y, r, hueco: tipo === 'hueco' }))
+  return (
+    <svg {...base} {...props} fill="currentColor" stroke="none">
+      {uniones.map(([i, j]) => (
+        <path key={`${i}-${j}`} d={cuello(p[i], p[j])} />
+      ))}
+      {p.map((c, i) => (c.hueco ? <circle key={i} cx={c.x} cy={c.y} r={c.r - 1} fill="none" stroke="currentColor" strokeWidth="2" /> : <circle key={i} cx={c.x} cy={c.y} r={c.r} />))}
+    </svg>
+  )
+}
 
-/** Escuchar: un punto y las ondas que capta. */
-export const IconoEscuchar = (p) => (
-  <svg {...base} {...p}>
-    <circle cx="12" cy="12" r="3.4" {...relleno} />
-    <circle cx="12" cy="12" r="6.6" strokeWidth="2" />
-    <circle cx="12" cy="12" r="9.8" strokeWidth="1.6" strokeDasharray="2.2 3" />
-  </svg>
-)
+const anillo = (n, radio, r, grande = -1) => Array.from({ length: n }, (_, i) => {
+  const a = ((i * 360) / n - 90) * (Math.PI / 180)
+  return [12 + Math.cos(a) * radio, 12 + Math.sin(a) * radio, i === grande ? r * 2 : r]
+})
 
-/** Juego: un dado (cinco). */
-export const IconoDado = (p) => (
-  <svg {...base} {...p}>
-    <rect x="3" y="3" width="18" height="18" rx="5.5" strokeWidth="2" />
-    {[
-      [8, 8],
-      [16, 8],
-      [12, 12],
-      [8, 16],
-      [16, 16],
-    ].map(([x, y]) => (
-      <circle key={`${x}${y}`} cx={x} cy={y} r="1.7" {...relleno} />
-    ))}
-  </svg>
-)
+/** Biblioteca: tu colección. Tres discos juntos y uno suelto. */
+export const IconoDiscos = (p) => <Gotas puntos={[[6.5, 6.5, 4.3], [17.5, 6.5, 4.3], [17.5, 17.5, 4.3], [6.5, 17.5, 4.3]]} uniones={[[0, 1], [1, 2]]} {...p} />
+
+/** Armonía: cuatro tonos que se cierran en rueda, con la clave de salida en el centro. */
+export const IconoRueda = (p) => <Gotas puntos={[[6, 6, 4.4], [18, 6, 4.4], [18, 18, 4.4], [6, 18, 4.4], [12, 12, 2]]} uniones={[[0, 1], [1, 2], [2, 3], [3, 0]]} {...p} />
+
+/** Sets: temas encadenados, uno tras otro. */
+export const IconoCadena = (p) => <Gotas puntos={[[4, 16, 3.4], [10, 8, 3.4], [15, 16, 3.4], [20.5, 8, 3.4]]} uniones={[[0, 1], [1, 2], [2, 3]]} {...p} />
+
+/** Escuchar: un punto y el anillo de lo que capta. */
+export const IconoEscuchar = (p) => <Gotas puntos={[[12, 12, 3.6], ...anillo(8, 8.6, 1.4)]} {...p} />
+
+/** Juego: la cara del cinco de un dado. */
+export const IconoDado = (p) => <Gotas puntos={[[5.5, 5.5, 3], [18.5, 5.5, 3], [12, 12, 3], [5.5, 18.5, 3], [18.5, 18.5, 3]]} {...p} />
 
 /** Radio: un punto que emite, en gotas cada vez más pequeñas. */
-export const IconoOndas = (p) => (
-  <svg {...base} {...p}>
-    <circle cx="12" cy="12" r="3" {...relleno} />
-    <circle cx="5.5" cy="12" r="2" {...relleno} />
-    <circle cx="18.5" cy="12" r="2" {...relleno} />
-    <circle cx="1.8" cy="12" r="1.2" {...relleno} />
-    <circle cx="22.2" cy="12" r="1.2" {...relleno} />
-  </svg>
-)
+export const IconoOndas = (p) => <Gotas puntos={[[12, 12, 3.4], [5.4, 12, 2.3], [18.6, 12, 2.3], [1.6, 12, 1.2], [22.4, 12, 1.2]]} uniones={[[0, 1], [0, 2]]} {...p} />
 
-/** Mezclador: dos faders y el crossfader. */
-export const IconoMezclador = (p) => (
-  <svg {...base} {...p}>
-    <path d="M7 3v12M17 3v12M4 20.5h16" strokeWidth="1.8" />
-    <circle cx="7" cy="7" r="2.8" {...relleno} />
-    <circle cx="17" cy="11" r="2.8" {...relleno} />
-    <circle cx="11" cy="20.5" r="2.8" {...relleno} />
-  </svg>
-)
+/** Mezclador: dos faders, uno arriba y otro abajo, y el crossfader. */
+export const IconoMezclador = (p) => <Gotas puntos={[[7, 5, 3.2], [7, 13, 3.2], [17, 9, 3.2], [17, 17, 3.2], [12, 21.5, 1.8]]} uniones={[[0, 1], [2, 3]]} {...p} />
+
+// ——— Juegos ———
+
+/** Adivina el BPM: golpes que crecen, como un tempo que entra. */
+export const IconoPulso = (p) => <Gotas puntos={[[3.5, 12, 2], [10, 12, 3.2], [18.5, 12, 4.8]]} {...p} />
+
+/** ¿Pega o choca?: dos que se unen y uno que no. */
+export const IconoPega = (p) => <Gotas puntos={[[6, 8, 4.2], [14.5, 8, 4.2], [18, 18, 3.6]]} uniones={[[0, 1]]} {...p} />
+
+/** ¿Dónde cae?: la rueda con un tono encendido. */
+export const IconoCae = (p) => <Gotas puntos={anillo(8, 8, 1.8, 0)} {...p} />
+
+/** ¿Cuál corre más?: el mismo tiempo, pocos golpes arriba y muchos abajo. */
+export const IconoCorre = (p) => <Gotas puntos={[[6, 7, 2.4], [18, 7, 2.4], [3.5, 17, 1.9], [9.2, 17, 1.9], [14.8, 17, 1.9], [20.5, 17, 1.9]]} {...p} />
+
+/** Cuadra el tempo: dos golpes que se funden en uno. */
+export const IconoCuadra = (p) => <Gotas puntos={[[7.5, 12, 4.8], [16.5, 12, 4.8]]} uniones={[[0, 1]]} {...p} />

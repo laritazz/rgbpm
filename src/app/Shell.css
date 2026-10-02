@@ -115,7 +115,9 @@
   padding: 0 12px;
   border-radius: var(--radio);
   color: var(--gris-2);
-  font-size: 15px;
+  font-family: var(--fuente-letras);
+  font-size: 16px;
+  letter-spacing: 0.02em;
   text-decoration: none;
   transition: background 160ms;
 }
@@ -366,7 +368,7 @@
   }
 
   /* Nada queda debajo de la isla: cada página deja su hueco al final */
-  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .juego, .adivina) {
+  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .adivina) {
     padding-bottom: calc(var(--hueco-isla, 140px) + 24px);
   }
 
