@@ -304,6 +304,19 @@
   box-shadow: 0 0 10px var(--rosa);
 }
 
+.lateral__sistema {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gris-2);
+  text-align: center;
+  text-decoration: none;
+}
+
+.lateral__sistema:hover,
+.lateral__sistema.active {
+  color: var(--rosa);
+}
+
 .lateral__version {
   font-size: 11px;
   color: var(--gris-3);
@@ -368,7 +381,7 @@
   }
 
   /* Nada queda debajo de la isla: cada página deja su hueco al final */
-  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .adivina) {
+  .shell__contenido :is(.biblioteca__rejilla-caja, .sets, .armonia, .radio, .tap, .pronto, .adivina, .sistema) {
     padding-bottom: calc(var(--hueco-isla, 140px) + 24px);
   }
 

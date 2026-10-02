@@ -8,7 +8,7 @@ import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
 /** Barra fija abajo: lo que suena, en cualquier pantalla. Al tocar el tema se abre a pantalla completa. */
 export default function BarraReproductor({ alAbrir }) {
-  const { tema, estado, sonando, origen, cola, indice, fundiendo, alternar, buscar, siguiente } = useReproductor()
+  const { tema, estado, sonando, origen, enlace, cola, indice, fundiendo, alternar, buscar, siguiente } = useReproductor()
   const { tiempo, duracion } = useTiempo()
   const { abrirAjustes } = useMusica()
   const { etiqueta } = useAjustesArmonia()
@@ -51,7 +51,13 @@ export default function BarraReproductor({ alAbrir }) {
             <input type="range" min="0" max={duracion || 0} step="0.1" value={tiempo} onChange={(e) => buscar(Number(e.target.value))} aria-label="Posición" />
             <span>{reloj(duracion)}</span>
           </div>
-          <span className="barra__origen">{estado === 'cargando' ? 'Cargando…' : fundiendo ? 'Mezclando…' : origen === 'privado' ? 'Fragmento' : 'Tu carpeta'}</span>
+          {origen === 'previa' && enlace && estado !== 'cargando' && !fundiendo ? (
+            <a className="barra__origen" href={enlace} target="_blank" rel="noreferrer" title="Previa de 30 s. Escúchalo entero en Apple Music">
+              Previa · Apple Music
+            </a>
+          ) : (
+            <span className="barra__origen">{estado === 'cargando' ? 'Cargando…' : fundiendo ? 'Mezclando…' : { privado: 'Fragmento', previa: 'Previa', carpeta: 'Tu carpeta' }[origen] ?? ''}</span>
+          )}
         </>
       )}
     </section>

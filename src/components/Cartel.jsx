@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { abrirDesde } from '../app/circulo'
 import { useMedida } from '../hooks/useMedida'
 import { componer, puntoEtiqueta } from '../lib/composicion'
+import CuerpoTinta from './marca/CuerpoTinta'
 import './Cartel.css'
 
 const entre = (v, min, max) => Math.min(max, Math.max(min, v))
@@ -29,8 +30,9 @@ function partir(nombre) {
  * @param entrada   color del círculo que se abre al entrar
  * @param arriba    px libres bajo la cabecera (ahí no cae ninguna etiqueta)
  * @param alPasar   al señalar un círculo (para precargar su pantalla)
+ * @param cuerpo    { bpm, tocando }: la lava del centro toma la forma de la mascota (disco o asterisco)
  */
-export default function Cartel({ plano, items, escalas, entrada = '#000000', arriba = 150, alPasar, mascota, etiqueta = 'Secciones', className = '' }) {
+export default function Cartel({ plano, items, escalas, entrada = '#000000', arriba = 150, alPasar, mascota, cuerpo, etiqueta = 'Secciones', className = '' }) {
   const navegar = useNavigate()
   const filtro = useId()
   const zona = useRef(null)
@@ -80,7 +82,10 @@ export default function Cartel({ plano, items, escalas, entrada = '#000000', arr
               </filter>
             </defs>
             <g filter={`url(#${filtro})`} className="cartel__capa">
-              {circulos.map((c, i) => (
+              {circulos.map((c, i) =>
+                c.id === 'mascota' && cuerpo ? (
+                  <CuerpoTinta key={c.id} cx={c.x} cy={c.y} r={c.r} bpm={cuerpo.bpm} tocando={cuerpo.tocando} className="cartel__tinta cartel__tinta--quieta" />
+                ) : (
                 <circle
                   key={c.id}
                   cx={c.x}
@@ -89,7 +94,8 @@ export default function Cartel({ plano, items, escalas, entrada = '#000000', arr
                   className={`cartel__tinta${activo === c.id ? ' cartel__tinta--activa' : ''}${c.id === 'mascota' ? ' cartel__tinta--quieta' : ''}`}
                   style={{ ...flota(i), transformOrigin: `${c.x}px ${c.y}px` }}
                 />
-              ))}
+                )
+              )}
               {gotas.map((g, i) => (
                 <circle key={g.id} cx={g.x} cy={g.y} r={g.r} className="cartel__gota" style={{ '--dur': `${7 + i * 1.7}s`, '--retraso': `${-i * 2}s` }} />
               ))}
@@ -160,7 +166,7 @@ export default function Cartel({ plano, items, escalas, entrada = '#000000', arr
           </svg>
 
           {centro && mascota && (
-            <div className="cartel__mascota" style={{ left: `${centro.x}%`, top: `${(centro.y / alto) * 100}%`, width: `${centro.r * 2 * 1.36}%` }}>
+            <div className="cartel__mascota" style={{ left: `${centro.x}%`, top: `${(centro.y / alto) * 100}%`, width: `${centro.r * (cuerpo ? 340 / 112 : 2 * 1.36)}%` }}>
               {mascota(mira)}
             </div>
           )}

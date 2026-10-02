@@ -1,6 +1,6 @@
 import { useCallback, useId, useRef } from 'react'
 import { useMascota } from '../../hooks/useMascota'
-import { animoDe, conRebote, energia, forma, movimientoCara, paleta } from '../../lib/mascota'
+import { animoDe, energia, forma, movimientoCara, movimientoCuerpo, paleta } from '../../lib/mascota'
 import Cara from './Cara'
 import './Mascota.css'
 
@@ -11,9 +11,10 @@ import './Mascota.css'
  * - Siempre: parpadea, mira alrededor (o hacia `mira`) y se mece un poco.
  *
  * No provoca renders por fotograma: el motor escribe directamente en el SVG a través de refs.
- * variante: 'icono' (cuadrado redondeado), 'etiqueta' (círculo, centro del vinilo), 'libre' o 'negra'.
+ * variante: 'icono' (cuadrado redondeado), 'etiqueta' (círculo, centro del vinilo), 'libre', 'negra' o 'rosa'.
+ * soloCara: sin cuerpo, para cuando el cuerpo lo dibuja otro (la tinta del inicio).
  */
-export default function Mascota({ bpm = 124, tocando = true, variante = 'icono', tamano = 160, animo, etiqueta, mira = null }) {
+export default function Mascota({ bpm = 124, tocando = true, variante = 'icono', tamano = 160, animo, etiqueta, mira = null, soloCara = false }) {
   const colores = paleta(bpm, variante)
   const estado = tocando ? (animo ?? animoDe(bpm).id) : 'dormida'
   const recorte = useId()
@@ -28,18 +29,11 @@ export default function Mascota({ bpm = 124, tocando = true, variante = 'icono',
 
   const pintar = useCallback(
     ({ t, k, vida: v }) => {
-      const golpes = (t * (bpm ?? 120)) / 60
-      const fase = golpes - Math.floor(golpes)
-      const pulso = tocando ? Math.exp(-fase * 5) : 0
-      if (tocando) {
-        // Gira una muesca por compás, con un pequeño rebote al final
-        const compas = Math.floor(golpes / 4)
-        giro.current = (compas + conRebote(Math.max(0, (golpes / 4 - compas - 0.75) / 0.25))) * 45 * k
-      }
-      const g = giro.current
-      const sx = ((1 + 0.07 * pulso) * v.respira).toFixed(3)
-      const sy = ((1 - 0.06 * pulso) * v.respira).toFixed(3)
-      const [dx, dy] = v.deriva
+      const m0 = movimientoCuerpo({ t, k, vida: v, bpm, tocando, giroAnterior: giro.current })
+      giro.current = m0.giro
+      const { pulso, dx, dy } = m0
+      const g = m0.giro
+      const [sx, sy] = [m0.sx.toFixed(3), m0.sy.toFixed(3)]
       const desfase = 16 + 6 * pulso // el eco va medio golpe por detrás
 
       if (!grupo.current) return
@@ -84,7 +78,7 @@ export default function Mascota({ bpm = 124, tocando = true, variante = 'icono',
       <g clipPath={conFondo ? `url(#${recorte})` : undefined} transform={`scale(${escala})`}>
         <path ref={eco} d={inicial} transform="translate(16 16)" style={{ fill: colores.eco ?? 'none' }} className="mascota__eco" />
         <g ref={grupo}>
-          <path ref={cuerpo} d={inicial} style={{ fill: colores.cuerpo }} />
+          <path ref={cuerpo} d={inicial} style={{ fill: soloCara ? 'none' : colores.cuerpo }} />
           <Cara animo={estado} color={colores.cara} refCara={cara} refOjos={ojos} refBoca={boca} />
         </g>
       </g>

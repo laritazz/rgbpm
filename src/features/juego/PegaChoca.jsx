@@ -3,19 +3,19 @@ import MascotaEscena from '../../components/marca/MascotaEscena'
 import { colorBpm } from '../../lib/color'
 import { puntuarEleccion, rondasPega } from '../../lib/juegos'
 import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
-import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import { BarraRonda, FinalJuego, InicioJuego } from './Pantallas'
 import { usePareja } from './usePareja'
 import { usePartida } from './usePartida'
 import { useSonido } from './useSonido'
 import './Juego.css'
+import { useMusica } from '../musica/MusicaContext'
 
 const RONDAS = 6
 
 /** ¿Pega o choca? Suenan dos temas seguidos: di qué salto armónico hay entre ellos. */
 export default function PegaChoca() {
-  const { temas } = useBiblioteca()
+  const { paraSugerir: temas } = useMusica()
   const { etiqueta, corregir } = useAjustesArmonia()
   const rep = useReproductor()
   const { sonar, parar } = useSonido()

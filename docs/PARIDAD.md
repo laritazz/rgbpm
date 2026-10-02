@@ -100,3 +100,7 @@ Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 | Tipografía propia RGBPM Letras, sacada del logo | ✨ |
 | Iconos propios de gotas | ✨ |
 | El inicio cambia con tu uso: lo que más usas, más grande | ✨ |
+| Color de la clave y degradado tempo + tono | ✨ |
+| Previas públicas de 30 s (Apple Music): la demo suena para cualquiera | ✨ |
+| Solo se sugiere lo que suena | ✨ |
+| Guía de estilo viva (`/sistema`) y documentación de sistema, arquitectura, decisiones y producto | ✨ |

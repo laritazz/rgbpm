@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { IconoBajar, IconoPausa, IconoPlay, IconoSiguiente } from '../../components/Iconos'
 import { compatibles } from '../../lib/armonia'
-import { colorBpm, franjaDe } from '../../lib/color'
+import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
 import { reloj } from '../../lib/formato'
-import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import BotonSet from '../sets/BotonSet'
 import { useReproductor, useTiempo } from './ReproductorContext'
 import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
+import { useMusica } from './MusicaContext'
 
 /**
  * Lo que suena, a pantalla completa: la mascota baila el tema y te propone con qué seguir.
@@ -17,7 +17,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
   const ventana = useRef(null)
   const { tema, sonando, cola, indice, fundiendo, alternar, buscar, siguiente, reproducir } = useReproductor()
   const { tiempo, duracion } = useTiempo()
-  const { temas } = useBiblioteca()
+  const { paraSugerir: temas } = useMusica()
   const [drop, setDrop] = useState(null)
   const [arrastre, setArrastre] = useState(0)
   const inicio = useRef(null)
@@ -119,7 +119,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
             {opciones.map((o) => (
               <li key={o.tema.id}>
                 <button onClick={() => reproducir(o.tema)}>
-                  <span className="escena__muestra" style={{ background: colorBpm(o.tema.bpm) }} aria-hidden="true" />
+                  <span className="escena__muestra" style={{ background: degradadoTema(o.tema) }} aria-hidden="true" />
                   <span className="escena__opcion">
                     <strong>{o.tema.titulo}</strong>
                     <small>

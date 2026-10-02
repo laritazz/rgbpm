@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import Mascota from '../../components/marca/Mascota'
 import { IconoMasSimple, IconoPlay } from '../../components/Iconos'
 import { CATEGORIAS } from '../../lib/armonia'
-import { colorBpm } from '../../lib/color'
+import { degradadoTema } from '../../lib/color'
 import { descargar } from '../../lib/descargar'
 import { duracionLarga } from '../../lib/formato'
 import { cambiazos, candidatosTras, duracionTotal, exportarCsv, exportarM3u, exportarNml, exportarTxt, importarSet, reordenar, saludSet, transicion } from '../../lib/set'
@@ -298,7 +298,7 @@ function Cambiazo({ tema, alElegir, alCerrar }) {
           {opciones.map((o) => (
             <li key={o.tema.id}>
               <button onClick={() => alElegir(o.tema)}>
-                <span className="muestra" style={{ background: colorBpm(o.tema.bpm) }} />
+                <span className="muestra" style={{ background: degradadoTema(o.tema) }} />
                 <span>
                   <strong>{o.tema.titulo}</strong>
                   <small>
@@ -321,7 +321,8 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
   const [pestana, setPestana] = useState('pegan')
   const [busqueda, setBusqueda] = useState('')
 
-  const candidatos = useMemo(() => candidatosTras(ancla, biblioteca, set.enSet, 12, opciones), [ancla, biblioteca, set.enSet, opciones])
+  const { paraSugerir } = useMusica()
+  const candidatos = useMemo(() => candidatosTras(ancla, paraSugerir, set.enSet, 12, opciones), [ancla, paraSugerir, set.enSet, opciones])
   const resultados = useMemo(() => {
     const q = normalizar(busqueda.trim())
     if (q.length < 2) return []
@@ -425,7 +426,7 @@ function ListaAnadir({ items, alAnadir }) {
     <ul className="anadir__lista">
       {items.map(({ tema, detalle, color }) => (
         <li key={tema.id}>
-          <span className="muestra" style={{ background: colorBpm(tema.bpm) }} aria-hidden="true" />
+          <span className="muestra" style={{ background: degradadoTema(tema) }} aria-hidden="true" />
           <span className="anadir__texto">
             <strong>{tema.titulo}</strong>
             <small>

@@ -6,6 +6,7 @@ export const cargar = {
   armonia: () => import('../features/armonia/Armonia'),
   sets: () => import('../features/sets/Sets'),
   juego: () => import('../features/juego/Juego'),
+  sistema: () => import('../features/sistema/Sistema'),
   juego_bpm: () => import('../features/juego/AdivinaBpm'),
   juego_pega: () => import('../features/juego/PegaChoca'),
   juego_corre: () => import('../features/juego/CualCorre'),

@@ -28,7 +28,7 @@ export default function Biblioteca() {
   const { temas, playlists, porId, estado } = useBiblioteca()
   const { setId } = useParams()
   const [params, setParams] = useSearchParams()
-  const { hayFuente } = useMusica()
+  const { audibles, tieneArchivo } = useMusica()
   const { tema: temaSonando, sonando, reproducir } = useReproductor()
   const sonandoId = sonando ? temaSonando?.id : null
 
@@ -58,7 +58,13 @@ export default function Biblioteca() {
   // La búsqueda se difiere: el campo responde al instante y la rejilla se pone al día después
   const qDiferida = useDeferredValue(q)
 
-  const base = useMemo(() => (playlist ? playlist.temas.map((id) => porId.get(id)).filter(Boolean) : temas), [playlist, porId, temas])
+  // Por defecto solo lo que suena (si hay bastante); «Todos» enseña también los mudos
+  const conAudio = audibles.length >= 12
+  const soloAudio = conAudio && params.get('audio') !== 'todos'
+  const base = useMemo(() => {
+    const lista = playlist ? playlist.temas.map((id) => porId.get(id)).filter(Boolean) : temas
+    return soloAudio ? lista.filter(tieneArchivo) : lista
+  }, [playlist, porId, temas, soloAudio, tieneArchivo])
 
   const filtrados = useMemo(() => {
     const texto = normalizar(qDiferida.trim())
@@ -111,6 +117,17 @@ export default function Biblioteca() {
           </label>
         </div>
 
+        {conAudio && (
+          <div className="biblioteca__audio" role="group" aria-label="Qué temas enseñar">
+            <button aria-pressed={soloAudio} onClick={() => poner('audio', null)}>
+              Con audio <span>{audibles.length.toLocaleString('es')}</span>
+            </button>
+            <button aria-pressed={!soloAudio} onClick={() => poner('audio', 'todos')}>
+              Todos <span>{temas.length.toLocaleString('es')}</span>
+            </button>
+          </div>
+        )}
+
         <div className="franjas" role="group" aria-label="Filtrar por franja de BPM">
           <button className="franja" aria-pressed={franja === 'todas'} onClick={() => poner('franja', null)}>
             <span className="franja__muestra franja__muestra--todas" aria-hidden="true" />
@@ -131,7 +148,7 @@ export default function Biblioteca() {
             <ul className="rejilla" style={{ opacity: q !== qDiferida ? 0.6 : 1 }}>
               {visibles.map((t) => (
                 <li key={t.id}>
-                  <TarjetaPantone tema={t} elegida={t.id === temaId} alElegir={elegir} sonando={t.id === sonandoId} alReproducir={hayFuente ? reproducir : undefined} />
+                  <TarjetaPantone tema={t} elegida={t.id === temaId} alElegir={elegir} sonando={t.id === sonandoId} alReproducir={tieneArchivo(t) ? reproducir : undefined} />
                 </li>
               ))}
             </ul>
@@ -140,7 +157,7 @@ export default function Biblioteca() {
         </div>
       </main>
 
-      <PanelSonando tema={tema} temas={temas} alElegir={elegir} alCerrar={() => poner('tema', null, true)} />
+      <PanelSonando tema={tema} alElegir={elegir} alCerrar={() => poner('tema', null, true)} />
     </div>
   )
 }

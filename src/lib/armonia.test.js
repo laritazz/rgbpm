@@ -43,8 +43,8 @@ describe('tempo y color', () => {
     expect(notaBpm(128, 128).nota).toBe(100)
   })
   it('más BPM, color más cálido', () => {
-    expect(franjaDe(110).id).toBe('violeta')
+    expect(franjaDe(100).id).toBe('violeta')
     expect(franjaDe(178).id).toBe('carmesi')
-    expect(colorBpm(100)).toBe('#7d4ea2')
+    expect(colorBpm(90)).toBe('#7d4ea2')
   })
 })

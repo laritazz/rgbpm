@@ -11,6 +11,7 @@ import { useRecords } from './useRecord'
 import './Juego.css'
 
 const IDS = JUEGOS.map((j) => j.id)
+const CUERPO = { bpm: 140, tocando: true }
 
 /**
  * Juego: el mismo cartel del inicio, al revés: fondo negro y círculos rosas.
@@ -41,7 +42,8 @@ export default function Juego() {
         etiqueta="Juegos"
         className="cartel-zona--juego"
         alPasar={(j) => cargar[`juego_${j.id}`]?.().catch(() => {})}
-        mascota={(mira) => <Mascota bpm={140} tocando variante="rosa" tamano="100%" mira={mira} etiqueta="Mascota" />}
+        cuerpo={CUERPO}
+        mascota={(mira) => <Mascota bpm={CUERPO.bpm} tocando variante="rosa" soloCara tamano="100%" mira={mira} etiqueta="Mascota" />}
       />
     </main>
   )

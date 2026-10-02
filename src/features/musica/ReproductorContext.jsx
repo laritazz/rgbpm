@@ -27,6 +27,7 @@ export function ReproductorProvider({ children }) {
   const [tiempo, setTiempo] = useState(0)
   const [duracion, setDuracion] = useState(0)
   const [origen, setOrigen] = useState(null)
+  const [enlace, setEnlace] = useState(null) // en las previas: el tema en Apple Music (hay que enlazarlo)
   const [cola, setCola] = useState([])
   const [indice, setIndice] = useState(-1)
   const [fundiendo, setFundiendo] = useState(false)
@@ -102,6 +103,8 @@ export function ReproductorProvider({ children }) {
         return
       }
       setOrigen(fuente.origen)
+    setEnlace(fuente.enlace ?? null)
+      setEnlace(fuente.enlace ?? null)
       el.volume = 1
       el.play().catch((e) => e.name !== 'AbortError' && setEstado('error'))
     },
@@ -138,6 +141,7 @@ export function ReproductorProvider({ children }) {
     setIndice(destino)
     setTema(lista[destino])
     setOrigen(fuente.origen)
+    setEnlace(fuente.enlace ?? null)
     setTiempo(0)
     // Sus metadatos llegaron mientras aún no mandaba: se leen ahora
     setDuracion(Number.isFinite(eEntra.duration) ? eEntra.duration : (lista[destino].duracion ?? 0))
@@ -220,8 +224,8 @@ export function ReproductorProvider({ children }) {
   }
 
   const valor = useMemo(
-    () => ({ tema, estado, sonando: estado === 'sonando', origen, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar }),
-    [tema, estado, origen, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar]
+    () => ({ tema, estado, sonando: estado === 'sonando', origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar }),
+    [tema, estado, origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar]
   )
   const reloj = useMemo(() => ({ tiempo, duracion }), [tiempo, duracion])
 

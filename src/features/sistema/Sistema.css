@@ -1,0 +1,251 @@
+/* Guía de estilo viva */
+.sistema {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  height: 100%;
+  padding: 28px 32px 60px;
+  overflow-y: auto;
+}
+
+.sistema__cabecera h1 {
+  margin: 0;
+  font-family: var(--fuente-letras);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 400;
+  color: var(--rosa);
+}
+
+.sistema__cabecera p,
+.sistema__nota {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--gris-2);
+}
+
+.sistema__bloque h2 {
+  margin: 0;
+  font-family: var(--fuente-letras);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.franjas-sistema {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.franja-sistema {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0 16px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--superficie);
+}
+
+.franja-sistema__muestra {
+  height: 110px;
+  margin-bottom: 10px;
+  background: var(--c);
+}
+
+.franja-sistema > :not(.franja-sistema__muestra) {
+  padding: 0 16px;
+}
+
+.franja-sistema strong {
+  font-family: var(--fuente-letras);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.franja-sistema span:not(.franja-sistema__muestra) {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.franja-sistema small {
+  font-size: 12px;
+  color: var(--gris-2);
+}
+
+.franja-sistema b {
+  margin-top: 6px;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  color: var(--c);
+}
+
+.escala {
+  position: relative;
+  height: 56px;
+  margin-top: 14px;
+  border-radius: 14px;
+}
+
+.escala__corte {
+  position: absolute;
+  top: 100%;
+  translate: -50% 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gris-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.escala__corte::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  width: 2px;
+  height: 56px;
+  background: #000000aa;
+}
+
+.claves-sistema {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.claves-sistema span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.degradados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 14px 0 0;
+}
+
+.degradados figure {
+  margin: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--blanco);
+  color: var(--negro);
+}
+
+.degradados figure > span {
+  display: block;
+  aspect-ratio: 4 / 3;
+}
+
+.degradados figcaption {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 10px;
+}
+
+.degradados strong {
+  font-size: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.degradados small {
+  font-size: 12px;
+}
+
+.tipos {
+  display: grid;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.tipos small {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris-3);
+}
+
+.tipos p {
+  margin: 4px 0 0;
+}
+
+.tipos__letras {
+  font-family: var(--fuente-letras);
+  font-size: clamp(26px, 4vw, 48px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.tipos__urbanist {
+  font-size: 22px;
+}
+
+.iconos-sistema,
+.mascotas-sistema {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iconos-sistema li,
+.mascotas-sistema li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  border-radius: 20px;
+  background: var(--superficie);
+  text-align: center;
+}
+
+.iconos-sistema li {
+  color: var(--rosa);
+}
+
+.iconos-sistema span,
+.mascotas-sistema small {
+  font-size: 12px;
+  color: var(--gris-2);
+}
+
+.mascotas-sistema strong {
+  font-family: var(--fuente-letras);
+  font-weight: 400;
+}
+
+.acciones-sistema {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.sistema__pie {
+  font-size: 13px;
+  color: var(--gris-3);
+}
+
+@media (max-width: 700px) {
+  .sistema {
+    padding: 18px 14px 40px;
+  }
+
+  .claves-sistema {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

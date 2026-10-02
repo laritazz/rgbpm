@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { TODAS_LAS_CLAVES } from '../../lib/claves'
-import { colorBpm, franjaDe } from '../../lib/color'
+import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
 import { generarRadio, sinRepetidos } from '../../lib/radio'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useMusica } from '../musica/MusicaContext'
@@ -184,7 +184,7 @@ export default function Radio() {
               {rep.cola.map((t, i) => (
                 <li key={t.id}>
                   <button className={`radio__pista${i === rep.indice ? ' radio__pista--actual' : ''}${i < rep.indice ? ' radio__pista--sonada' : ''}`} onClick={() => rep.ponerCola(rep.cola, i)}>
-                    <span className="radio__muestra" style={{ background: colorBpm(t.bpm) }}>
+                    <span className="radio__muestra" style={{ background: degradadoTema(t) }}>
                       {i + 1}
                     </span>
                     <span className="radio__pista-texto">

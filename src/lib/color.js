@@ -1,17 +1,20 @@
 // Sistema de color Laritazz: color = BPM. Más BPM, más cálido.
 
+// Las cinco franjas (una por letra del logo). Cortadas con tu colección real (10.554 temas, oct 2026):
+// cada una guarda entre el 12 y el 25 % de tus temas, y el rojo entra donde empieza lo duro (150).
 export const FRANJAS = [
-  { id: 'violeta', nombre: 'Violeta', desde: 0, hasta: 120, color: '#7D4EA2' },
-  { id: 'turquesa', nombre: 'Turquesa', desde: 120, hasta: 132, color: '#4ABDC4' },
-  { id: 'oliva', nombre: 'Oliva', desde: 132, hasta: 153, color: '#A0B03D' },
-  { id: 'amarillo', nombre: 'Amarillo', desde: 153, hasta: 168, color: '#E4BB2A' },
-  { id: 'carmesi', nombre: 'Carmesí', desde: 168, hasta: 999, color: '#A42640' },
+  { id: 'violeta', nombre: 'Violeta', desde: 0, hasta: 110, color: '#7D4EA2', texto: 'Downtempo, hip hop, reggaetón' },
+  { id: 'turquesa', nombre: 'Turquesa', desde: 110, hasta: 124, color: '#4ABDC4', texto: 'House, nu disco, afro' },
+  { id: 'oliva', nombre: 'Oliva', desde: 124, hasta: 132, color: '#A0B03D', texto: 'Tech house, techno, el centro de la pista' },
+  { id: 'amarillo', nombre: 'Amarillo', desde: 132, hasta: 150, color: '#E4BB2A', texto: 'Trance, techno duro, hard dance' },
+  { id: 'carmesi', nombre: 'Carmesí', desde: 150, hasta: 999, color: '#A42640', texto: 'Hardstyle, jungle, drum & bass' },
 ]
 
-// Escala fina, sacada de tus portadas de canciones: el color se funde entre puntos
+// Escala fina: el color se funde entre puntos. Los puntos caen dentro de su franja,
+// así el color de un tema siempre «pertenece» a la franja que le toca.
 const ESCALA = [
-  [100, '#7D4EA2'], [116, '#4B8EC6'], [124, '#48C3A5'], [127, '#3FAF4A'], [132, '#A6BC4E'],
-  [142, '#C2B545'], [152, '#E4CD2D'], [165, '#E5922F'], [180, '#A42640'],
+  [92, '#7D4EA2'], [106, '#5B6FC0'], [114, '#4B9FC6'], [119, '#48C3B5'], [124, '#3FAF4A'], [128, '#A6BC4E'],
+  [133, '#C2B545'], [140, '#E4CD2D'], [146, '#E5922F'], [152, '#C9452F'], [162, '#A42640'], [180, '#7A1A33'],
 ]
 
 const aRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
@@ -44,10 +47,31 @@ export function tintaSobre(hex) {
   return (l + 0.05) / 0.05 > 1.05 / (l + 0.05) ? '#000000' : '#FFFFFF'
 }
 
-/** Portada Pantone: degradado que gira con el BPM, como tus portadas de sets. */
-export function degradadoPortada(bpm) {
-  const base = colorBpm(bpm)
-  const siguiente = colorBpm((bpm ?? 120) + 8)
-  const giro = Math.round(((bpm ?? 120) * 7) % 360)
-  return `conic-gradient(from ${giro}deg at 30% 70%, ${base}, ${siguiente}, ${base})`
+// ——— Color de la clave ———
+// Cada tono tiene su color en la rueda: el número Open Key recorre el círculo de color como recorre
+// las quintas, así dos claves vecinas tienen colores vecinos. Las menores, más oscuras; las mayores, más claras.
+
+function hslAHex(h, s, l) {
+  const k = (n) => (n + h / 30) % 12
+  const a = s * Math.min(l, 1 - l)
+  const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))
+  return aHex([f(0), f(8), f(4)].map((v) => v * 255))
+}
+
+const INICIO_RUEDA = 330 // 1m / 1d (La menor, Do mayor) en magenta, la casa
+
+export function colorClave(clave) {
+  if (!clave) return '#555555'
+  const h = (INICIO_RUEDA + (clave.open - 1) * 30) % 360
+  return clave.menor ? hslAHex(h, 0.62, 0.46) : hslAHex(h, 0.72, 0.66)
+}
+
+/**
+ * El color de un tema: tempo y tono juntos. Arriba a la izquierda, su BPM (la franja);
+ * abajo a la derecha, su clave. Sin clave, color plano.
+ */
+export function degradadoTema(tema, angulo = 135) {
+  const bpm = colorBpm(tema?.bpm)
+  if (!tema?.clave) return bpm
+  return `linear-gradient(${angulo}deg, ${bpm} 0%, ${bpm} 38%, ${colorClave(tema.clave)} 100%)`
 }

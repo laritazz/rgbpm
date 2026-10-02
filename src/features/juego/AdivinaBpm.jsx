@@ -4,11 +4,11 @@ import MascotaEscena from '../../components/marca/MascotaEscena'
 import { colorBpm } from '../../lib/color'
 import { RONDAS, elegirRondas, puntuarBpm, resumenPartida } from '../../lib/juego'
 import { bpmDeToques } from '../../lib/tempo'
-import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import { useRecord } from './useRecord'
 import { useSonido } from './useSonido'
 import './Juego.css'
+import { useMusica } from '../musica/MusicaContext'
 
 const TOQUES_MINIMOS = 4
 const TOQUES_MAXIMOS = 12
@@ -18,7 +18,7 @@ const TOQUES_MAXIMOS = 12
  * y te dice cuánto te has acercado. Vale marcar a doble o a medio tempo, como en cabina.
  */
 export default function AdivinaBpm() {
-  const { temas } = useBiblioteca()
+  const { paraSugerir: temas } = useMusica()
   const rep = useReproductor()
   const record = useRecord('bpm')
   const { sonar, parar } = useSonido()

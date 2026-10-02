@@ -117,6 +117,9 @@ export default function BarraLateral({ abierta, alCerrar }) {
             Volver a la demo
           </button>
         )}
+        <NavLink to="/sistema" className="lateral__sistema">
+          Sistema de diseño
+        </NavLink>
         <span className="lateral__version">{__VERSION__}</span>
       </div>
     </nav>

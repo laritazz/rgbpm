@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { guardar, leer } from '../../lib/almacen'
 import { buscarArchivo, crearIndice, esAudio } from '../../lib/indice'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
+import { usePrevias } from './usePrevias'
 import { usePrivado } from './usePrivado'
 
 const MusicaContext = createContext(null)
@@ -24,14 +25,18 @@ async function indexarCarpetas(carpetas) {
 }
 
 /**
- * De dónde sale el audio:
- * - Tus carpetas del ordenador: temas enteros (Chrome/Edge recuerdan el permiso).
- * - Tu música privada en creativezz: fragmentos de 90 s, con login y enlaces que caducan.
+ * De dónde sale el audio, en este orden:
+ * 1. Tus carpetas del ordenador: temas enteros (Chrome/Edge recuerdan el permiso).
+ * 2. Tu música privada en creativezz: fragmentos de 90 s, con login y enlaces que caducan.
+ * 3. Previas públicas de Apple Music: 30 s, para cualquiera que entre en la web.
+ * Un tema que no tiene ninguna de las tres no suena: `audibles` son los que sí.
  */
 export function MusicaProvider({ children }) {
   const { temas } = useBiblioteca()
   const privado = usePrivado(temas)
   const { resolver: resolverPrivado, tiene: tienePrivado } = privado
+  const previas = usePrevias()
+  const { resolver: resolverPrevia, tiene: tienePrevia } = previas
   const [carpetas, setCarpetas] = useState([]) // handles de carpeta (solo Chrome/Edge)
   const [archivos, setArchivos] = useState(new Map()) // ruta → () => Promise<File>
   const [estadoLocal, setEstadoLocal] = useState('vacio') // vacio · reconectar · leyendo · listo
@@ -113,15 +118,19 @@ export function MusicaProvider({ children }) {
         const archivo = await archivos.get(local)()
         return { url: URL.createObjectURL(archivo), origen: 'carpeta', ruta: local, temporal: true }
       }
-      return resolverPrivado(tema)
+      return (await resolverPrivado(tema)) ?? resolverPrevia(tema)
     },
-    [indiceLocal, archivos, resolverPrivado]
+    [indiceLocal, archivos, resolverPrivado, resolverPrevia]
   )
 
   const tieneArchivo = useCallback(
-    (tema) => Boolean(buscarArchivo(indiceLocal, tema)) || tienePrivado(tema),
-    [indiceLocal, tienePrivado]
+    (tema) => Boolean(buscarArchivo(indiceLocal, tema)) || tienePrivado(tema) || tienePrevia(tema),
+    [indiceLocal, tienePrivado, tienePrevia]
   )
+
+  // Los temas que suenan. Con muy pocos (menos de 12) las sugerencias usan toda la biblioteca: si no, se quedarían vacías
+  const audibles = useMemo(() => temas.filter(tieneArchivo), [temas, tieneArchivo])
+  const paraSugerir = audibles.length >= 12 ? audibles : temas
 
   const valor = useMemo(
     () => ({
@@ -130,7 +139,10 @@ export function MusicaProvider({ children }) {
       totalLocal: archivos.size,
       estadoLocal,
       privado,
-      hayFuente: archivos.size > 0 || privado.conTema > 0,
+      hayFuente: archivos.size > 0 || privado.conTema > 0 || previas.total > 0,
+      totalPrevias: previas.total,
+      audibles,
+      paraSugerir,
       anadirCarpeta,
       anadirArchivos,
       reconectar,
@@ -141,7 +153,7 @@ export function MusicaProvider({ children }) {
       abrirAjustes: () => setAjustesAbiertos(true),
       cerrarAjustes: () => setAjustesAbiertos(false),
     }),
-    [ajustesAbiertos, carpetas, archivos, estadoLocal, privado, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, resolver, tieneArchivo]
+    [ajustesAbiertos, carpetas, archivos, estadoLocal, privado, previas.total, audibles, paraSugerir, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, resolver, tieneArchivo]
   )
 
   return <MusicaContext.Provider value={valor}>{children}</MusicaContext.Provider>

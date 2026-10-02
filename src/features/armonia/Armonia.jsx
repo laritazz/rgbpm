@@ -3,9 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { IconoPlay } from '../../components/Iconos'
 import { CATEGORIAS } from '../../lib/armonia'
 import { NOTACIONES, clave, leerClave } from '../../lib/claves'
-import { colorBpm } from '../../lib/color'
+import { degradadoTema } from '../../lib/color'
 import { azarConSemilla, relacionPorClave, sugerirSet, temasPorCategoria } from '../../lib/rueda'
-import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import BotonSet from '../sets/BotonSet'
@@ -25,7 +24,8 @@ const signo = (n) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '±0')
  * Clave, BPM, pasos y pestaña viven en la URL: el enlace se comparte tal cual.
  */
 export default function Armonia() {
-  const { temas } = useBiblioteca()
+  // Solo lo que suena: un set sugerido con temas mudos no sirve
+  const { paraSugerir: temas } = useMusica()
   const rep = useReproductor()
   const ajustes = useAjustesArmonia()
   const { etiqueta, opciones } = ajustes
@@ -258,7 +258,7 @@ function PasoSugerido({ paso, numero, abierto, alAbrir, alFijar }) {
     <div className={`paso${abierto ? ' paso--abierto' : ''}${elegido ? '' : ' paso--vacio'}`}>
       <div className="paso__fila">
         <span className="paso__numero">{numero}</span>
-        <span className="paso__muestra" style={{ background: colorBpm(elegido?.bpm) }} aria-hidden="true" />
+        <span className="paso__muestra" style={{ background: degradadoTema(elegido) }} aria-hidden="true" />
         <button className="paso__texto" onClick={alAbrir} disabled={!alternativas.length} aria-expanded={alternativas.length ? abierto : undefined}>
           <strong>{elegido ? elegido.titulo : `Sin temas en ${etiqueta(paso.clave)}`}</strong>
           <small>
@@ -276,7 +276,7 @@ function PasoSugerido({ paso, numero, abierto, alAbrir, alFijar }) {
         <ul className="paso__otras" aria-label={`Otras opciones en ${etiqueta(paso.clave)}`}>
           {alternativas.map((t) => (
             <li key={t.id}>
-              <span className="paso__muestra paso__muestra--mini" style={{ background: colorBpm(t.bpm) }} aria-hidden="true" />
+              <span className="paso__muestra paso__muestra--mini" style={{ background: degradadoTema(t) }} aria-hidden="true" />
               <span className="paso__texto paso__texto--quieto">
                 <strong>{t.titulo}</strong>
                 <small>
@@ -339,7 +339,7 @@ function QuePega({ semilla, bpm, temas, alElegir }) {
               <ul className="grupo__temas">
                 {visibles.map(({ tema, tempo }) => (
                   <li key={tema.id}>
-                    <span className="paso__muestra paso__muestra--mini" style={{ background: colorBpm(tema.bpm) }} aria-hidden="true" />
+                    <span className="paso__muestra paso__muestra--mini" style={{ background: degradadoTema(tema) }} aria-hidden="true" />
                     <span className="paso__texto paso__texto--quieto">
                       <strong>{tema.titulo}</strong>
                       <small>

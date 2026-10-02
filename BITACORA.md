@@ -422,3 +422,33 @@ Crear el componente `Filtros` con dos botones, «Solo mayores» y «Solo menores
 - **Un hook para lo común:** `usePartida` lleva rondas, puntos y récord; cada juego solo dice cómo se crean sus rondas y cómo se puntúa.
 - **Eventos propios del navegador:** al apuntar una visita disparo `rgbpm:uso` y el inicio se entera sin recargar.
 - **RLS en Supabase:** la base de datos decide quién lee y escribe cada fila (`user_id = auth.uid()`), no la web.
+
+## Sesión 16 · 2 oct 2026 · Color v2, música para todos y sistema documentado
+
+### Qué hicimos
+| Paso | Resultado |
+|---|---|
+| Franjas con datos reales | Medí los 10.554 temas de mi colección: mediana 125, la mitad entre 115 y 138. Nuevos cortes: violeta < 110 · turquesa 110–124 · oliva 124–132 · amarillo 132–150 · carmesí ≥ 150 |
+| Color de la clave | Cada tono tiene color: el número Open Key recorre el círculo cromático. Menores oscuras, mayores claras; la relativa, mismo tono con más luz |
+| Tempo + tono = un color | Tarjetas, muestras y portadas de set son un degradado del BPM a la clave. Filtros y leyendas, planos |
+| Mascota alineada | Un ánimo y una forma por franja: el asterisco entero llega en el carmesí |
+| La lava es la mascota | En el inicio y en Juego, el cuerpo de tinta toma su forma (disco o asterisco) y late con ella: ya no se pierde |
+| Previas de Apple Music | Tercera fuente de audio, pública y legal: 30 s con enlace a Apple Music. 112 de los 153 temas de la demo suenan para cualquiera |
+| Solo sale lo que suena | Biblioteca «Con audio / Todos»; set sugerido, Pegan, compatibles, radio y juegos usan solo temas con audio |
+| Documentación | `docs/SISTEMA.md`, `docs/ARQUITECTURA.md`, `docs/DECISIONES.md`, `docs/PRODUCTO.md` |
+| Guía de estilo viva | `/#/sistema`: franjas con el % de tu biblioteca, escala, colores de clave, degradados, tipografía, iconos, mascota |
+| Probado | 114 pruebas; todas las rutas en escritorio y móvil sin errores ni desbordes |
+
+### Decisiones
+- **Los cortes salen de datos, no de la intuición:** cada franja guarda entre el 12 y el 25 % de la música.
+- **Apple y no Deezer ni Spotify:** Apple tiene CORS y no pide claves; Deezer no deja llamarla desde el navegador y Spotify ya no da previas a apps nuevas.
+- **Mejor sin previa que con otra canción:** si el parecido del título y el artista baja del 60 %, el tema no suena.
+- **Con menos de 12 temas con audio se sugiere de toda la biblioteca:** si no, las sugerencias se quedarían vacías.
+
+### Qué aprendí
+- **Diseño con datos:** un histograma de mi colección decidió la escala de color.
+- **HSL en código:** una fórmula reparte 12 tonos por el círculo; luz y saturación separan menores de mayores.
+- **CORS:** el navegador solo deja leer otra web si esa web lo permite (`Access-Control-Allow-Origin`). Lo comprobé con `curl -I` antes de programar.
+- **Una fuente más sin tocar las pantallas:** el reproductor pide «la dirección de este tema» y `MusicaContext` decide de dónde sale. Añadir Apple fue cambiar un sitio.
+- **Datos derivados en el contexto:** `audibles` se calcula una vez (`useMemo`) y lo usan todas las pantallas.
+- **Documentación viva:** la guía `/sistema` importa las mismas funciones que la interfaz; si cambio un color, la guía cambia.

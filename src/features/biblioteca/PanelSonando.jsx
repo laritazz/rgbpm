@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import Vinilo from '../../components/marca/Vinilo'
 import { compatibles } from '../../lib/armonia'
-import { colorBpm, franjaDe } from '../../lib/color'
+import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
 import { animoDe } from '../../lib/mascota'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
@@ -12,16 +12,16 @@ import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '—')
 
 /** Panel derecho: el tema elegido gira en el vinilo y la mascota propone con qué mezclarlo. */
-export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
+export default function PanelSonando({ tema, alElegir, alCerrar }) {
   const rep = useReproductor()
-  const { hayFuente, abrirAjustes } = useMusica()
+  const { hayFuente, abrirAjustes, paraSugerir } = useMusica()
   const { etiqueta, notacion, opciones: ajustes, corregir, tolerancia } = useAjustesArmonia()
-  const opciones = useMemo(() => (tema ? compatibles(tema, temas, 6, ajustes) : []), [tema, temas, ajustes])
+  const opciones = useMemo(() => (tema ? compatibles(tema, paraSugerir, 6, ajustes) : []), [tema, paraSugerir, ajustes])
 
   if (!tema) {
     return (
       <aside className="sonando sonando--vacio" aria-label="Tema elegido">
-        <Vinilo bpm={124} tocando={false} tamano={220} />
+        <Vinilo bpm={100} tocando={false} tamano={220} />
         <p>Elige un tema y te digo con qué mezclarlo.</p>
       </aside>
     )
@@ -96,7 +96,7 @@ export default function PanelSonando({ tema, temas, alElegir, alCerrar }) {
           {opciones.map((o) => (
             <li key={o.tema.id}>
               <button onClick={() => alElegir(o.tema.id)} className="sonando__opcion">
-                <span className="sonando__muestra" style={{ background: colorBpm(o.tema.bpm) }} aria-hidden="true" />
+                <span className="sonando__muestra" style={{ background: degradadoTema(o.tema) }} aria-hidden="true" />
                 <span className="sonando__opcion-texto">
                   <span className="sonando__opcion-titulo">{o.tema.titulo}</span>
                   <span className="sonando__opcion-datos">

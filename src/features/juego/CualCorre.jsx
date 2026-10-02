@@ -2,19 +2,19 @@ import { useCallback, useEffect } from 'react'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { colorBpm } from '../../lib/color'
 import { puntuarEleccion, rondasCorre } from '../../lib/juegos'
-import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import { BarraRonda, FinalJuego, InicioJuego } from './Pantallas'
 import { usePareja } from './usePareja'
 import { usePartida } from './usePartida'
 import { useSonido } from './useSonido'
 import './Juego.css'
+import { useMusica } from '../musica/MusicaContext'
 
 const signo = (n) => (n > 0 ? `+${n}` : `${n}`)
 
 /** ¿Cuál corre más? Suenan dos temas: ¿cuál va más rápido? Cada ronda, la diferencia es más fina. */
 export default function CualCorre() {
-  const { temas } = useBiblioteca()
+  const { paraSugerir: temas } = useMusica()
   const rep = useReproductor()
   const { sonar, parar } = useSonido()
   const crear = useCallback(() => rondasCorre(temas), [temas])

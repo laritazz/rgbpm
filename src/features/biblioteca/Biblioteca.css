@@ -200,7 +200,7 @@
 
 .pantone:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 30px -14px var(--muestra);
+  box-shadow: 0 14px 30px -14px var(--brillo);
 }
 
 .pantone--elegida {
@@ -565,4 +565,35 @@
   .biblioteca--con-tema .sonando {
     animation: none;
   }
+}
+
+/* Con audio / Todos: por defecto solo lo que suena */
+.biblioteca__audio {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--pildora);
+  background: var(--superficie-2);
+  align-self: flex-start;
+}
+
+.biblioteca__audio button {
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: var(--pildora);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--gris-2);
+}
+
+.biblioteca__audio button span {
+  margin-left: 4px;
+  font-weight: 500;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.biblioteca__audio button[aria-pressed='true'] {
+  background: var(--blanco);
+  color: var(--negro);
 }

@@ -4,7 +4,7 @@ import MascotaEscena from '../../components/marca/MascotaEscena'
 import { useCazados } from '../../hooks/useCazados'
 import { useEscucha } from '../../hooks/useEscucha'
 import { compatibles, porTempo } from '../../lib/armonia'
-import { colorBpm, franjaDe } from '../../lib/color'
+import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
 import { puedeSer } from '../../lib/escucha'
 import { bpmDeToques } from '../../lib/tempo'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
@@ -208,7 +208,7 @@ function FilaTema({ tema, detalle }) {
   return (
     <li className="tap__fila-tema">
       <Link to={`/?tema=${tema.id}`} className="tap__tema">
-        <span className="tap__muestra" style={{ background: colorBpm(tema.bpm) }} aria-hidden="true" />
+        <span className="tap__muestra" style={{ background: degradadoTema(tema) }} aria-hidden="true" />
         <span>
           <strong>{tema.titulo}</strong>
           <small>{detalle}</small>
@@ -246,7 +246,7 @@ function PuedeSer({ bpm, clave }) {
 /** Qué pinchar a continuación desde tu biblioteca. */
 function Sugerencias({ bpm, clave }) {
   const { etiqueta, opciones: ajustes } = useAjustesArmonia()
-  const { temas } = useBiblioteca()
+  const { paraSugerir: temas } = useMusica()
   const opciones = useMemo(() => (clave ? compatibles({ id: 'escucha', bpm, clave }, temas, 6, ajustes) : porTempo(bpm, temas, 6)), [bpm, clave, temas, ajustes])
   if (!opciones.length) return null
   return (

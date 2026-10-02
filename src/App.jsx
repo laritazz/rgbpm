@@ -17,6 +17,7 @@ const Radio = lazy(cargar.radio)
 const Armonia = lazy(cargar.armonia)
 const Sets = lazy(cargar.sets)
 const Juego = lazy(cargar.juego)
+const Sistema = lazy(cargar.sistema)
 const AdivinaBpm = lazy(cargar.juego_bpm)
 const PegaChoca = lazy(cargar.juego_pega)
 const CualCorre = lazy(cargar.juego_corre)
@@ -47,6 +48,7 @@ export default function App() {
                     <Route path="armonia" element={<Armonia />} />
                     <Route path="sets" element={<Sets />} />
                     <Route path="juego" element={<Juego />} />
+                    <Route path="sistema" element={<Sistema />} />
                     <Route path="juego/bpm" element={<AdivinaBpm />} />
                     <Route path="juego/pega" element={<PegaChoca />} />
                     <Route path="juego/corre" element={<CualCorre />} />

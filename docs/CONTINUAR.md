@@ -1,7 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
-> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 15 (Letras propias y cinco juegos). Últimos commits en `estado.json`.
-> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–15), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
+> Léelo entero antes de tocar nada. Estado a 30 sep 2026, tras la sesión 16 (Color v2, música para todos y sistema documentado). Últimos commits en `estado.json`.
+> Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–16), `docs/SISTEMA.md` (diseño), `docs/ARQUITECTURA.md` (front y back), `docs/DECISIONES.md`, `docs/PRODUCTO.md` (mercado), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
 ---
 
@@ -16,6 +16,7 @@
 | Colección de Traktor (copia) | `~/RGBPM/data/traktor/collection.nml` (copia del 5 sep; la de Traktor puede ser más nueva) |
 | Música | Disco externo `/Volumes/LaritaZZ/_Cosas/_DJ` (Traktor aún guarda rutas antiguas de `~/Downloads/_Cosas/_DJ`) |
 | Lo que se sube a IONOS | `~/RGBPM/SUBIR-A-IONOS/rgbpm-audio/` |
+| Previas públicas | Apple Music (iTunes Search API). Demo: `public/previas.json` (`npm run previas` en el Mac) |
 | Audio privado | https://creativezz.com/rgbpm-audio/ · `firmar.php?salud=1` → `{"ok":true,"fragmentos":79}` |
 | Supabase | Proyecto `qmsrldxqmtinuzzkjsgh` · clave publicable en `src/lib/config.js` · altas cerradas |
 
@@ -23,7 +24,7 @@
 
 ## 2 · Arquitectura en 30 segundos
 
-- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (104 pruebas) · oxlint.
+- **Vite + React 19 en JavaScript** (sin TypeScript) · HashRouter · Vitest (114 pruebas) · oxlint.
 - **Lógica pura en `src/lib/`** con pruebas; los componentes no calculan reglas de mezcla.
 - **Proveedores:** AjustesArmonía › Biblioteca › Música › Reproductor › Set › Router. El tiempo de reproducción va en un contexto aparte.
 - **Rutas:** `/` inicio (rosa, racimo de círculos), `/biblioteca`, `/armonia`, `/sets`, `/radio`, `/tap`, `/juego` (con `/juego/bpm`) y `/mezclador` («Pronto»). Tap, Radio, Armonía y Sets se cargan con `React.lazy` (`app/pantallas.js`).
@@ -49,7 +50,8 @@
 ## 3 · Reglas que no se rompen
 
 - Español en nombres, comentarios y textos. Explicar cada concepto nuevo de React en `BITACORA.md`.
-- Color = BPM (`lib/color.js`). **Verde** solo en la escala, nunca en botones ni acciones principales.
+- Color = BPM + clave (`lib/color.js`, `docs/SISTEMA.md`). Franjas planas; un tema es un degradado BPM → clave. **Verde** solo en la escala, nunca en botones ni acciones principales.
+- **Solo sale lo que suena:** sugerencias, sets propuestos y juegos usan `audibles` de `MusicaContext`.
 - Urbanist para textos; **RGBPM Letras** (propia, `scripts/fuente.py`) para menús y títulos. **Codec nunca entra en el repo** (licencia).
 - **Nunca** se suben al repo colecciones `.nml`, audio ni `config.php`.
 - Toda animación respeta `prefers-reduced-motion`.
@@ -90,7 +92,8 @@
 | # | Tarea | Nota |
 |---|---|---|
 | 1 | Revisar la rueda vinilo | Hecha con la dirección A. Si no convence, B (Secuenciador) y C (Onda) están en el prototipo «RGBPM Home y Armonía» |
-| 2 | **Supabase: crear la tabla** | Lara pega `servidor/supabase/puntuaciones.sql` en el SQL Editor. Sin ella, los récords siguen en el navegador |
+| 2 | **Fragmentos de toda la colección** | Que todo suene entero 90 s con login. Ver «Música» abajo |
+| 3 | **Supabase: crear la tabla** | Lara pega `servidor/supabase/puntuaciones.sql` en el SQL Editor. Sin ella, los récords siguen en el navegador |
 | 3 | Más juegos | Hechos 5. Ideas: Agita el móvil (tempo con el sensor), ¿Qué categoría es? solo de oído, ranking compartido si se abren altas |
 | 3 | Probar en su iPhone | Inicio, transiciones, mascota dormida en pausa, rueda con el dedo |
 | 4 | **Mezclador** (`/mezclador`, hoy «Pronto») | Ver «Después» · 3 |

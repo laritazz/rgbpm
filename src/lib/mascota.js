@@ -34,18 +34,18 @@ export function forma(k) {
   return `${d}Z`
 }
 
-/** Energía 0–1 a partir del BPM: tranquila por debajo de 118, a tope desde 165. */
+/** Energía 0–1 a partir del BPM: disco hasta 110 (violeta), asterisco entero desde 155 (carmesí). */
 export function energia(bpm) {
-  const x = Math.max(0, Math.min(1, ((bpm ?? 120) - 118) / (165 - 118)))
+  const x = Math.max(0, Math.min(1, ((bpm ?? 120) - 110) / (155 - 110)))
   return x * x * (3 - 2 * x)
 }
 
-// Cada ánimo tiene su cara. El fondo lo pone el BPM: color = BPM.
+// Un ánimo por franja: la cara también cambia donde cambia el color. El fondo lo pone el BPM.
 export const ANIMOS = [
-  { id: 'calma', nombre: 'Calma', hasta: 112, texto: 'Warm-up: sin prisa, que la pista se vaya llenando.' },
-  { id: 'feliz', nombre: 'Feliz', hasta: 126, texto: 'Groove cómodo: ideal para enganchar a la gente.' },
-  { id: 'guino', nombre: 'Guiño', hasta: 140, texto: 'Ya estamos dentro: es momento de jugar con las claves.' },
-  { id: 'sorpresa', nombre: 'Sorpresa', hasta: 155, texto: 'Esto sube: cuida las transiciones, cada salto se nota.' },
+  { id: 'calma', nombre: 'Calma', hasta: 110, texto: 'Warm-up: sin prisa, que la pista se vaya llenando.' },
+  { id: 'feliz', nombre: 'Feliz', hasta: 124, texto: 'Groove cómodo: ideal para enganchar a la gente.' },
+  { id: 'guino', nombre: 'Guiño', hasta: 132, texto: 'Ya estamos dentro: es momento de jugar con las claves.' },
+  { id: 'sorpresa', nombre: 'Sorpresa', hasta: 150, texto: 'Esto sube: cuida las transiciones, cada salto se nota.' },
   { id: 'euforia', nombre: 'Euforia', hasta: 999, texto: 'Pico del set: el asterisco a tope.' },
 ]
 
@@ -134,4 +134,21 @@ export function movimientoCara({ parpado = 0, ojo = [0, 0], pulso = 0 }) {
     ojos: `translate(0 -14) scale(1 ${(1 - parpado * 0.88).toFixed(3)}) translate(0 14)`,
     boca: `translate(0 4) scale(${(1 + 0.22 * pulso).toFixed(3)}) translate(0 -4)`,
   }
+}
+
+/**
+ * Cómo se mueve el cuerpo en un instante: latido, giro por compás y vaivén.
+ * Lo usan la mascota y su «cuerpo de tinta» del inicio: con los mismos números, los dos se mueven a la vez.
+ * @param giroAnterior en pausa el giro se queda donde estaba
+ */
+export function movimientoCuerpo({ t, k, vida: v, bpm, tocando, giroAnterior = 0 }) {
+  const golpes = (t * (bpm ?? 120)) / 60
+  const fase = golpes - Math.floor(golpes)
+  const pulso = tocando ? Math.exp(-fase * 5) : 0
+  let giro = giroAnterior
+  if (tocando) {
+    const compas = Math.floor(golpes / 4)
+    giro = (compas + conRebote(Math.max(0, (golpes / 4 - compas - 0.75) / 0.25))) * 45 * k
+  }
+  return { pulso, giro, sx: (1 + 0.07 * pulso) * v.respira, sy: (1 - 0.06 * pulso) * v.respira, dx: v.deriva[0], dy: v.deriva[1] }
 }

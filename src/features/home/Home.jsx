@@ -72,7 +72,8 @@ export default function Home() {
         items={items}
         escalas={escalas}
         alPasar={(s) => precargar(s.id)}
-        mascota={(mira) => <Mascota bpm={tema?.bpm ?? 124} tocando variante="negra" tamano="100%" mira={mira} etiqueta={sonando ? 'Mascota bailando' : 'Mascota'} />}
+        cuerpo={{ bpm: tema?.bpm ?? 124, tocando: true }}
+        mascota={(mira) => <Mascota bpm={tema?.bpm ?? 124} tocando variante="negra" soloCara tamano="100%" mira={mira} etiqueta={sonando ? 'Mascota bailando' : 'Mascota'} />}
       />
     </main>
   )
