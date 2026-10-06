@@ -1,5 +1,7 @@
 # RGBPM · caso vivo para Creativezz
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [07 — Contenido](https://app.notion.com/p/3f1c9362e7c68107b19ecacf3e89cde6). No edites este archivo: los cambios van en Notion.
+
 > Todo lo necesario para contar RGBPM en mi web: historia, proceso, IA, React, diseño, imágenes y la sección en directo desde GitHub.
 > Escrito en primera persona. Datos reales del repo a 30 sep 2026; los números vivos salen de `estado.json`.
 

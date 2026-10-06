@@ -1,5 +1,7 @@
 # RGBPM · Proceso de diseño
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [03 — UX y arquitectura funcional](https://app.notion.com/p/3f1c9362e7c68102a9f9dd96bb90a433). No edites este archivo: los cambios van en Notion.
+
 > v1 · 2 oct 2026. Cómo diseño RGBPM, con pruebas de cada fase. Sirve para el portfolio (`CREATIVEZZ.md`).
 > Relacionados: `PRODUCTO.md` (mercado) · `DECISIONES.md` (cada giro) · `SISTEMA.md` (lenguaje visual) · `PERSONAS.md` (recorrido con proto-personas) · `PRUEBA_USUARIOS.md` (test con DJs).
 

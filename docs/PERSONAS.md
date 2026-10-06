@@ -1,5 +1,7 @@
 # RGBPM · Recorrido cognitivo con proto-personas
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [02 — Discovery](https://app.notion.com/p/3f1c9362e7c681e1b704f753403c9cd9). No edites este archivo: los cambios van en Notion.
+
 > v1 · 2 oct 2026. Sustituye de momento al test con 5 DJs reales (`PRUEBA_USUARIOS.md`), que sigue pendiente.
 > **Método:** recorrido cognitivo (*cognitive walkthrough*). Recorro las 5 tareas del kit en la app publicada, paso a paso, preguntando en cada pantalla: ¿esta persona sabría qué hacer?, ¿vería el control?, ¿entendería la respuesta?
 

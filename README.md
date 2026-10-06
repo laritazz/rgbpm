@@ -2,7 +2,7 @@
 
 App web para DJs: importa tu colección de Traktor, ve tu biblioteca como portadas Pantone (**color = BPM**) y descubre con qué mezclar cada tema según tus reglas de armonía.
 
-Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, diseño UX/UI y marca: yo. El proceso completo está en [BITACORA.md](./BITACORA.md).
+Proyecto de aprendizaje de React de **Lara Cáceres · Laritazz**. Producto, diseño UX/UI y marca: yo. El proceso completo está en [BITACORA.md](./BITACORA.md). Desde el 6 oct 2026 la gestión del proyecto vive en Notion; los documentos de `docs/` son copias de esa fecha.
 
 **En vivo:** [laritazz.github.io/rgbpm](https://laritazz.github.io/rgbpm/) · se instala en el móvil como app
 

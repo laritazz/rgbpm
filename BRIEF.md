@@ -1,5 +1,7 @@
 # RGBPM · Brief de producto
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [01 — Producto](https://app.notion.com/p/3f1c9362e7c681b1ae89e75597c7ffa3). No edites este archivo: los cambios van en Notion.
+
 _v1 · 28 sep 2026_
 
 ## En una frase

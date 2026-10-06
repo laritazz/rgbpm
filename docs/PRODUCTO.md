@@ -1,5 +1,7 @@
 # RGBPM · Producto y mercado
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [01 — Producto](https://app.notion.com/p/3f1c9362e7c681b1ae89e75597c7ffa3). No edites este archivo: los cambios van en Notion.
+
 > v2 · 2 oct 2026. Amplía el brief v1 (`claude/BRIEF_PRODUCTO.md` en el proyecto).
 
 ---

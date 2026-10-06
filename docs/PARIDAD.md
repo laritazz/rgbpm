@@ -1,5 +1,7 @@
 # Paridad con RGBPM original
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [05 — Especificaciones](https://app.notion.com/p/3f1c9362e7c6812cafc3d711f773c3b9). No edites este archivo: los cambios van en Notion.
+
 Todo lo que ya tenía mi web original (`RGBPM.html`) y su estado en la versión React.
 Regla: nada se pierde; cada utilidad vuelve igual o mejor.
 

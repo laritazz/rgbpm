@@ -1,5 +1,7 @@
 # RGBPM · Test con usuarios
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [02 — Discovery](https://app.notion.com/p/3f1c9362e7c681e1b704f753403c9cd9). No edites este archivo: los cambios van en Notion.
+
 > Kit listo para usar. 5 DJs, 30 minutos cada uno. Con 5 personas salen la mayoría de los problemas de uso (Nielsen).
 > Los resultados van a la tabla del final y a `PROCESO.md`. Antes de este test hice un recorrido con 5 proto-personas (`PERSONAS.md`): sus 4 pendientes son buenas preguntas para el cierre.
 

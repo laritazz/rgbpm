@@ -1,5 +1,7 @@
 # RGBPM · Registro de decisiones
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [Decision Log](https://app.notion.com/p/33cada51cf0f4563ad19ad68c807602e). No edites este archivo: los cambios van en Notion.
+
 > Una línea por decisión: qué, por qué y qué descartamos. La más nueva, arriba.
 > Formato corto de ADR (Architecture/Design Decision Record).
 

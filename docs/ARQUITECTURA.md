@@ -1,5 +1,7 @@
 # RGBPM · Arquitectura
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [06 — Desarrollo y audio](https://app.notion.com/p/3f1c9362e7c6818bbdabd32362995402). No edites este archivo: los cambios van en Notion.
+
 > v2 · 2 oct 2026. Cómo está hecho por dentro, front y back. Las decisiones y su porqué: `docs/DECISIONES.md`.
 
 ---

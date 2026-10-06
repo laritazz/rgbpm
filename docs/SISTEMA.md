@@ -1,5 +1,7 @@
 # RGBPM · Sistema de diseño
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [04 — Sistema visual](https://app.notion.com/p/3f1c9362e7c681f7bf58d77b64a9badd). No edites este archivo: los cambios van en Notion.
+
 > v2 · 2 oct 2026. La versión viva está en la app: **/#/sistema** (se pinta con el mismo código que la interfaz, así nunca se desfasa).
 > Fuente de verdad en el código: `src/lib/color.js`, `src/lib/mascota.js`, `src/components/Iconos.jsx`, `scripts/fuente.py`, `src/styles/base.css`.
 

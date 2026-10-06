@@ -1,5 +1,7 @@
 # Bitácora RGBPM · React
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [Aprendizajes](https://app.notion.com/p/fd3300f833244e0d8caf2ee3920a9f5e). No edites este archivo: los cambios van en Notion.
+
 Registro de cada sesión: qué hicimos, qué decidimos y qué aprendí.
 Es la fuente del caso de estudio final.
 

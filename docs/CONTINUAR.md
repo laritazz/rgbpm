@@ -1,5 +1,7 @@
 # RGBPM · traspaso para seguir en un chat nuevo
 
+> **Copia congelada del 6 oct 2026.** La versión viva está en Notion (privado): [Cómo empezar](https://app.notion.com/p/3f1c9362e7c6814b8ea6ecf34d48f00e). No edites este archivo: los cambios van en Notion.
+
 > Léelo entero antes de tocar nada. Estado a 2 oct 2026, tras la sesión 18 (recorrido con proto-personas y mejoras). Últimos commits en `estado.json`.
 > Fuentes de verdad en el repo: `CLAUDE.md` (reglas), `BITACORA.md` (sesiones 1–18), `docs/PROCESO.md` (método, heurística), `docs/PERSONAS.md` (5 proto-personas), `docs/PRUEBA_USUARIOS.md` (test con DJs), `docs/SISTEMA.md` (diseño), `docs/ARQUITECTURA.md` (front y back), `docs/DECISIONES.md`, `docs/PRODUCTO.md` (mercado), `docs/PARIDAD.md` (qué falta), `servidor/LEEME.md` (audio privado).
 
