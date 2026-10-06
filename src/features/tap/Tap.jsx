@@ -4,8 +4,8 @@ import MascotaEscena from '../../components/marca/MascotaEscena'
 import { useCazados } from '../../hooks/useCazados'
 import { useEscucha } from '../../hooks/useEscucha'
 import { compatibles, porTempo } from '../../lib/armonia'
-import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
-import { puedeSer } from '../../lib/escucha'
+import { colorBpm, colorProvisional, degradadoTema, franjaDe, tintaSobre } from '../../lib/color'
+import { faseCerteza, puedeSer } from '../../lib/escucha'
 import { bpmDeToques } from '../../lib/tempo'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import RuedaMini from '../biblioteca/RuedaMini'
@@ -50,13 +50,16 @@ export default function Tap() {
 /* ——— Escucha ——— */
 
 function ModoEscucha({ alCazar, vista, alSoltarVista }) {
-  const { estado, nivel, segundos, maximo, lectura, fijado, fijadoEn, error, escuchar, parar } = useEscucha({
+  const { estado, nivel, segundos, maximo, lectura, certeza, fijado, fijadoEn, error, escuchar, parar } = useEscucha({
     alTerminar: (l, seguro) => alCazar({ bpm: l.tempo?.bpm ?? null, clave: l.tono?.clave ?? null, confianza: l.tono?.confianza ?? 0, seguro, origen: 'escucha' }),
   })
   const escuchando = estado === 'pidiendo' || estado === 'escuchando'
   const { sonando, alternar } = useReproductor()
   const actual = vista && !escuchando ? { bpm: vista.bpm, clave: vista.clave, confianza: vista.confianza } : { bpm: lectura?.tempo?.bpm ?? null, clave: lectura?.tono?.clave ?? null, confianza: lectura?.tono?.confianza }
   const { bpm, clave } = actual
+  // Cuánto se fía la escucha: gris (pulso) → gotas del color intuido → color entero (fijada)
+  const fase = escuchando ? faseCerteza(certeza) : estado === 'listo' && fijado && !vista ? 'fijada' : null
+  const color = fase === 'pulso' || fase === 'intuye' ? colorProvisional(bpm, certeza) : bpm ? colorBpm(bpm) : '#333'
 
   const empezar = () => {
     alSoltarVista()
@@ -69,7 +72,7 @@ function ModoEscucha({ alCazar, vista, alSoltarVista }) {
   const texto = {
     parado: 'Toca la mascota para escuchar',
     pidiendo: 'Dame permiso para el micro…',
-    escuchando: lectura ? 'Afinando…' : 'Escuchando…',
+    escuchando: fase === 'intuye' && bpm ? `Intuyo unos ${Math.round(bpm)} BPM · certeza ${Math.round(certeza * 100)} %` : 'Escuchando pulso inicial…',
     listo: fijado ? '¡Lo tengo!' : 'Esto es lo que he oído',
     error,
   }[estado]
@@ -77,12 +80,12 @@ function ModoEscucha({ alCazar, vista, alSoltarVista }) {
   return (
     <>
       <button
-        className={`tap__escenario${escuchando ? ' tap__escenario--escuchando' : ''}`}
+        className={`tap__escenario${escuchando ? ' tap__escenario--escuchando' : ''}${fase ? ` tap__escenario--${fase}` : ''}`}
         onClick={escuchando ? parar : empezar}
         aria-label={escuchando ? 'Parar la escucha' : 'Escuchar lo que suena'}
-        style={{ '--color': bpm ? colorBpm(bpm) : '#333', '--avance': Math.min(1, segundos / maximo) }}
+        style={{ '--color': color, '--tinta': tintaSobre(color), '--avance': Math.min(1, segundos / maximo) }}
       >
-        <MascotaEscena bpm={bpm} nivel={nivel} drop={fijadoEn} tocando={escuchando || Boolean(bpm)} tamano={360} />
+        <MascotaEscena bpm={bpm} nivel={nivel} drop={fijadoEn} tocando={escuchando || Boolean(bpm)} fase={fase} certeza={certeza} tamano={360} />
         {escuchando && (
           <svg className="tap__anillo" viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="47" pathLength="1" />
@@ -93,7 +96,7 @@ function ModoEscucha({ alCazar, vista, alSoltarVista }) {
         </span>
       </button>
 
-      <Lectura bpm={bpm} clave={clave} confianza={actual.confianza} provisional={escuchando}>
+      <Lectura bpm={bpm} clave={clave} confianza={actual.confianza} provisional={escuchando} fijada={fase === 'fijada'}>
         <p className="tap__privacidad">El audio se analiza aquí y no se guarda.</p>
       </Lectura>
 
@@ -168,10 +171,10 @@ function ModoTap({ alGuardar }) {
 
 /* ——— Piezas comunes ——— */
 
-function Lectura({ bpm, clave, confianza, provisional = false, children }) {
+function Lectura({ bpm, clave, confianza, provisional = false, fijada = false, children }) {
   const { etiqueta, completa, corregir } = useAjustesArmonia()
   return (
-    <section className={`tap__lectura${provisional && bpm ? ' tap__lectura--provisional' : ''}`} aria-live="polite">
+    <section className={`tap__lectura${provisional && bpm ? ' tap__lectura--provisional' : ''}${fijada ? ' tap__lectura--fijada' : ''}`} aria-live="polite">
       <div className="tap__cifras">
         <div>
           <span className="etiqueta-seccion">BPM</span>

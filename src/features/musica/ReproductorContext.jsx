@@ -6,11 +6,24 @@ const ReproductorContext = createContext(null)
 const TiempoContext = createContext({ tiempo: 0, duracion: 0 })
 
 export const FUNDIDO = 10 // segundos de fundido cruzado en la radio
+const LATENCIA = 400 // ms de carga a partir de los que la mascota baila igualmente (no parece colgado)
+
+// En iPhone y iPad el volumen de <audio> es de solo lectura: el fundido por volumen no existe
+const VOLUMEN_FIJO = (() => {
+  try {
+    const a = new Audio()
+    a.volume = 0.5
+    return a.volume !== 0.5
+  } catch {
+    return false
+  }
+})()
 
 /**
  * Un solo reproductor para toda la app, con dos «platos» (<audio>) para poder fundir
  * el tema que sale con el que entra, como en la Radio de RGBPM original.
  * estado: parado · cargando · sonando · pausa · sin-archivo · error
+ * esperando: lleva más de 400 ms cargando; la mascota y el vinilo bailan ya al BPM del tema.
  */
 export function ReproductorProvider({ children }) {
   const { resolver } = useMusica()
@@ -31,6 +44,17 @@ export function ReproductorProvider({ children }) {
   const [cola, setCola] = useState([])
   const [indice, setIndice] = useState(-1)
   const [fundiendo, setFundiendo] = useState(false)
+  const [lento, setLento] = useState(false) // lleva más de LATENCIA cargando
+
+  // Carrera contra la red: si el audio no llega en 400 ms, la app ya se mueve al tempo del tema
+  useEffect(() => {
+    if (estado !== 'cargando') return
+    const reloj = setTimeout(() => setLento(true), LATENCIA)
+    return () => {
+      clearTimeout(reloj)
+      setLento(false)
+    }
+  }, [estado])
 
   // Copia de lo último para que las acciones no cambien en cada render
   const actual = useRef({ tema: null, estado: 'parado', cola: [], indice: -1 })
@@ -134,6 +158,8 @@ export function ReproductorProvider({ children }) {
 
     const eSale = plato(sale)
     const eEntra = plato(entra)
+    // iOS: sin volumen, los dos platos sonarían a tope a la vez. Corte limpio en vez de choque
+    if (VOLUMEN_FIJO) eSale.pause()
     eEntra.volume = 0
     await eEntra.play().catch(() => {})
     activo.current = entra
@@ -146,6 +172,10 @@ export function ReproductorProvider({ children }) {
     // Sus metadatos llegaron mientras aún no mandaba: se leen ahora
     setDuracion(Number.isFinite(eEntra.duration) ? eEntra.duration : (lista[destino].duracion ?? 0))
     setEstado('sonando')
+    if (VOLUMEN_FIJO) {
+      soltar(sale)
+      return
+    }
     setFundiendo(true)
 
     // El fundido nunca dura más de lo que le queda al que sale.
@@ -206,7 +236,8 @@ export function ReproductorProvider({ children }) {
     const el = e.currentTarget
     setTiempo(el.currentTime)
     const { cola: lista, indice: i } = actual.current
-    if (lista.length && i < lista.length - 1 && !fundido.current && el.duration - el.currentTime <= FUNDIDO) siguiente()
+    // Sin fundido posible (iOS) se espera al final del tema: adelantarlo cortaría sus últimos segundos
+    if (!VOLUMEN_FIJO && lista.length && i < lista.length - 1 && !fundido.current && el.duration - el.currentTime <= FUNDIDO) siguiente()
   }
   const eventos = {
     onPlaying: (e) => manda(e) && setEstado('sonando'),
@@ -224,8 +255,8 @@ export function ReproductorProvider({ children }) {
   }
 
   const valor = useMemo(
-    () => ({ tema, estado, sonando: estado === 'sonando', origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar }),
-    [tema, estado, origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar]
+    () => ({ tema, estado, sonando: estado === 'sonando', esperando: estado === 'cargando' && lento, origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar }),
+    [tema, estado, lento, origen, enlace, cola, indice, fundiendo, reproducir, ponerCola, vaciarCola, siguiente, alternar, buscar]
   )
   const reloj = useMemo(() => ({ tiempo, duracion }), [tiempo, duracion])
 

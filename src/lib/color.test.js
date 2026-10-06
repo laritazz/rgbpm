@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { leerClave } from './claves'
-import { FRANJAS, colorBpm, colorClave, degradadoTema, franjaDe } from './color'
+import { FRANJAS, GRIS_ESCUCHA, colorBpm, colorClave, colorProvisional, degradadoTema, franjaDe } from './color'
 
 describe('franjas de BPM', () => {
   it('cortes nuevos: violeta hasta 110, rojo desde 150', () => {
@@ -30,5 +30,16 @@ describe('color de la clave', () => {
   it('un tema con clave es un degradado de BPM a clave; sin clave, plano', () => {
     expect(degradadoTema({ bpm: 128, clave: leerClave('8m') })).toMatch(/^linear-gradient/)
     expect(degradadoTema({ bpm: 128, clave: null })).toBe(colorBpm(128))
+  })
+})
+
+describe('colorProvisional', () => {
+  it('gris sin certeza, color entero al fijarse y algo intermedio mientras intuye', () => {
+    expect(colorProvisional(128, 0.2)).toBe(GRIS_ESCUCHA)
+    expect(colorProvisional(null, 0.9)).toBe(GRIS_ESCUCHA)
+    expect(colorProvisional(128, 1)).toBe(colorBpm(128))
+    const medio = colorProvisional(128, 0.55)
+    expect(medio).not.toBe(GRIS_ESCUCHA)
+    expect(medio).not.toBe(colorBpm(128))
   })
 })

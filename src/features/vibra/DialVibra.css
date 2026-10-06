@@ -1,0 +1,137 @@
+/* Dial de vibra: un potenciómetro de mesa. El color bajo el mando tiñe la ventana entera. */
+.dial-vibra {
+  width: min(380px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radio-l);
+  background: color-mix(in srgb, var(--vibra) 16%, var(--superficie));
+  color: var(--blanco);
+  transition: background 300ms var(--curva-salida);
+}
+
+.dial-vibra::backdrop {
+  background: #000000b3;
+  backdrop-filter: blur(6px);
+}
+
+.dial-vibra[open] {
+  animation: dial-entra 260ms var(--curva-muelle);
+}
+
+@keyframes dial-entra {
+  from {
+    scale: 0.92;
+    opacity: 0;
+  }
+}
+
+.dial-vibra__caja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 20px 20px;
+  text-align: center;
+}
+
+.dial-vibra h2 {
+  max-width: 100%;
+  margin: 0;
+  font-family: var(--fuente-letras);
+  font-size: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dial-vibra__ia {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gris-2);
+}
+
+.dial-vibra__ia span {
+  color: var(--color);
+  font-weight: 800;
+}
+
+.dial-vibra__dial {
+  width: min(240px, 70vw);
+  margin: 4px 0;
+  touch-action: none; /* el arrastre es del dial, no del scroll */
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  border-radius: 50%;
+  outline: none;
+}
+
+.dial-vibra__dial:focus-visible {
+  outline: 2px solid var(--vibra);
+  outline-offset: 4px;
+}
+
+.dial-vibra__dial--arrastre {
+  cursor: grabbing;
+}
+
+.dial-vibra__arco {
+  fill: none;
+  stroke-width: 14;
+  stroke-linecap: round;
+  opacity: 0.35;
+  transition: opacity 160ms, stroke-width 160ms;
+}
+
+.dial-vibra__arco--activa {
+  opacity: 1;
+  stroke-width: 18;
+}
+
+.dial-vibra__ia-marca {
+  fill: var(--blanco);
+}
+
+.dial-vibra__mando circle {
+  fill: #111111;
+  stroke: var(--vibra);
+  stroke-width: 3;
+}
+
+.dial-vibra__mando rect {
+  fill: var(--vibra);
+}
+
+/* Al soltar, el mando se encaja en el centro de su franja */
+.dial-vibra__dial:not(.dial-vibra__dial--arrastre) .dial-vibra__mando {
+  transition: rotate 220ms var(--curva-muelle);
+}
+
+.dial-vibra__nombre {
+  fill: var(--blanco);
+  font-family: var(--fuente-letras);
+  font-size: 19px;
+  pointer-events: none;
+}
+
+.dial-vibra__texto {
+  min-height: 2.6em;
+  margin: 0;
+  font-size: 14px;
+  color: var(--gris-1);
+  text-wrap: balance;
+}
+
+.dial-vibra__acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dial-vibra[open],
+  .dial-vibra__dial .dial-vibra__mando {
+    animation: none;
+    transition: none;
+  }
+}

@@ -6,6 +6,7 @@ import { AjustesArmoniaProvider } from './features/armonia/AjustesArmoniaContext
 import Biblioteca from './features/biblioteca/Biblioteca'
 import { BibliotecaProvider } from './features/biblioteca/BibliotecaContext'
 import { MusicaProvider } from './features/musica/MusicaContext'
+import { VibrasProvider } from './features/vibra/VibrasContext'
 import { ReproductorProvider } from './features/musica/ReproductorContext'
 import Home from './features/home/Home'
 import Proximamente from './features/proximamente/Proximamente'
@@ -34,6 +35,7 @@ export default function App() {
   return (
     <AjustesArmoniaProvider>
       <BibliotecaProvider>
+        <VibrasProvider>
         <MusicaProvider>
           <ReproductorProvider>
             <SetProvider>
@@ -64,6 +66,7 @@ export default function App() {
             </SetProvider>
           </ReproductorProvider>
         </MusicaProvider>
+        </VibrasProvider>
       </BibliotecaProvider>
     </AjustesArmoniaProvider>
   )

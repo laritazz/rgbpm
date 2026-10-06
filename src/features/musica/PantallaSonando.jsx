@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { IconoBajar, IconoPausa, IconoPlay, IconoSiguiente } from '../../components/Iconos'
 import { compatibles } from '../../lib/armonia'
-import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
+import { degradadoTema, franjaDe } from '../../lib/color'
 import { reloj } from '../../lib/formato'
 import BotonSet from '../sets/BotonSet'
 import { useReproductor, useTiempo } from './ReproductorContext'
 import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 import { useMusica } from './MusicaContext'
+import { colorSonando } from '../../lib/vibra'
+import { useVibras } from '../vibra/VibrasContext'
 
 /**
  * Lo que suena, a pantalla completa: la mascota baila el tema y te propone con qué seguir.
@@ -15,9 +17,10 @@ import { useMusica } from './MusicaContext'
  */
 export default function PantallaSonando({ abierta, alCerrar }) {
   const ventana = useRef(null)
-  const { tema, sonando, cola, indice, fundiendo, alternar, buscar, siguiente, reproducir } = useReproductor()
+  const { tema, sonando, esperando, cola, indice, fundiendo, alternar, buscar, siguiente, reproducir } = useReproductor()
   const { tiempo, duracion } = useTiempo()
   const { paraSugerir: temas } = useMusica()
+  const { vibraDe } = useVibras()
   const [drop, setDrop] = useState(null)
   const [arrastre, setArrastre] = useState(0)
   const inicio = useRef(null)
@@ -47,13 +50,15 @@ export default function PantallaSonando({ abierta, alCerrar }) {
   if (!tema) return <dialog ref={ventana} className="escena" onClose={alCerrar} />
 
   const bpm = tema.bpm
+  const vibra = vibraDe(tema)
+  const ambiente = colorSonando(tema, vibra) // tu vibra manda cuando suena
   return (
     <dialog
       ref={ventana}
       className="escena"
       onClose={alCerrar}
       aria-label={`Sonando: ${tema.titulo}`}
-      style={{ '--color': colorBpm(bpm), translate: arrastre ? `0 ${arrastre}px` : undefined, transition: arrastre ? 'none' : undefined }}
+      style={{ '--color': ambiente, translate: arrastre ? `0 ${arrastre}px` : undefined, transition: arrastre ? 'none' : undefined }}
     >
       <div className="escena__asa" onPointerDown={empezarArrastre} onPointerMove={moverArrastre} onPointerUp={soltarArrastre} onPointerCancel={soltarArrastre}>
         <button className="escena__cerrar" onClick={alCerrar} aria-label="Cerrar">
@@ -65,7 +70,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
       <div className="escena__principal">
         {/* La mascota es el play: un toque pausa o reanuda */}
         <button className={`escena__mascota${sonando ? '' : ' escena__mascota--pausa'}`} onClick={alternar} aria-label={sonando ? 'Pausa' : 'Reproducir'}>
-          <MascotaEscena bpm={bpm} tocando={sonando} drop={drop} tamano={420} />
+          <MascotaEscena bpm={bpm} tocando={sonando || esperando} drop={drop} tinte={vibra ? ambiente : null} tamano={420} />
           <span className="escena__estado" aria-hidden="true">
             {sonando ? <IconoPausa width={28} height={28} /> : <IconoPlay width={34} height={34} />}
           </span>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { esEstable } from '../lib/escucha'
+import { certeza as medirCerteza, esEstable } from '../lib/escucha'
 
 const PRIMERA = 6 // s de audio antes de la primera lectura
 const CADA = 2 // s entre lecturas
@@ -12,12 +12,14 @@ const MAXIMO = 20 // si no se aclara, se queda con la última lectura
  * la afina cada 2 s y para sola cuando tres lecturas coinciden.
  * El cálculo va en un Web Worker y el audio no se guarda ni sale del dispositivo.
  * estado: parado · pidiendo · escuchando · listo · error
+ * certeza (0–1): cuánto se fía de lo que oye; la pantalla la convierte en gris → gotas → color (lib/escucha: faseCerteza).
  */
 export function useEscucha({ alTerminar } = {}) {
   const [estado, setEstado] = useState('parado')
   const [nivel, setNivel] = useState(0)
   const [segundos, setSegundos] = useState(0)
   const [lectura, setLectura] = useState(null)
+  const [certeza, setCerteza] = useState(0)
   const [fijado, setFijado] = useState(false)
   const [fijadoEn, setFijadoEn] = useState(null) // ms (performance.now): dispara el drop de la mascota
   const [error, setError] = useState(null)
@@ -45,6 +47,7 @@ export function useEscucha({ alTerminar } = {}) {
   const escuchar = useCallback(async () => {
     cerrar()
     setLectura(null)
+    setCerteza(0)
     setFijado(false)
     setFijadoEn(null)
     setError(null)
@@ -95,6 +98,7 @@ export function useEscucha({ alTerminar } = {}) {
         if (!recursos.current) return
         lecturas.push(data.lectura)
         if (data.lectura) setLectura(data.lectura)
+        setCerteza(medirCerteza(lecturas))
         const t = recogidas / fs
         if (t >= MINIMO && esEstable(lecturas)) terminar(true)
         else if (t >= MAXIMO) {
@@ -111,6 +115,7 @@ export function useEscucha({ alTerminar } = {}) {
       r.reloj = setInterval(() => {
         const t = recogidas / fs
         setSegundos(t)
+        if (!lecturas.some(Boolean)) setCerteza(medirCerteza(lecturas, t / PRIMERA))
         if (ocupado || t < PRIMERA) return
         const tramo = Math.min(recogidas, Math.round(VENTANA * fs))
         const senal = new Float32Array(tramo)
@@ -147,5 +152,5 @@ export function useEscucha({ alTerminar } = {}) {
     setEstado((e) => (lectura && e === 'escuchando' ? 'listo' : 'parado'))
   }, [cerrar, lectura])
 
-  return { estado, nivel, segundos, maximo: MAXIMO, lectura, fijado, fijadoEn, error, escuchar, parar }
+  return { estado, nivel, segundos, maximo: MAXIMO, lectura, certeza, fijado, fijadoEn, error, escuchar, parar }
 }

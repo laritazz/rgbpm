@@ -617,3 +617,51 @@
 .sonando__escuchar:active {
   scale: 0.92;
 }
+
+/* Tu vibra: punto en la esquina de la muestra (el BPM sigue mandando en la tarjeta) */
+.pantone-caja {
+  -webkit-touch-callout: none; /* la pulsación larga abre el dial, no el menú de iOS */
+}
+
+.pantone__vibra {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--vibra);
+  box-shadow:
+    0 0 0 2px var(--negro),
+    0 0 0 4px var(--blanco);
+}
+
+.sonando__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sonando__vibra {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--pildora);
+  background: var(--superficie-2);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sonando__vibra::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--vibra);
+}
+
+.sonando__plato {
+  -webkit-touch-callout: none;
+}

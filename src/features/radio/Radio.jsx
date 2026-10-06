@@ -2,12 +2,14 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MascotaEscena from '../../components/marca/MascotaEscena'
 import { TODAS_LAS_CLAVES } from '../../lib/claves'
-import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
+import { degradadoTema, franjaDe } from '../../lib/color'
 import { generarRadio, sinRepetidos } from '../../lib/radio'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { useMusica } from '../musica/MusicaContext'
 import { FUNDIDO, useReproductor } from '../musica/ReproductorContext'
 import { useSet } from '../sets/SetContext'
+import { colorSonando, franjaPorId } from '../../lib/vibra'
+import { useVibras } from '../vibra/VibrasContext'
 import './Radio.css'
 import { useAjustesArmonia } from '../armonia/AjustesArmoniaContext'
 
@@ -43,6 +45,8 @@ export default function Radio() {
   const enRadio = rep.cola.length > 0
   const tema = enRadio ? rep.tema : null
   const bpm = tema?.bpm ?? null
+  const { vibraDe } = useVibras()
+  const vibra = franjaPorId(vibraDe(tema))
 
   function montar(e) {
     e.preventDefault()
@@ -77,15 +81,15 @@ export default function Radio() {
   }
 
   return (
-    <main className="radio" style={{ '--color': bpm ? colorBpm(bpm) : '#333333' }}>
+    <main className="radio" style={{ '--color': tema ? colorSonando(tema, vibra?.id) : '#333333' }}>
       <section className="radio__escenario" aria-label="Sonando">
         <header className="radio__titulo">
-          <span className="etiqueta-seccion">{!enRadio ? 'Radio' : rep.fundiendo ? 'Mezclando…' : rep.sonando ? 'Sonando' : 'En pausa'}</span>
+          <span className="etiqueta-seccion">{!enRadio ? 'Radio' : rep.esperando ? 'Cargando el audio…' : rep.fundiendo ? 'Mezclando…' : rep.sonando ? 'Sonando' : 'En pausa'}</span>
           <h1>{tema?.titulo ?? 'Tu radio'}</h1>
           <p>{tema ? tema.artista : `${disponibles.length.toLocaleString('es')} temas con audio listos para sonar.`}</p>
         </header>
 
-        <MascotaEscena bpm={bpm} tocando={rep.sonando} drop={drop} tamano={440} />
+        <MascotaEscena bpm={bpm} tocando={rep.sonando || rep.esperando} drop={drop} tinte={vibra?.color ?? null} tamano={440} />
 
         <dl className="radio__datos">
           <div>
@@ -98,7 +102,7 @@ export default function Radio() {
           </div>
           <div>
             <dt>Color</dt>
-            <dd>{bpm ? franjaDe(bpm).nombre : '—'}</dd>
+            <dd>{vibra ? `${vibra.nombre} (tu vibra)` : bpm ? franjaDe(bpm).nombre : '—'}</dd>
           </div>
         </dl>
       </section>

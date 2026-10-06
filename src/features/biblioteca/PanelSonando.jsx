@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
+import { usePulsacionLarga } from '../../hooks/usePulsacionLarga'
 import { IconoPausa, IconoPlay } from '../../components/Iconos'
 import Vinilo from '../../components/marca/Vinilo'
 import { compatibles } from '../../lib/armonia'
 import { colorBpm, degradadoTema, franjaDe } from '../../lib/color'
 import { animoDe } from '../../lib/mascota'
+import { colorSonando, franjaPorId } from '../../lib/vibra'
+import { useVibras } from '../vibra/VibrasContext'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import BotonSet from '../sets/BotonSet'
@@ -18,6 +21,8 @@ export default function PanelSonando({ tema, alElegir, alCerrar }) {
   const { hayFuente, abrirAjustes, paraSugerir, tieneArchivo } = useMusica()
   const { etiqueta, notacion, opciones: ajustes, corregir, tolerancia } = useAjustesArmonia()
   const opciones = useMemo(() => (tema ? compatibles(tema, paraSugerir, 6, ajustes) : []), [tema, paraSugerir, ajustes])
+  const { vibraDe, abrirDial } = useVibras()
+  const pulsacion = usePulsacionLarga(() => tema && abrirDial(tema))
 
   if (!tema) {
     return (
@@ -29,21 +34,22 @@ export default function PanelSonando({ tema, alElegir, alCerrar }) {
   }
 
   const esEste = rep.tema?.id === tema.id
-  const tocando = esEste && rep.sonando
+  const tocando = esEste && (rep.sonando || rep.esperando) // si el audio tarda, el vinilo gira ya
   const animo = animoDe(tema.bpm)
   const mejor = opciones[0]
+  const tuya = franjaPorId(vibraDe(tema))
 
   return (
-    <aside className="sonando" aria-label="Tema elegido" style={{ '--ambiente': colorBpm(tema.bpm) }}>
+    <aside className="sonando" aria-label="Tema elegido" style={{ '--ambiente': colorSonando(tema, tuya?.id) }}>
       <button className="sonando__cerrar" onClick={alCerrar} aria-label="Cerrar panel">
         ✕
       </button>
 
-      <div className="sonando__plato">
+      <div className="sonando__plato" {...pulsacion}>
         <Vinilo bpm={tema.bpm} tocando={tocando} tamano={236} />
         {hayFuente ? (
-          <button className="sonando__play" onClick={() => rep.reproducir(tema)} aria-pressed={tocando}>
-            {tocando ? 'Pausa' : esEste && rep.estado === 'cargando' ? 'Cargando…' : 'Play'}
+          <button className="sonando__play" onClick={() => rep.reproducir(tema)} aria-pressed={esEste && rep.sonando}>
+            {esEste && rep.sonando ? 'Pausa' : esEste && rep.estado === 'cargando' ? 'Cargando…' : 'Play'}
           </button>
         ) : (
           <button className="sonando__play" onClick={abrirAjustes}>
@@ -78,6 +84,10 @@ export default function PanelSonando({ tema, alElegir, alCerrar }) {
         </dl>
         <div className="sonando__acciones">
           <BotonSet tema={tema} />
+          {/* La pulsación larga no se ve: el dial también tiene su botón */}
+          <button className="sonando__vibra" onClick={() => abrirDial(tema)} style={{ '--vibra': tuya?.color ?? colorBpm(tema.bpm) }}>
+            {tuya ? `Tu vibra: ${tuya.nombre}` : 'Ajustar vibra'}
+          </button>
         </div>
       </header>
 

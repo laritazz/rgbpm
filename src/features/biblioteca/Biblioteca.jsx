@@ -9,6 +9,7 @@ import PanelSonando from './PanelSonando'
 import TarjetaPantone from './TarjetaPantone'
 import './Biblioteca.css'
 import ElegirNotacion from '../armonia/ElegirNotacion'
+import { useVibras } from '../vibra/VibrasContext'
 
 const ORDENES = {
   set: { nombre: 'Orden del set', fn: null },
@@ -32,6 +33,7 @@ export default function Biblioteca() {
   const { audibles, tieneArchivo } = useMusica()
   const { tema: temaSonando, sonando, reproducir } = useReproductor()
   const sonandoId = sonando ? temaSonando?.id : null
+  const { vibraDe, abrirDial } = useVibras()
 
   const q = params.get('q') ?? ''
   const franja = params.get('franja') ?? 'todas'
@@ -151,7 +153,7 @@ export default function Biblioteca() {
             <ul className="rejilla" style={{ opacity: q !== qDiferida ? 0.6 : 1 }}>
               {visibles.map((t) => (
                 <li key={t.id}>
-                  <TarjetaPantone tema={t} elegida={t.id === temaId} alElegir={elegir} sonando={t.id === sonandoId} alReproducir={tieneArchivo(t) ? reproducir : undefined} />
+                  <TarjetaPantone tema={t} elegida={t.id === temaId} alElegir={elegir} sonando={t.id === sonandoId} alReproducir={tieneArchivo(t) ? reproducir : undefined} vibra={vibraDe(t)} alPedirVibra={abrirDial} />
                 </li>
               ))}
             </ul>

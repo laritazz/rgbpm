@@ -75,3 +75,15 @@ export function degradadoTema(tema, angulo = 135) {
   if (!tema?.clave) return bpm
   return `linear-gradient(${angulo}deg, ${bpm} 0%, ${bpm} 38%, ${colorClave(tema.clave)} 100%)`
 }
+
+export const GRIS_ESCUCHA = '#8c8c8c'
+
+/**
+ * Color mientras la escucha aún duda: gris al principio, se tiñe del BPM intuido según crece la certeza
+ * y llega a su color entero al fijarse (80 %). Así el color nunca promete más de lo que se sabe.
+ */
+export function colorProvisional(bpm, certeza) {
+  if (!bpm || certeza <= 0.3) return GRIS_ESCUCHA
+  if (certeza >= 0.8) return colorBpm(bpm)
+  return mezclar(GRIS_ESCUCHA, colorBpm(bpm), 0.25 + (0.5 * (certeza - 0.31)) / 0.48)
+}

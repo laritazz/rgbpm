@@ -43,3 +43,27 @@ export function puedeSer(temas, { bpm, clave }, limite = 5) {
     .sort((a, b) => a.diferencia - b.diferencia)
     .slice(0, limite)
 }
+
+// ——— Certeza: cuánto se fía la escucha de lo que oye (0–1) ———
+// Tres tramos que la pantalla enseña de forma distinta:
+// pulso (0–30 %) aún no hay lectura · intuye (31–79 %) hay lectura pero oscila · fijada (80–100 %) tres lecturas iguales.
+
+const coincide = (a, b) => a.tono?.clave.id === b.tono?.clave.id && a.tempo && b.tempo && Math.abs(a.tempo.bpm - b.tempo.bpm) <= 1
+
+/**
+ * @param lecturas  todas las lecturas de la escucha (null = tramo en silencio)
+ * @param progreso  0–1 hasta la primera lectura: así el pulso inicial también avanza
+ */
+export function certeza(lecturas, progreso = 0, veces = 3) {
+  const validas = lecturas.filter(Boolean)
+  if (!validas.length) return Math.min(0.3, Math.max(0, progreso) * 0.3)
+  if (esEstable(lecturas, veces)) return 1
+  const ultima = validas.at(-1)
+  const acuerdo = validas.slice(-veces).filter((l) => coincide(l, ultima)).length // 1…veces-1
+  const confianza = ((ultima.tempo?.confianza ?? 0) + (ultima.tono?.confianza ?? 0)) / 2
+  const mezcla = ((acuerdo - 1) / (veces - 1)) * 0.6 + confianza * 0.4
+  return 0.31 + 0.48 * Math.min(1, mezcla)
+}
+
+/** El tramo de certeza en el que está la escucha. */
+export const faseCerteza = (c) => (c >= 0.8 ? 'fijada' : c > 0.3 ? 'intuye' : 'pulso')

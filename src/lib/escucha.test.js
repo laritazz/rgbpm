@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { claveDeAudio } from './tonalidad'
 import { bpmDeAudio, bpmDeToques } from './tempo'
-import { esEstable, puedeSer } from './escucha'
+import { certeza, esEstable, faseCerteza, puedeSer } from './escucha'
 import { leerClave } from './claves'
 
 const FS = 22050
@@ -73,5 +73,31 @@ describe('escucha continua', () => {
       { id: 'd', bpm: 135, clave: leerClave('8m') },
     ]
     expect(puedeSer(temas, { bpm: 127.6, clave: leerClave('8m') }).map((o) => o.tema.id)).toEqual(['a', 'b'])
+  })
+})
+
+describe('certeza', () => {
+  const lectura = (bpm, clave, confianza = 0.5) => ({ tempo: { bpm, confianza }, tono: { clave: { id: clave }, confianza } })
+
+  it('sin lecturas avanza con el tiempo pero no pasa del 30 %', () => {
+    expect(certeza([], 0)).toBe(0)
+    expect(certeza([null], 0.5)).toBeCloseTo(0.15)
+    expect(certeza([], 4)).toBe(0.3)
+    expect(faseCerteza(certeza([], 1))).toBe('pulso')
+  })
+
+  it('con lecturas que oscilan se queda entre el 31 y el 79 %', () => {
+    const una = certeza([lectura(128, '8m', 0)])
+    const dos = certeza([lectura(120, '5m', 1), lectura(128, '8m', 1), lectura(128.5, '8m', 1)])
+    expect(una).toBeGreaterThan(0.3)
+    expect(dos).toBeLessThan(0.8)
+    expect(dos).toBeGreaterThan(una)
+    expect(faseCerteza(dos)).toBe('intuye')
+  })
+
+  it('tres lecturas iguales la fijan al 100 %', () => {
+    const c = certeza([lectura(128, '8m'), lectura(128.4, '8m'), lectura(127.8, '8m')])
+    expect(c).toBe(1)
+    expect(faseCerteza(c)).toBe('fijada')
   })
 })

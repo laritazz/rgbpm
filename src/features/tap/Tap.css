@@ -63,6 +63,31 @@
   -webkit-tap-highlight-color: transparent;
   transition: background 600ms var(--curva-salida);
   overflow: hidden;
+  isolation: isolate;
+}
+
+/* Fijada: el color definitivo inunda el escenario (los degradados no se animan: se funde una capa encima) */
+.tap__escenario::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 45%, var(--color) 0%, color-mix(in srgb, var(--color) 45%, #000) 85%);
+  opacity: 0;
+  transition: opacity 900ms var(--curva-salida);
+}
+
+.tap__escenario--fijada::before {
+  opacity: 0.9;
+}
+
+.tap__escenario--fijada .tap__pista {
+  color: var(--tinta);
+}
+
+/* Pulso inicial: gris neutro, todavía no hay nada que prometer */
+.tap__escenario--pulso {
+  background: radial-gradient(circle at 50% 45%, #2b2b2b 0%, #000 70%);
 }
 
 .tap__escenario .mascota {
@@ -166,6 +191,12 @@
   50% {
     opacity: 0.55;
   }
+}
+
+.tap__lectura--fijada .tap__bpm,
+.tap__lectura--fijada .tap__franja {
+  font-family: var(--fuente-letras);
+  opacity: 1;
 }
 
 .tap__bpm--vacio {

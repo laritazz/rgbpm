@@ -8,6 +8,16 @@ const arco = (x, abajo, y = -14) => `M${x - 12},${y} Q${x},${y + (abajo ? 10 : -
 const sonrisa = (w, h = w) => `M${-w},1 L${w},1 A${w},${h} 0 0 1 ${-w},1 Z`
 
 const PARTES = {
+  // Escuchando el pulso: ojos en línea recta, concentrada
+  escucha: (c) => ({
+    ojos: (
+      <>
+        <path d="M-46,-12 L-22,-12" {...trazo(c)} />
+        <path d="M22,-12 L46,-12" {...trazo(c)} />
+      </>
+    ),
+    boca: <ellipse cx="0" cy="16" rx="5" ry="3" fill={c} />,
+  }),
   dormida: (c) => ({
     ojos: (
       <>
