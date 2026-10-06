@@ -15,9 +15,9 @@ const minutos = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, 
 /** Panel derecho: el tema elegido gira en el vinilo y la mascota propone con qué mezclarlo. */
 export default function PanelSonando({ tema, alElegir, alCerrar }) {
   const rep = useReproductor()
-  const { hayFuente, abrirAjustes, paraSugerir, tieneArchivo } = useMusica()
+  const { hayFuente, abrirAjustes, audibles, tieneArchivo } = useMusica()
   const { etiqueta, notacion, opciones: ajustes, corregir, tolerancia } = useAjustesArmonia()
-  const opciones = useMemo(() => (tema ? compatibles(tema, paraSugerir, 6, ajustes) : []), [tema, paraSugerir, ajustes])
+  const opciones = useMemo(() => (tema ? compatibles(tema, audibles, 6, ajustes) : []), [tema, audibles, ajustes])
 
   if (!tema) {
     return (
@@ -92,7 +92,11 @@ export default function PanelSonando({ tema, alElegir, alCerrar }) {
         <h3 id="titulo-mezcla" className="etiqueta-seccion">
           Mezcla con
         </h3>
-        {opciones.length === 0 && <p className="sonando__nada">{tema.clave ? `Nada en ±${tolerancia} % de tempo que case de clave.` : 'Sin clave no puedo recomendar: analízalo en Traktor.'}</p>}
+        {opciones.length === 0 && (
+          <p className="sonando__nada">
+            {!tema.clave ? 'Sin clave no puedo recomendar: analízalo en Traktor.' : audibles.length ? `Nada en ±${tolerancia} % de tempo que case de clave.` : 'Aún no suena ningún tema: conecta tu música y te digo con cuál mezclar.'}
+          </p>
+        )}
         <ul>
           {opciones.map((o) => (
             <li key={o.tema.id}>

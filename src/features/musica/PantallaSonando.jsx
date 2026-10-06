@@ -17,7 +17,7 @@ export default function PantallaSonando({ abierta, alCerrar }) {
   const ventana = useRef(null)
   const { tema, sonando, cola, indice, fundiendo, alternar, buscar, siguiente, reproducir } = useReproductor()
   const { tiempo, duracion } = useTiempo()
-  const { paraSugerir: temas } = useMusica()
+  const { audibles: temas } = useMusica()
   const [drop, setDrop] = useState(null)
   const [arrastre, setArrastre] = useState(0)
   const inicio = useRef(null)

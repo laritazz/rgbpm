@@ -5,6 +5,7 @@ import { CATEGORIAS } from '../../lib/armonia'
 import { NOTACIONES, clave, leerClave } from '../../lib/claves'
 import { degradadoTema } from '../../lib/color'
 import { azarConSemilla, relacionPorClave, sugerirSet, temasPorCategoria } from '../../lib/rueda'
+import AvisoSinAudio from '../musica/AvisoSinAudio'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import BotonSet from '../sets/BotonSet'
@@ -36,7 +37,7 @@ const signo = (n) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '±0')
  */
 export default function Armonia() {
   // Solo lo que suena: un set sugerido con temas mudos no sirve
-  const { paraSugerir: temas } = useMusica()
+  const { audibles: temas } = useMusica()
   const rep = useReproductor()
   const ajustes = useAjustesArmonia()
   const { etiqueta, opciones } = ajustes
@@ -217,6 +218,7 @@ function SetSugerido({ semilla, cadena, bpm, energia, alEnergia, alFijar, alOtra
   const navegar = useNavigate()
   const [abierto, setAbierto] = useState(null)
   const [aviso, setAviso] = useState(null)
+  const { audibles } = useMusica()
   const conTema = cadena.filter((p) => p.elegido)
 
   function fijar(paso, id) {
@@ -252,6 +254,8 @@ function SetSugerido({ semilla, cadena, bpm, energia, alEnergia, alFijar, alOtra
         </div>
       </header>
 
+      {!audibles.length && <AvisoSinAudio />}
+
       <ol className="sugerido__lista">
         {cadena.map((paso, i) => (
           // Por posición: un tono puede repetirse en el camino
@@ -269,10 +273,10 @@ function SetSugerido({ semilla, cadena, bpm, energia, alEnergia, alFijar, alOtra
       </ol>
 
       <footer className="sugerido__pie">
-        <button className="boton boton--rosa" onClick={usarSet}>
+        <button className="boton boton--rosa" onClick={usarSet} disabled={!conTema.length}>
           Usar este set
         </button>
-        <button className="boton boton--fantasma" onClick={alOtraTirada}>
+        <button className="boton boton--fantasma" onClick={alOtraTirada} disabled={!conTema.length}>
           Otras canciones
         </button>
       </footer>

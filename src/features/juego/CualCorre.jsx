@@ -14,7 +14,7 @@ const signo = (n) => (n > 0 ? `+${n}` : `${n}`)
 
 /** ¿Cuál corre más? Suenan dos temas: ¿cuál va más rápido? Cada ronda, la diferencia es más fina. */
 export default function CualCorre() {
-  const { paraSugerir: temas } = useMusica()
+  const { paraJugar: temas } = useMusica()
   const rep = useReproductor()
   const { sonar, parar } = useSonido()
   const crear = useCallback(() => rondasCorre(temas), [temas])

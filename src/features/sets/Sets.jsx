@@ -9,6 +9,7 @@ import { duracionLarga } from '../../lib/formato'
 import { cambiazos, candidatosTras, duracionTotal, exportarCsv, exportarM3u, exportarNml, exportarTxt, importarSet, reordenar, saludSet, transicion } from '../../lib/set'
 import { useMovimientoReducido } from '../../hooks/useMovimientoReducido'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
+import AvisoSinAudio from '../musica/AvisoSinAudio'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import CurvaSet from './CurvaSet'
@@ -291,9 +292,10 @@ export default function Sets() {
 /** Otros temas para el mismo hueco: misma clave y BPM parecido. */
 function Cambiazo({ tema, alElegir, alCerrar }) {
   const { etiqueta } = useAjustesArmonia()
-  const { temas: biblioteca } = useBiblioteca()
+  // Solo lo que suena: un cambiazo mudo no sirve en cabina
+  const { audibles } = useMusica()
   const { enSet } = useSet()
-  const opciones = useMemo(() => cambiazos(tema, biblioteca, enSet), [tema, biblioteca, enSet])
+  const opciones = useMemo(() => cambiazos(tema, audibles, enSet), [tema, audibles, enSet])
   return (
     <div className="cambiazo">
       <div className="cambiazo__cabecera">
@@ -303,7 +305,7 @@ function Cambiazo({ tema, alElegir, alCerrar }) {
         </button>
       </div>
       {opciones.length === 0 ? (
-        <p>No hay otro tema con la misma clave y un BPM tan parecido.</p>
+        <p>{audibles.length ? 'No hay otro tema que suene con la misma clave y un BPM tan parecido.' : 'Aún no suena ningún tema: conecta tu música.'}</p>
       ) : (
         <ul>
           {opciones.map((o) => (
@@ -332,8 +334,8 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
   const [pestana, setPestana] = useState('pegan')
   const [busqueda, setBusqueda] = useState('')
 
-  const { paraSugerir } = useMusica()
-  const candidatos = useMemo(() => candidatosTras(ancla, paraSugerir, set.enSet, 12, opciones), [ancla, paraSugerir, set.enSet, opciones])
+  const { audibles } = useMusica()
+  const candidatos = useMemo(() => candidatosTras(ancla, audibles, set.enSet, 12, opciones), [ancla, audibles, set.enSet, opciones])
   const resultados = useMemo(() => {
     const q = normalizar(busqueda.trim())
     if (q.length < 2) return []
@@ -359,7 +361,11 @@ function PanelAnadir({ ancla, biblioteca, playlists, porId, avisar }) {
 
       {pestana === 'pegan' && (
         <>
-          <p className="anadir__nota">{ancla ? <>Pegan después de <strong>{ancla.titulo}</strong>.</> : 'Añade un tema y te digo qué pega.'}</p>
+          {audibles.length ? (
+            <p className="anadir__nota">{ancla ? <>Pegan después de <strong>{ancla.titulo}</strong>.</> : 'Añade un tema y te digo qué pega.'}</p>
+          ) : (
+            <AvisoSinAudio />
+          )}
           <ListaAnadir items={candidatos.map((c) => ({ tema: c.tema, detalle: `${c.categoria.nombre} · ${c.nota}`, color: c.categoria.color }))} alAnadir={(t) => set.anadir(t.id, ancla?.id)} />
         </>
       )}

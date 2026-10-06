@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { guardar, leer } from '../../lib/almacen'
+import { temasParaJugar } from '../../lib/audibles'
 import { buscarArchivo, crearIndice, esAudio } from '../../lib/indice'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import { usePrevias } from './usePrevias'
@@ -128,9 +129,9 @@ export function MusicaProvider({ children }) {
     [indiceLocal, tienePrivado, tienePrevia]
   )
 
-  // Los temas que suenan. Con muy pocos (menos de 12) las sugerencias usan toda la biblioteca: si no, se quedarían vacías
+  // Los temas que suenan: lo único que se sugiere. Los juegos suenan siempre (ritmo sintetizado si no hay audio)
   const audibles = useMemo(() => temas.filter(tieneArchivo), [temas, tieneArchivo])
-  const paraSugerir = audibles.length >= 12 ? audibles : temas
+  const paraJugar = useMemo(() => temasParaJugar(audibles, temas), [audibles, temas])
 
   const valor = useMemo(
     () => ({
@@ -142,7 +143,7 @@ export function MusicaProvider({ children }) {
       hayFuente: archivos.size > 0 || privado.conTema > 0 || previas.total > 0,
       totalPrevias: previas.total,
       audibles,
-      paraSugerir,
+      paraJugar,
       anadirCarpeta,
       anadirArchivos,
       reconectar,
@@ -153,7 +154,7 @@ export function MusicaProvider({ children }) {
       abrirAjustes: () => setAjustesAbiertos(true),
       cerrarAjustes: () => setAjustesAbiertos(false),
     }),
-    [ajustesAbiertos, carpetas, archivos, estadoLocal, privado, previas.total, audibles, paraSugerir, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, resolver, tieneArchivo]
+    [ajustesAbiertos, carpetas, archivos, estadoLocal, privado, previas.total, audibles, paraJugar, anadirCarpeta, anadirArchivos, reconectar, olvidarCarpetas, resolver, tieneArchivo]
   )
 
   return <MusicaContext.Provider value={valor}>{children}</MusicaContext.Provider>

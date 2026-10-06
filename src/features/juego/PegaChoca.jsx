@@ -15,7 +15,7 @@ const RONDAS = 6
 
 /** ¿Pega o choca? Suenan dos temas seguidos: di qué salto armónico hay entre ellos. */
 export default function PegaChoca() {
-  const { paraSugerir: temas } = useMusica()
+  const { paraJugar: temas } = useMusica()
   const { etiqueta, corregir } = useAjustesArmonia()
   const rep = useReproductor()
   const { sonar, parar } = useSonido()

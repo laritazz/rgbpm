@@ -15,7 +15,7 @@ const RONDAS = 5
 
 /** ¿Dónde cae? Suena un tema: toca su tono en la rueda. La relativa y la vecina también puntúan. */
 export default function DondeCae() {
-  const { paraSugerir: temas } = useMusica()
+  const { paraJugar: temas } = useMusica()
   const { etiqueta, corregir } = useAjustesArmonia()
   const rep = useReproductor()
   const { sonar, parar } = useSonido()

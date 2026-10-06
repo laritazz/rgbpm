@@ -9,6 +9,7 @@ import { puedeSer } from '../../lib/escucha'
 import { bpmDeToques } from '../../lib/tempo'
 import { useBiblioteca } from '../biblioteca/BibliotecaContext'
 import RuedaMini from '../biblioteca/RuedaMini'
+import AvisoSinAudio from '../musica/AvisoSinAudio'
 import { useMusica } from '../musica/MusicaContext'
 import { useReproductor } from '../musica/ReproductorContext'
 import './Tap.css'
@@ -246,8 +247,9 @@ function PuedeSer({ bpm, clave }) {
 /** Qué pinchar a continuación desde tu biblioteca. */
 function Sugerencias({ bpm, clave }) {
   const { etiqueta, opciones: ajustes } = useAjustesArmonia()
-  const { paraSugerir: temas } = useMusica()
+  const { audibles: temas } = useMusica()
   const opciones = useMemo(() => (clave ? compatibles({ id: 'escucha', bpm, clave }, temas, 6, ajustes) : porTempo(bpm, temas, 6)), [bpm, clave, temas, ajustes])
+  if (!temas.length) return <AvisoSinAudio texto="Aún no suena ningún tema: conecta tu música y te digo con cuál mezclar." />
   if (!opciones.length) return null
   return (
     <section className="tap__sugerencias" aria-labelledby="titulo-sugerencias">

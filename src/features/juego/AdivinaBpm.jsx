@@ -18,7 +18,7 @@ const TOQUES_MAXIMOS = 12
  * y te dice cuánto te has acercado. Vale marcar a doble o a medio tempo, como en cabina.
  */
 export default function AdivinaBpm() {
-  const { paraSugerir: temas } = useMusica()
+  const { paraJugar: temas } = useMusica()
   const rep = useReproductor()
   const record = useRecord('bpm')
   const { sonar, parar } = useSonido()
