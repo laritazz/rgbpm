@@ -9,9 +9,9 @@ Desde el 6 oct 2026 la gestión y la documentación viven en Notion (privado). L
 |---|---|
 | Raíz del proyecto | https://app.notion.com/p/3f1c9362e7c681af881accbc4690c8d9 |
 | Reglas de trabajo, DoR, DoD, handoff | 00 — Cómo trabajamos · https://app.notion.com/p/3f1c9362e7c6810785cac4e98c83aa79 |
-| Sistema visual | 04 · https://app.notion.com/p/3f1c9362e7c681f7bf58d77b64a9badd |
-| Especificaciones | 05 · https://app.notion.com/p/3f1c9362e7c6812cafc3d711f773c3b9 |
-| Desarrollo y audio | 06 · https://app.notion.com/p/3f1c9362e7c6818bbdabd32362995402 |
+| Sistema visual | 03 — Diseño · https://app.notion.com/p/3f1c9362e7c681f7bf58d77b64a9badd |
+| Especificaciones | 04 — Especificaciones · https://app.notion.com/p/3f1c9362e7c6812cafc3d711f773c3b9 |
+| Desarrollo y audio | 05 — Desarrollo · https://app.notion.com/p/3f1c9362e7c6818bbdabd32362995402 |
 | Tareas (Kanban) | https://app.notion.com/p/3d6c20965ccb4e9089dbda4ba6c7ad08 |
 | Decision Log | https://app.notion.com/p/33cada51cf0f4563ad19ad68c807602e |
 | Agentes y prompts | https://app.notion.com/p/444cd98f734b400586347c7aac13c4a3 |
